@@ -7,7 +7,7 @@ COPY . /app
 
 
 # ARG REACT_APP_BASE_API
-ENV REACT_APP_BASE_API=/api/v1
+ENV REACT_APP_BASE_API=/api
 
 RUN yarn
 RUN yarn build

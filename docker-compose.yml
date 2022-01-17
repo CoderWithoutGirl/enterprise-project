@@ -8,7 +8,7 @@ services:
       dockerfile: Dockerfile
       context: ./front-end
     environment:
-      - REACT_APP_BASE_API=/api/v1
+      - REACT_APP_BASE_API=/api
     ports:
       - "80:80"
     depends_on:
@@ -24,7 +24,6 @@ services:
       - DB_URL=mongodb://mongo:27017/enterprise-project
       - USER='user'
       - ADMIN='admin'
-      - api_version='/api/v1'
       - ENCRYPT_KEY='enterprise-web-development-v1-key'
       - SECRET_KEY='enterprise-web-development-v1-jwt-secret-key'
     ports:
