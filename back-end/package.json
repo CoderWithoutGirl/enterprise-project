@@ -20,7 +20,7 @@
     "passport-local": "^1.0.0"
   },
   "scripts": {
-    "run": "node index.js",
+    "start": "node index.js",
     "dev": "nodemon index.js"
   }
 }

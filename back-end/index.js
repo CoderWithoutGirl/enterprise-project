@@ -5,7 +5,7 @@ const cors = require('cors');
 const errorhandler = require('errorhandler');
 const helmet = require('helmet');
 dotenv.config();
-const PORT = process.env.PORT || 4000;
+const PORT = process.env.PORT || 8000;
 const app = express();
 const dbService = require('./service/db');
 const passport = require('passport');

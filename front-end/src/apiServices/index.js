@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API = axios.create({baseURL: "http://localhost:5000/api/v1/"});
+const API = axios.create({ baseURL: process.env.REACT_APP_BASE_API });
 
 API.interceptors.request.use(request => {request.headers['Content-Type']= "application/json";request.validateStatus = (status) => {return status <= 500}; return request;})
 
