@@ -4,9 +4,7 @@ import { LockClosedIcon } from "@heroicons/react/solid";
 import { useForm } from "react-hook-form";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
-import {loginSuccess} from '../store/actions/authenticateAction';
-import { login } from "../apiServices";
-import {toast} from 'react-toastify';
+import {login} from '../store/actions/authenticateAction';
 
 
 const loginFormValidationSchema = yup.object({
@@ -14,7 +12,8 @@ const loginFormValidationSchema = yup.object({
   password: yup.string().required("Password must be filled"),
 });
 
-const LoginPage = ({putLoginDataToStore}) => {
+const LoginPage = ({ submitLoginForm }) => {
+  
   const {
     register,
     handleSubmit,
@@ -23,15 +22,10 @@ const LoginPage = ({putLoginDataToStore}) => {
     resolver: yupResolver(loginFormValidationSchema),
   });
 
-  const onSubmit = async (formData) => {
-    const {status, data} = await login(formData);
-    if(status === 200) {
-      putLoginDataToStore(data);
-    }
-    else {
-      toast.error('Unauthorize')
-    }
-  }
+
+  const onSubmit = (formData) => {
+    submitLoginForm(formData)
+  };
 
   return (
     <>
@@ -113,7 +107,7 @@ const LoginPage = ({putLoginDataToStore}) => {
 
               <div className="text-sm">
                 <a
-                  href="#"
+                  href="https://github.com"
                   className="font-medium text-indigo-600 hover:text-indigo-500"
                 >
                   Forgot your password?
@@ -145,7 +139,7 @@ const LoginPage = ({putLoginDataToStore}) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    putLoginDataToStore: (responseData) => dispatch(loginSuccess(responseData))
+    submitLoginForm: (formData) => dispatch(login(formData))
   }
 }
 

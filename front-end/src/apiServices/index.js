@@ -1,8 +1,24 @@
-import axios from 'axios';
+import axios from "axios";
 
-const API = axios.create({ baseURL: process.env.REACT_APP_BASE_API });
+const unauthorizeAPIInstance = axios.create({
+  baseURL: process.env.REACT_APP_BASE_API,
+  validateStatus: (status) => status <= 500,
+});
 
-API.interceptors.request.use(request => {request.headers['Content-Type']= "application/json";request.validateStatus = (status) => {return status <= 500}; return request;})
+const authorizeAPIInstance = axios.create({
+  baseURL: process.env.REACT_APP_BASE_API,
+  validateStatus: (status) => status <= 400,
+});
 
-export const login = (formData) => API.post('/auth/login', {...formData});
-export const register = (formData) => API.post('/ath/register', {...formData})
+unauthorizeAPIInstance.interceptors.request.use((request) => {
+  request.headers["Content-Type"] = "application/json";
+  return request;
+});
+
+export const login = (formData) =>
+  unauthorizeAPIInstance.post("/auth/login", { ...formData });
+export const register = (formData) =>
+  unauthorizeAPIInstance.post("/ath/register", { ...formData });
+
+export const refreshToken = (refreshToken) =>
+  unauthorizeAPIInstance.post("/auth/refresh-token", { refreshToken });

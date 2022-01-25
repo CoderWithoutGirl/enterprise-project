@@ -30,7 +30,7 @@ const HomePage = () => {
                   <ul className="flex flex-wrap items-center">
                     <li>
                       <a
-                        href="javascript:void(0)"
+                        href="https://github.com"
                         className="
                       py-4
                       px-6
@@ -51,8 +51,7 @@ const HomePage = () => {
                       </a>
                     </li>
                     <li>
-                      <a
-                        href="javascript:void(0)"
+                      <button
                         className="
                       py-4
                       px-6
@@ -98,7 +97,7 @@ const HomePage = () => {
                           </svg>
                         </span>
                         Download App
-                      </a>
+                      </button>
                     </li>
                   </ul>
                   <div className="clients pt-16">

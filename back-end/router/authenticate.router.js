@@ -1,5 +1,10 @@
 const authenticateRouter = require('express').Router();
-const {login, register} = require('../controller/authenticate.controller')
+const {
+  login,
+  register,
+  refeshToken,
+  logout
+} = require("../controller/authenticate.controller");
 const passport = require('passport');
 
 authenticateRouter.get('/', passport.authenticate('jwt', {session: false}), async (req, res, next) => {
@@ -10,6 +15,10 @@ authenticateRouter.post('/login',
 passport.authenticate('local', {session: false}),
 login);
 
+authenticateRouter.post("/refresh-token", refeshToken);
+
 authenticateRouter.post('/register', register);
+
+authenticateRouter.post("/logout", logout);
 
 module.exports = authenticateRouter;

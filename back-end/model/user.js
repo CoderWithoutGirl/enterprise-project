@@ -46,6 +46,16 @@ UserSchema.methods.validatePassword = async function(password, next) {
       }
 }
 
+UserSchema.set("toJSON", {
+  virtuals: true,
+  versionKey: false,
+  transform: function (doc, ret) {
+    // remove these props when object is serialized
+    delete ret._id;
+    delete ret.password;
+  },
+});
+
 const UserModel = mongoose.model('user', UserSchema)
 
 module.exports = UserModel;

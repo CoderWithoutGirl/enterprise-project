@@ -1,6 +1,30 @@
 version: "3.3"
 
 services:
+  mongo:
+    container_name: mongo
+    image: mongo:latest
+    volumes:
+      - .docker/data/db:/data/db
+    ports:
+      - 27017:27017
+  redis:
+    image: redis:latest
+    container_name: redis
+    environment:
+      - ALLOW_EMPTY_PASSWORD=yes
+    volumes:
+    - .docker/data/redis:/data
+    ports:
+      - 6379:6379
+  redis-commander:
+    container_name: redis-commander
+    image: rediscommander/redis-commander
+    restart: always
+    environment:
+      - REDIS_HOSTS=local:redis:6379
+    ports:
+      - "8081:8081"
   client:
     container_name: client
     stdin_open: true
@@ -26,14 +50,12 @@ services:
       - ADMIN='admin'
       - ENCRYPT_KEY='enterprise-web-development-v1-key'
       - SECRET_KEY='enterprise-web-development-v1-jwt-secret-key'
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - SMTP_USER=coderwithourgirl@gmail.com
+      - SMTP_PASS=Password@123
     ports:
       - "8080:80"
     depends_on:
       - mongo
-  mongo:
-    container_name: mongo
-    image: mongo
-    ports:
-      - 27017:27017
-volumes:
-  mongodb:
+      - redis
