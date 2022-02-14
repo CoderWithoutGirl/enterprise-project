@@ -20,7 +20,7 @@ db.seedData = async () => {
                 roles: process.env.ADMIN
             });
             await admin.save();
-            const userTest1 = new new User({
+            const userTest1 = new User({
               username: "usertest1",
               password: "abc123",
               fullname: "user test 1",
@@ -30,7 +30,7 @@ db.seedData = async () => {
               roles: process.env.STAFF,
             });
             await userTest1.save();
-            const userTest2 = new new User({
+            const userTest2 = new User({
               username: "usertest2",
               password: "abc123",
               fullname: "user test 2",
@@ -40,7 +40,7 @@ db.seedData = async () => {
               roles: process.env.STAFF,
             });
             await userTest2.save();
-            const userTest3 = new new User({
+            const userTest3 = new User({
               username: "usertest3",
               password: "abc123",
               fullname: "user test 3",
