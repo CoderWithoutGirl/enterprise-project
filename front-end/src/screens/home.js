@@ -3,7 +3,7 @@ const HomePage = () => {
       <div className="container">
         <div className="relative pt-[120px] lg:pt-[150px] pb-[110px] bg-white">
           <div className="container">
-            <div className="flex flex-wrap -mx-4">
+            <div className="flex flex-wrap">
               <div className="w-full lg:w-5/12 px-4">
                 <div className="hero-content">
                   <h1
@@ -137,7 +137,7 @@ const HomePage = () => {
                   </div>
                 </div>
               </div>
-              <div className="hidden lg:block lg:w-1/12 px-4"></div>
+              <div className="hidden lg:block lg:w-1/12"></div>
               <div className="w-full lg:w-6/12 px-4">
                 <div className="lg:text-right lg:ml-auto">
                   <div className="relative inline-block z-10 pt-11 lg:pt-0">

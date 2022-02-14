@@ -4,6 +4,7 @@ const request = require("supertest");
 const app = require("../app");
 
 describe("POST /auth/login", () => {
+  //
   it("Should return JWT token and refreshToken", async () => {
     const requestBody = {
       username: "admin",
@@ -12,6 +13,7 @@ describe("POST /auth/login", () => {
     const response = await request(app)
       .post("/api/auth/login")
       .send(requestBody);
+      //
     expect(response.statusCode).toBe(200);
     expect(response.body).toHaveProperty("token");
     expect(response.body).toHaveProperty("refreshToken");
