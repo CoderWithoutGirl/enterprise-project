@@ -1,3 +1,6 @@
+import Button from "../components/button";
+import Form from "../components/form";
+import InputField from "../components/inputField";
 import Table from "../components/table";
 
 const customerTableHead = [
@@ -263,7 +266,7 @@ const TestScreen = () => {
   );
 
   return (
-    <>
+    <div className="w-full my-20">
       <Table
         limit={10}
         tableHead={customerTableHead}
@@ -272,7 +275,18 @@ const TestScreen = () => {
         renderHead={renderTableHead}
         tableTitle={"Test Table"}
       />
-    </>
+      <div className="w-2/6 flex justify-center mx-auto my-20">
+        <Form title="Test Form">
+          <InputField type="text" placeholder="Type: Text" />
+          <InputField type="password" placeholder="Type: Password" />
+          <InputField type="email" placeholder="Type: Email" />
+          <div className="w-2/5 flex flex-wrap justify-between items-center">
+            <Button type="primary" title="Login" />
+            <Button type="secondary" title="Register" />
+          </div>
+        </Form>
+      </div>
+    </div>
   );
 };
 
