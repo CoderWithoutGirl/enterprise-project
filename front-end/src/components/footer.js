@@ -1,7 +1,8 @@
+
 const Footer = () => {
     return (
-      <footer className="text-center bg-gray-900 text-white">
-        <div className="container px-6 pt-6">
+      <footer className="text-center bg-gray-900 text-white flex flex-col items-center">
+        <div className="container px-6 pt-6 ">
           <div className="flex justify-center mb-6">
             <a
               href="#!"
@@ -138,7 +139,7 @@ const Footer = () => {
 
           <div>
             <form action="">
-              <div className="grid md:grid-cols-3 gird-cols-1 gap-4 flex justify-center items-center">
+              <div className="grid md:grid-cols-3 gird-cols-1 gap-4 justify-center items-center">
                 <div className="md:ml-auto md:mb-6">
                   <p className="">
                     <strong>Sign up for our newsletter</strong>
@@ -303,8 +304,8 @@ const Footer = () => {
         </div>
 
         <div
-          className="text-center p-4"
-          style={{backgroundColor: "black", opacity: 0.2}}
+          className="text-center p-4 self-stretch"
+          style={{ backgroundColor: "black", opacity: 0.2 }}
         >
           © 2021 Copyright:
           <a className="text-white" href="https://tailwind-elements.com/">

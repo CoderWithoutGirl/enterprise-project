@@ -5,6 +5,7 @@ import UnauthorizeRoute from "./customRouters/unauthorizeRouter";
 import ApplicationBaseLayout from "../layout/ApplicationBaseLayout";
 import HomePage from "../screens/home";
 import LoginPage from "../screens/login";
+import TestScreen from "../screens/test";
 
 const AppRouter = () => {
     return (
@@ -15,6 +16,14 @@ const AppRouter = () => {
             element={
               <ApplicationBaseLayout>
                 <HomePage />
+              </ApplicationBaseLayout>
+            }
+          />
+          <Route
+            path="/test"
+            element={
+              <ApplicationBaseLayout>
+                <TestScreen />
               </ApplicationBaseLayout>
             }
           />
