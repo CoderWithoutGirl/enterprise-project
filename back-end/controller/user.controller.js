@@ -6,7 +6,8 @@ const userController = {
         res.status(200).json(user);
     },
     searchUserByUsername: async (req, res) => {
-        const username = req.body.username;
+        const username = req.query.username;
+        console.log(username);
 
         const result = await getUserByUsername(username);
     

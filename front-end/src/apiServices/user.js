@@ -11,7 +11,7 @@ return request;
 });
 
 export const getAllUser = () =>
-    unauthorizeAPIInstance.get("/user/getalluser");
+    unauthorizeAPIInstance.get("/users/");
 
-export const searchUserByUsername = (formData) =>
-    unauthorizeAPIInstance.post("user/searchuserbyusername",{...formData});
+export const searchUserByUsername = (username) =>
+    unauthorizeAPIInstance.get(`users/search?username=${username}`);

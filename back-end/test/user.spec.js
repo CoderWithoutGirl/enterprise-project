@@ -3,11 +3,11 @@ dotenv.config();
 const request = require("supertest");
 const app = require("../app");
 
-describe("GET /user/getalluser", () => {
+describe("GET /users/", () => {
   //
   it("Should return list all user", async () => {
     const response = await request(app)
-      .get("/api/user/getalluser")
+      .get("/api/users/")
       
     expect(response.statusCode).toBe(200);
     expect(response.body[0].roles==="qamanager");
@@ -16,16 +16,11 @@ describe("GET /user/getalluser", () => {
   });
 });
 
-describe("POST /user/searchuserbyusername", () => {
-
-    const requestBody = {
-        username: "admin",
-    };
+describe("POST /users/search", () => {
 
     it("Should return user need to find", async () => {
       const response = await request(app)
-        .post("/api/user/searchuserbyusername")
-        .send(requestBody)
+        .get("/api/users/search?username=admin")
         
       expect(response.statusCode).toBe(200);
       expect(response.body.username==="admin");

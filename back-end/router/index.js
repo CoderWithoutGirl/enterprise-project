@@ -5,6 +5,6 @@ const rootRouter = require('express').Router();
 
 rootRouter.use(`/auth`,authenticateRouter);
 rootRouter.use(`/mail`,emailRouter);
-rootRouter.use(`/user`,userRouter);
+rootRouter.use(`/users`,userRouter);
 
 module.exports = rootRouter;

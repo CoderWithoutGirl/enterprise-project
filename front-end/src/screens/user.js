@@ -40,7 +40,7 @@ const UserPage = () =>{
 
     const hangleSearch = (e) => {
       e.preventDefault();
-      searchUserByUsername({username:keyword}).then((res)=>{
+      searchUserByUsername(keyword).then((res)=>{
           setUsers(res.data);
       }).catch((err)=>{
         console.log(err);
