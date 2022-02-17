@@ -1,3 +1,4 @@
+import { useState } from "react";
 import Button from "../components/button";
 import Form from "../components/form";
 import InputField from "../components/inputField";
@@ -233,6 +234,21 @@ const testData = [
 ];
 
 const TestScreen = () => {
+
+  const [data, setData] = useState(testData);
+
+  const searchByNameExample = (searchParam) => {
+    if(searchParam !== '') {
+      const filtering = data.filter((item) => item.name.includes(searchParam));
+      console.log(searchParam); 
+      console.log(filtering); 
+      setData(filtering);
+    }
+    else {
+      setData(testData);
+    }
+  }
+
   const renderTableHead = (item, index) => (
     <th key={index} class="p-2 whitespace-nowrap">
       <div className="font-semibold text-left">{item}</div>
@@ -268,9 +284,10 @@ const TestScreen = () => {
   return (
     <div className="w-full my-20">
       <Table
+        search={searchByNameExample}
         limit={10}
         tableHead={customerTableHead}
-        tableData={testData}
+        tableData={data}
         renderData={renderTableBody}
         renderHead={renderTableHead}
         tableTitle={"Test Table"}
