@@ -2,6 +2,7 @@ import { useState } from "react";
 import Button from "../components/button";
 import Form from "../components/form";
 import InputField from "../components/inputField";
+import Modal from "../components/modal";
 import Table from "../components/table";
 
 const customerTableHead = [
@@ -236,6 +237,7 @@ const testData = [
 const TestScreen = () => {
 
   const [data, setData] = useState(testData);
+  const [open, setOpen] = useState(false);
 
   const searchByNameExample = (searchParam) => {
     if(searchParam !== '') {
@@ -292,13 +294,30 @@ const TestScreen = () => {
         renderHead={renderTableHead}
         tableTitle={"Test Table"}
       />
+      <Modal open={open} setOpen={setOpen} title="Test Modal">
+        <div className="w-full flex justify-center mx-auto">
+          <Form title="Test Form">
+            <InputField type="text" placeholder="Type: Text" />
+            <InputField type="password" placeholder="Type: Password" />
+            <InputField type="email" placeholder="Type: Email" />
+            <div className="w-3/5 flex flex-wrap justify-between items-center">
+              <Button type="primary" title="Login" />
+              <Button type="secondary" title="Register" />
+            </div>
+          </Form>
+        </div>
+      </Modal>
       <div className="w-2/6 flex justify-center mx-auto my-20">
         <Form title="Test Form">
           <InputField type="text" placeholder="Type: Text" />
           <InputField type="password" placeholder="Type: Password" />
           <InputField type="email" placeholder="Type: Email" />
           <div className="w-2/5 flex flex-wrap justify-between items-center">
-            <Button type="primary" title="Login" />
+            <Button
+              type="primary"
+              title="Login"
+              onClick={() => setOpen(true)}
+            />
             <Button type="secondary" title="Register" />
           </div>
         </Form>
