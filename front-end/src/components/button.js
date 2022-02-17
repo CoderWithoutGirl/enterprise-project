@@ -1,6 +1,6 @@
 import PropsType from 'prop-types';
 
-const Button = ({type, title, ...rest}) => {
+const Button = ({type, title}) => {
 
     const typeCheck = () => {
         switch(type) {
@@ -22,7 +22,7 @@ const Button = ({type, title, ...rest}) => {
     }
 
     return (
-      <button className={`${typeCheck()} text-white inline-block rounded-md font-semibold px-4 py-3 w-2/5`} {...rest}>
+      <button className={`${typeCheck()} text-white inline-block rounded-md font-semibold px-4 py-3 w-2/5`}>
         {title}
       </button>
     );
