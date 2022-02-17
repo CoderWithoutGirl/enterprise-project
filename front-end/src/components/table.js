@@ -1,4 +1,4 @@
-import { useState } from "react";
+import React, { useState, useEffect } from "react";
 import PropTypes from "prop-types";
 import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/solid";
 
@@ -10,13 +10,16 @@ const Table = ({
   renderHead,
   tableTitle,
 }) => {
-  const initDataShow =
-    limit && tableData ? tableData.slice(0, Number(limit)) : tableData;
 
   let pages = 1;
   let range = [];
 
-  const [dataShow, setDataShow] = useState(initDataShow);
+  const [dataShow, setDataShow] = useState((limit && tableData) ? tableData.slice(0, limit) : tableData);
+
+  useEffect(() =>{
+    setDataShow((limit && tableData) ? tableData.slice(0, limit) : tableData)
+  }, [limit, tableData])
+
   const [currPage, setCurrPage] = useState(0);
 
   if (limit !== undefined) {
@@ -24,7 +27,6 @@ const Table = ({
     pages = tableData.length % limit === 0 ? page : page + 1;
     range = [...Array(pages).keys()];
   }
-  console.log(currPage);
 
   const selectPage = (page) => {
     const start = limit * page;
@@ -53,7 +55,7 @@ const Table = ({
       
 
   return (
-    <section className="antialiased text-gray-600 mt-20 mb-20 px-4">
+    <section className="antialiased text-gray-600 mb-20 px-4">
       <div className="flex flex-col justify-center h-full">
         <div className="w-full mx-auto bg-white shadow-lg rounded-sm border border-gray-200">
           <header className="px-5 py-4 border-b border-gray-100">
@@ -70,7 +72,7 @@ const Table = ({
                   </tr>
                 </thead>
                 <tbody className="text-sm divide-y divide-gray-100">
-                  {tableData && renderData
+                  {dataShow.length > 0 && renderData
                     ? dataShow.map((item, index) => renderData(item, index))
                     : null}
                 </tbody>
