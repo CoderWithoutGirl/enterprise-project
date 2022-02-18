@@ -1,6 +1,7 @@
-import React, { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import PropTypes from "prop-types";
 import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/solid";
+import InputField from "./inputField";
 
 const Table = ({
   limit,
@@ -9,18 +10,19 @@ const Table = ({
   renderData,
   renderHead,
   tableTitle,
+  search,
 }) => {
-
   let pages = 1;
   let range = [];
 
-  const [dataShow, setDataShow] = useState((limit && tableData) ? tableData.slice(0, limit) : tableData);
-
-  useEffect(() =>{
-    setDataShow((limit && tableData) ? tableData.slice(0, limit) : tableData)
-  }, [limit, tableData])
-
+  const [dataShow, setDataShow] = useState(
+    limit && tableData ? tableData.slice(0, Number(limit)) : tableData
+  );
   const [currPage, setCurrPage] = useState(0);
+
+  useEffect(() => {
+    setDataShow(limit && tableData ? tableData.slice(0, Number(limit)) : tableData)
+  }, [limit, tableData]);
 
   if (limit !== undefined) {
     let page = Math.floor(tableData.length / Number(limit));
@@ -38,21 +40,32 @@ const Table = ({
   };
 
   const nextPage = () => {
-      const start = limit *( currPage + 1);
-      const end = start + limit;
-      setDataShow(tableData.slice(start, end));
-      setCurrPage(prev => prev + 1);
-      
-  }
+    const start = limit * (currPage + 1);
+    const end = start + limit;
+    setDataShow(tableData.slice(start, end));
+    setCurrPage((prev) => prev + 1);
+  };
 
   const prevPage = () => {
     const start = limit * (currPage - 1);
     const end = start + limit;
     setDataShow(tableData.slice(start, end));
     setCurrPage((prev) => prev - 1);
-
   };
-      
+
+  const debounce = (func, wait) => {
+    let timeout;
+    return function (...args) {
+      const context = this;
+      if (timeout) clearTimeout(timeout);
+      timeout = setTimeout(() => {
+        timeout = null;
+        func.apply(context, args);
+      }, wait);
+    };
+  };
+
+  const searchWithDebounce = debounce(search, 1000);
 
   return (
     <section className="antialiased text-gray-600 mb-20 px-4">
@@ -60,6 +73,12 @@ const Table = ({
         <div className="w-full mx-auto bg-white shadow-lg rounded-sm border border-gray-200">
           <header className="px-5 py-4 border-b border-gray-100">
             <h2 className="font-semibold text-gray-800">{tableTitle}</h2>
+            <InputField
+              type="text"
+              placeholder="Search..."
+              onChange={(e) => searchWithDebounce(e.target.value)}
+              className="w-1/5 rounded-md mt-1 border-gray-300"
+            />
           </header>
           <div className="p-3">
             <div className="overflow-x-auto">
@@ -131,6 +150,7 @@ Table.propsType = {
   renderData: PropTypes.func,
   renderHead: PropTypes.func,
   tableTitle: PropTypes.string,
+  search: PropTypes.func,
 };
 
 export default Table;
