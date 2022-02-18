@@ -4,7 +4,10 @@ import Form from "../components/form";
 import InputField from "../components/inputField";
 import Table from "../components/table";
 import Modal from "../components/modal";
-
+import { useForm } from "react-hook-form";
+import * as yup from "yup";
+import { yupResolver } from "@hookform/resolvers/yup";
+import { login } from "../apiServices";
 const customerTableHead = [
   "Id",
   "Name",
@@ -234,22 +237,38 @@ const testData = [
   },
 ];
 
-const TestScreen = () => {
+const loginFormValidationSchema = yup.object({
+  username: yup.string().required("Username must be filled"),
+  password: yup.string().required("Password must be filled"),
+});
 
+const TestScreen = () => {
   const [data, setData] = useState(testData);
-    const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState(false);
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    getValues,
+  } = useForm();
+
+  const submitLoginForm = async (formData) => {
+    console.log(getValues());
+    const { status, data } = await login(formData);
+    console.log(data);
+  };
 
   const searchByNameExample = (searchParam) => {
-    if(searchParam !== '') {
+    if (searchParam !== "") {
       const filtering = data.filter((item) => item.name.includes(searchParam));
-      console.log(searchParam); 
-      console.log(filtering); 
+      console.log(searchParam);
+      console.log(filtering);
       setData(filtering);
-    }
-    else {
+    } else {
       setData(testData);
     }
-  }
+  };
 
   const renderTableHead = (item, index) => (
     <th key={index} class="p-2 whitespace-nowrap">
@@ -309,14 +328,22 @@ const TestScreen = () => {
       </Modal>
       <div className="w-2/6 flex justify-center mx-auto my-20">
         <Form title="Test Form">
-          <InputField type="text" placeholder="Type: Text" />
-          <InputField type="password" placeholder="Type: Password" />
-          <InputField type="email" placeholder="Type: Email" />
+          <InputField
+            type="text"
+            placeholder="Type: Text"
+            {...register("username")}
+          />
+          <InputField
+            type="password"
+            placeholder="Type: Password"
+            {...register("password")}
+          />
           <div className="w-2/5 flex flex-wrap justify-between items-center">
             <Button
               type="primary"
               title="Login"
-              onClick={() => setOpen(true)}
+              role="submit"
+              onClick={handleSubmit(submitLoginForm)}
             />
             <Button type="secondary" title="Register" />
           </div>
