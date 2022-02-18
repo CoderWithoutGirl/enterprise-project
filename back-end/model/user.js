@@ -5,11 +5,15 @@ const UserSchema = mongoose.Schema({
     username: {type: String, required: true},
     password: {type: String, required: true},
     fullname: {type: String, required: true},
+    email: {type: String, required: true, match: [/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/, 'Please fill a valid email address']},
     dateOfBirth: {type: Date, required: true},
     address: {type: String, required: false},
     age: {type: Number, required: true},
+    department: {type: Number, required: false},
     gender: {type: String, required: true, enum: ['male', 'female', 'unkown']},
-    roles: {type: String, required: true, enum: [process.env.USER, process.env.ADMIN]}
+    roles: {type: String, required: true, enum: [process.env.USER, process.env.ADMIN, process.env.QAMANAGER, process.env.STAFF]},
+    createdAt: {type: Date, required: true, 
+    default: Date.now}
 }, {collection: 'users'})
 
 

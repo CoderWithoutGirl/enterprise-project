@@ -7,6 +7,8 @@ import HomePage from "../screens/home";
 import LoginPage from "../screens/login";
 import TestScreen from "../screens/test";
 import Departments from "../screens/departments";
+import UserPage from "../screens/user";
+
 
 const AppRouter = () => {
   return (
@@ -52,9 +54,18 @@ const AppRouter = () => {
             </UnauthorizeRoute>
           }
         />
+        <Route
+            path="/user"
+            element={
+              <ApplicationBaseLayout>
+                <UserPage />
+              </ApplicationBaseLayout>
+            }
+          />
       </Routes>
     </BrowserRouter>
   );
+
 }
 
 export default AppRouter;
