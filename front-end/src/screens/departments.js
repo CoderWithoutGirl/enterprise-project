@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect, useRef} from 'react';
 import Form from '../components/form';
 import InputField from "../components/inputField";
 import Button from "../components/button";
@@ -6,10 +6,11 @@ import { useForm } from "react-hook-form";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { createDepartment } from '../apiServices';
+import {toast} from 'react-toastify';
 
-const loginFormValidationSchema = yup.object({
-    name: yup.string().required("Username must be filled"),
-    description: yup.string().required("Password must be filled"),
+const departmentFormValidationSchema = yup.object({
+    name: yup.string().required("Name must be filled"),
+    description: yup.string().required("Description must be filled"),
 });
 
 function Departments() {
@@ -18,36 +19,98 @@ function Departments() {
         register,
         handleSubmit,
         formState: { errors },
+        setValue,
+        setError,
+        getValues,
+        reset
     } = useForm({
-        resolver: yupResolver(loginFormValidationSchema),
+        resolver: yupResolver(departmentFormValidationSchema),
     });
+
+    useEffect(() => {
+        register("name")
+        register("description")
+    }, [register])
+
+    const onChange = (e) => {
+        if(e.target.value === "") {
+            setError(e.target.name, `${e.target.value} is required`)
+        }
+        else {
+            setValue(e.target.name, e.target.value)
+            setError(e.target.name, null)
+
+        }
+    }
+
 
 
     const onSubmit = async (formData) => {
-        // console.log(formData);
-        // const { status } = await createDepartment(formData)
-        // if(status === 201) {
-        // }
         console.log(formData);
-        // const body = {
-        //     "name": "Security2",
-        //     "description": "Managemt accademic"
-        // }
-        await createDepartment(formData);
-
+        const { status, data } = await createDepartment(formData);
+        if(status === 400){
+            toast.error(data.message)
+        }
+        else if(status === 201){
+            toast.success(data.message)
+            reset({name: "", description: ""})
+        }
+        else{
+            toast.warning(data.message);
+        }
     };
 
 
     return (
         <>
-            <div className="min-h-full flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
-                <div className="max-w-md w-full space-y-8">
-                    <div>
-                        <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
-                            Create Departments
-                        </h2>
-                    </div>
-                    <form className="mt-8 space-y-6" action="#" method="POST">
+            <div className="w-2/6 flex justify-center mx-auto my-20">
+                <Form
+                    title="Create Department"
+                    // action="#" 
+                    // method="POST"
+                >
+                    <InputField
+                        type="text"
+                        placeholder="Name"
+                        name="name"
+                        value={getValues('name')}
+                        onChange={onChange}
+                    />
+                    {errors.name?.message && (
+                        <div
+                            className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative"
+                            role="alert"
+                        >
+                            <span className="block sm:inline">
+                                {errors.name?.message}
+                            </span>
+                        </div>
+                    )}
+                    <InputField
+                        type="text"
+                        placeholder="Description"
+                        name="description"
+                        value={getValues('description')}
+                        onChange={onChange}
+                    />
+                    {errors.description?.message && (
+                        <div
+                            className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative"
+                            role="alert"
+                        >
+                            <span className="block sm:inline">
+                                {errors.description?.message}
+                            </span>
+                        </div>
+                    )}
+                    <Button
+                        onClick={handleSubmit(onSubmit)}
+                        role="submit"
+                        type="primary"
+                        title="Create"
+                    />
+                </Form>
+                {/* <form className="mt-8 space-y-6" action="#" method="POST">
                         <div className="rounded-md shadow-sm -space-y-px">
                             <div>
                                 <label htmlFor="name" className="sr-only">
@@ -82,8 +145,7 @@ function Departments() {
                                 Create
                             </button>
                         </div>
-                    </form>
-                </div>
+                    </form> */}
             </div>
         </>
     )

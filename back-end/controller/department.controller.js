@@ -3,6 +3,7 @@ const { createDepartment } = require('../service/department.service');
 const departmentController = {
     createDepartment: async (req, res) => {
         const defaultDepartment = req.body;
+        console.log(defaultDepartment);
         try {
             const newDepartment = await createDepartment(defaultDepartment);
             res.status(201).json({
