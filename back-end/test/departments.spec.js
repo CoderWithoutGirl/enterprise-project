@@ -12,40 +12,52 @@ describe("POST /departments/", () => {
     })
 
     it("Test create Departments with correct value", async () => {
-        const newDep = new DepartmentModel(
+        const newDep = await createDepartment(
             {
-                name: "Staff Affair", description: "Manage student"
+                name: "Staff Affair1", description: "Manage student"
             });
-        await newDep.save();
-        const DepartmentInDB = await DepartmentModel.findOne({ name: "Staff Affair" });
-        expect(DepartmentInDB).toBeTruthy();
+
+        expect(newDep).toBeTruthy();
     });
 
     it("Test create Departments with the same name of departments", async () => {
-        const checkDepartmentExistedInDb = await DepartmentModel.findOne({ name: "Staff Affair" });
+        const checkDepartmentExistedInDb = await DepartmentModel.findOne({ name: "Staff Affair1" });
         expect(checkDepartmentExistedInDb).toBeTruthy();
     });
 
 
     it("Test create Departments with name of departments is null", async () => {
-        const checkDepartmentExistedInDb = await DepartmentModel.findOne({ name: "" });
-        expect(checkDepartmentExistedInDb).toBeFalsy();
+        try {
+            const newDep = await createDepartment(
+                {
+                    name: ""
+                });
+        } catch (error) {
+            expect(error).toBeTruthy();
+        }
     });
 
     it("Test create Departments with name of departments is longer than 50 characters", async () => {
-        const checkDepartmentExistedInDb = await DepartmentModel.findOne(
-            {
-                name: "Staffffffffffffffffffffffffffffffffffffffffffffffffffff"
-            });
-        expect(checkDepartmentExistedInDb).toBeFalsy();
+        try {
+            const newDep = await createDepartment(
+                {
+                    name: "Staffffffffffffffffffffffffffffffffffffffffffffffff"
+                });
+        } catch (error) {
+            expect(error).toBeTruthy();
+        }
+
     });
 
     it("Test create Departments with description of departments is longer than 200 characters", async () => {
-        const checkDepartmentExistedInDb = await DepartmentModel.findOne(
-            {
-                description: "Many desktop publishing packages and web page editors now use Lorem Ipsum as their default model text, and a search for 'lorem ipsum' will uncover many web sites still in their infancy. Various versions have evolved over the years."
-            });
-        expect(checkDepartmentExistedInDb).toBeFalsy();
+        try {
+            const newDep = await createDepartment(
+                {
+                    description: "Many desktop publishing packages and web page editors now use Lorem Ipsum as their default model text, and a search for 'lorem ipsum' will uncover many web sites still in their infancy. Various versions have evolved over the years."
+                });
+        } catch (error) {
+            expect(error).toBeTruthy();
+        }
     });
 
     afterAll(() => {

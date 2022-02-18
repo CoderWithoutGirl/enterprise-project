@@ -1,4 +1,4 @@
-import React, {useEffect, useRef} from 'react';
+import React, { useEffect } from 'react';
 import Form from '../components/form';
 import InputField from "../components/inputField";
 import Button from "../components/button";
@@ -6,11 +6,13 @@ import { useForm } from "react-hook-form";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { createDepartment } from '../apiServices';
-import {toast} from 'react-toastify';
+import { toast } from 'react-toastify';
+import { ErrorMessage } from '@hookform/error-message';
+
 
 const departmentFormValidationSchema = yup.object({
-    name: yup.string().required("Name must be filled"),
-    description: yup.string().required("Description must be filled"),
+    name: yup.string().required("Name must be filled").max(50),
+    description: yup.string().required("Description must be filled").max(200),
 });
 
 function Departments() {
@@ -24,38 +26,32 @@ function Departments() {
         getValues,
         reset
     } = useForm({
+        mode: 'onChange',
         resolver: yupResolver(departmentFormValidationSchema),
     });
 
     useEffect(() => {
-        register("name")
-        register("description")
+        register("name", { value:{ maxLength: 50, message: "Max length of name is 50" }, required: { value: true, message: "Please enter department name" } })
+        register("description", { maxLength: { value: 200, message: "Max length of description is 200" } })
     }, [register])
 
     const onChange = (e) => {
-        if(e.target.value === "") {
-            setError(e.target.name, `${e.target.value} is required`)
-        }
-        else {
-            setValue(e.target.name, e.target.value)
-            setError(e.target.name, null)
-
-        }
+        setValue(e.target.name, e.target.value)
+        setError(e.target.value, null);
     }
-
 
 
     const onSubmit = async (formData) => {
         console.log(formData);
         const { status, data } = await createDepartment(formData);
-        if(status === 400){
+        if (status === 400) {
             toast.error(data.message)
         }
-        else if(status === 201){
+        else if (status === 201) {
             toast.success(data.message)
-            reset({name: "", description: ""})
+            reset({ name: "", description: "" })
         }
-        else{
+        else {
             toast.warning(data.message);
         }
     };
@@ -66,8 +62,8 @@ function Departments() {
             <div className="w-2/6 flex justify-center mx-auto my-20">
                 <Form
                     title="Create Department"
-                    // action="#" 
-                    // method="POST"
+                // action="#" 
+                // method="POST"
                 >
                     <InputField
                         type="text"
@@ -76,16 +72,18 @@ function Departments() {
                         value={getValues('name')}
                         onChange={onChange}
                     />
-                    {errors.name?.message && (
-                        <div
-                            className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative"
-                            role="alert"
-                        >
-                            <span className="block sm:inline">
-                                {errors.name?.message}
-                            </span>
-                        </div>
-                    )}
+                    <ErrorMessage
+                        errors={errors}
+                        name="name"
+                        render={({ message }) => <div
+                        className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative"
+                        role="alert"
+                    >
+                        <span className="block sm:inline">
+                            {message}
+                        </span>
+                    </div>}
+                    />
                     <InputField
                         type="text"
                         placeholder="Description"
@@ -93,16 +91,18 @@ function Departments() {
                         value={getValues('description')}
                         onChange={onChange}
                     />
-                    {errors.description?.message && (
-                        <div
-                            className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative"
-                            role="alert"
-                        >
-                            <span className="block sm:inline">
-                                {errors.description?.message}
-                            </span>
-                        </div>
-                    )}
+                    <ErrorMessage
+                        errors={errors}
+                        name="description"
+                        render={({ message }) => <div
+                        className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative"
+                        role="alert"
+                    >
+                        <span className="block sm:inline">
+                            {message}
+                        </span>
+                    </div>}
+                    />
                     <Button
                         onClick={handleSubmit(onSubmit)}
                         role="submit"
