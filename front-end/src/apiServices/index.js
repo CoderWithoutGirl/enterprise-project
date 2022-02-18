@@ -22,3 +22,6 @@ export const register = (formData) =>
 
 export const refreshToken = (refreshToken) =>
   unauthorizeAPIInstance.post("/auth/refresh-token", { refreshToken });
+
+export const createDepartment = (formData) =>
+  unauthorizeAPIInstance.post("/departments/", { ...formData });

@@ -254,7 +254,7 @@ const TestScreen = () => {
   } = useForm();
 
   const submitLoginForm = async (formData) => {
-    console.log(getValues());
+    console.log(formData);
     const { status, data } = await login(formData);
     console.log(data);
   };

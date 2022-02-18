@@ -1,6 +1,7 @@
 const db = {};
 const mongoose = require('mongoose');
 const User = require('../model/user');
+const Department = require('../model/department');
 
 mongoose.Promise = global.Promise;
 
@@ -9,7 +10,7 @@ db.mongoose = mongoose;
 db.seedData = async () => {
     try {
         const userInDbCount = await User.estimatedDocumentCount();
-        if(!userInDbCount) {
+        if (!userInDbCount) {
             const admin = new User({
                 username: 'admin',
                 password: 'admin@123',
@@ -62,13 +63,15 @@ db.seedData = async () => {
     }
 }
 
+
+
 db.connect = async (dbConnectionUrl) => {
     try {
-        await mongoose.connect(dbConnectionUrl, {useUnifiedTopology: true, useNewUrlParser: true});
+        await mongoose.connect(dbConnectionUrl, { useUnifiedTopology: true, useNewUrlParser: true });
         await db.seedData();
         console.log('DB connected');
     } catch (error) {
-       console.error(`Connecting error: ${error}`);
+        console.error(`Connecting error: ${error}`);
     }
 }
 
