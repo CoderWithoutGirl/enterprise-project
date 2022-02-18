@@ -6,6 +6,7 @@ import ApplicationBaseLayout from "../layout/ApplicationBaseLayout";
 import HomePage from "../screens/home";
 import LoginPage from "../screens/login";
 import TestScreen from "../screens/test";
+import UserPage from "../screens/user";
 
 const AppRouter = () => {
     return (
@@ -41,6 +42,14 @@ const AppRouter = () => {
               <UnauthorizeRoute>
                 <LoginPage />
               </UnauthorizeRoute>
+            }
+          />
+          <Route
+            path="/user"
+            element={
+              <ApplicationBaseLayout>
+                <UserPage />
+              </ApplicationBaseLayout>
             }
           />
         </Routes>

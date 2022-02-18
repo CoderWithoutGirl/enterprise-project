@@ -29,6 +29,7 @@ const Table = ({
     pages = tableData.length % limit === 0 ? page : page + 1;
     range = [...Array(pages).keys()];
   }
+
   const selectPage = (page) => {
     const start = limit * page;
     const end = start + limit;
@@ -67,7 +68,7 @@ const Table = ({
   const searchWithDebounce = debounce(search, 1000);
 
   return (
-    <section className="antialiased text-gray-600 mt-20 mb-20 px-4">
+    <section className="antialiased text-gray-600 mb-20 px-4">
       <div className="flex flex-col justify-center h-full">
         <div className="w-full mx-auto bg-white shadow-lg rounded-sm border border-gray-200">
           <header className="px-5 py-4 border-b border-gray-100">
@@ -90,7 +91,7 @@ const Table = ({
                   </tr>
                 </thead>
                 <tbody className="text-sm divide-y divide-gray-100">
-                  {tableData && renderData
+                  {dataShow.length > 0 && renderData
                     ? dataShow.map((item, index) => renderData(item, index))
                     : null}
                 </tbody>
