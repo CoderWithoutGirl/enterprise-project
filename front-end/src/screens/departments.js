@@ -31,8 +31,8 @@ function Departments() {
     });
 
     useEffect(() => {
-        register("name", { value:{ maxLength: 50, message: "Max length of name is 50" }, required: { value: true, message: "Please enter department name" } })
-        register("description", { maxLength: { value: 200, message: "Max length of description is 200" } })
+        register("name")
+        register("description")
     }, [register])
 
     const onChange = (e) => {
