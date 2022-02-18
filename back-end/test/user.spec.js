@@ -16,11 +16,11 @@ describe("GET /users/", () => {
   });
 });
 
-describe("POST /users/search", () => {
+describe("GET /api/users", () => {
 
     it("Should return user need to find", async () => {
       const response = await request(app)
-        .get("/api/users/search?username=admin")
+        .get("/api/users?username=admin")
         
       expect(response.statusCode).toBe(200);
       expect(response.body.username==="admin");

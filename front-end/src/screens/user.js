@@ -19,7 +19,6 @@ const userTableHead = [
 const UserPage = () =>{
 
     const [users, setUsers] = useState([]);
-    const [keyword, setKeyword] = useState("");
 
     const loadUser = async () => {
       const {data} = await getAllUser();
@@ -31,20 +30,17 @@ const UserPage = () =>{
         loadUser();
     },[]);
 
-    useEffect(()=>{
-      if(keyword.length === 0 ){
+    const hangleSearch = (keyword) => {
+      if(keyword){
+        searchUserByUsername(keyword).then((res)=>{
+          setUsers(res.data);
+        }).catch((err)=>{
+          console.log(err);
+        });
+      }
+      else{
         loadUser();
       }
-  },[keyword]);
-   
-
-    const hangleSearch = (e) => {
-      e.preventDefault();
-      searchUserByUsername(keyword).then((res)=>{
-          setUsers(res.data);
-      }).catch((err)=>{
-        console.log(err);
-      });
     }
 
     const renderTableHead = (item, index) => (
@@ -84,14 +80,6 @@ const UserPage = () =>{
 
     return (
         <div>
-          <div className="w-1/5 ml-5 my-10">
-              <form>
-                <div class="flex items-center">
-                  <InputField type="text" className="mr-5 border-1 rounded-lg py-3" value={keyword} onChange={(e) => setKeyword(e.target.value)} placeholder="Insert Username" />
-                  <Button  type="primary" title="Search" onClick={hangleSearch} />
-                </div>
-              </form>
-            </div>
            <Table
             limit={20}
             tableHead={userTableHead}
@@ -99,6 +87,7 @@ const UserPage = () =>{
             renderData={renderTableBody}
             renderHead={renderTableHead}
             tableTitle={"User Table"}
+            search={hangleSearch}
             />
         </div>
     );

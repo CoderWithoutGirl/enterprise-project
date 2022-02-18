@@ -14,4 +14,4 @@ export const getAllUser = () =>
     unauthorizeAPIInstance.get("/users/");
 
 export const searchUserByUsername = (username) =>
-    unauthorizeAPIInstance.get(`users/search?username=${username}`);
+    unauthorizeAPIInstance.get(`users?username=${username}`);
