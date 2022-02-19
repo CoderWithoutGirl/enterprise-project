@@ -11,7 +11,7 @@ const UserSchema = mongoose.Schema({
     age: {type: Number, required: true},
     department: {type: Number, required: false},
     gender: {type: String, required: true, enum: ['male', 'female', 'unkown']},
-    roles: {type: String, required: true, enum: [process.env.USER, process.env.ADMIN, process.env.QAMANAGER, process.env.STAFF]},
+    role: {type: String, required: true, enum: [process.env.USER, process.env.ADMIN, process.env.QAMANAGER, process.env.STAFF]},
     createdAt: {type: Date, required: true, 
     default: Date.now}
 }, {collection: 'users'})

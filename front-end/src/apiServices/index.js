@@ -1,31 +1,40 @@
 import axios from "axios";
 
-const unauthorizeAPIInstance = axios.create({
+
+
+const apiInstance = axios.create({
   baseURL: process.env.REACT_APP_BASE_API,
   validateStatus: (status) => status <= 500,
 });
 
-const authorizeAPIInstance = axios.create({
-  baseURL: process.env.REACT_APP_BASE_API,
-  validateStatus: (status) => status <= 400,
-});
-
-unauthorizeAPIInstance.interceptors.request.use((request) => {
+apiInstance.interceptors.request.use((request) => {
   request.headers["Content-Type"] = "application/json";
   return request;
 });
 
+export const tokenRequestInterceptor = async (apiCall, refreshToken) => {
+  const {status, data} = await apiCall();
+  if(status === 401) {
+    refreshToken();
+    return await apiCall();
+  }
+  else {
+    return { status, data };
+  }
+}
+
 export const login = (formData) =>
-  unauthorizeAPIInstance.post("/auth/login", { ...formData });
+  apiInstance.post("/auth/login", { ...formData });
 export const register = (formData) =>
-  unauthorizeAPIInstance.post("/ath/register", { ...formData });
+  apiInstance.post("/ath/register", { ...formData });
 
 export const refreshToken = (refreshToken) =>
-  unauthorizeAPIInstance.post("/auth/refresh-token", { refreshToken });
+  apiInstance.post("/auth/refresh-token", { refreshToken });
 
-export const createDepartment = (formData) =>
-  unauthorizeAPIInstance.post("/departments/", { ...formData });
+export const createDepartment = (formData, token) =>
+  apiInstance.post("/departments/", { ...formData }, {headers: {Authorization: `Beaer ${token}`}});
+  
+export const getAllUser = (token) => apiInstance.get("/users/", {headers: {Authorization: `Bearer ${token}`}});
 
-export const createCategory = (formData) =>
-  unauthorizeAPIInstance.post("/categories/", { ...formData });
-
+export const searchUserByUsername = (username, token) =>
+  apiInstance.get(`users?username=${username}`, {headers: {Authorization: `Bearer ${token}`}});

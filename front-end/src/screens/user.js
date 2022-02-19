@@ -1,10 +1,16 @@
 import React, {useState, useEffect} from 'react';
+import {connect} from 'react-redux';
 import Button from "../components/button";
 import Form from "../components/form";
 import InputField from "../components/inputField";
 import Table from "../components/table";
-import { getAllUser, searchUserByUsername } from "../apiServices/user";
-
+import { useNavigate } from 'react-router-dom';
+import {
+  tokenRequestInterceptor,
+  getAllUser,
+  searchUserByUsername,
+} from "../apiServices/";
+import {getNewToken} from '../store/actions/authenticateAction'
 const userTableHead = [
     "Fullname",
     "Username",
@@ -16,19 +22,25 @@ const userTableHead = [
   ];
 
 
-const UserPage = () =>{
+const UserPage = ({getNewTokenRequest, token}) =>{
+
 
     const [users, setUsers] = useState([]);
 
     const loadUser = async () => {
-      const {data} = await getAllUser();
-      setUsers(prev => data);
-      console.log(data);
+      const loadAllDataOfUser = async () => {
+        const {data, status} = await getAllUser(token)
+        return {data, status}
+      }
+      const {status, data} = await tokenRequestInterceptor(loadAllDataOfUser, getNewTokenRequest);
+     if(status === 200) {
+        setUsers((prev) => data);
+     }
   }
 
     useEffect(()=>{
         loadUser();
-    },[]);
+    },[token]);
 
     const hangleSearch = (keyword) => {
       if(keyword){
@@ -93,4 +105,16 @@ const UserPage = () =>{
     );
 }
 
-export default UserPage;
+const mapStateToProps = (state) => {
+  return {
+    token: state.authenticateReducer.token
+  }
+}
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    getNewTokenRequest: () => dispatch(getNewToken())
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(UserPage);
