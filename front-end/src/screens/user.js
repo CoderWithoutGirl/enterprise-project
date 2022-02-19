@@ -1,16 +1,16 @@
-import React, { useState, useEffect } from "react";
-import { connect } from "react-redux";
+import React, {useState, useEffect} from 'react';
+import {connect} from 'react-redux';
 import Button from "../components/button";
 import Form from "../components/form";
 import InputField from "../components/inputField";
 import Table from "../components/table";
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from 'react-router-dom';
 import {
   tokenRequestInterceptor,
   getAllUser,
   searchUserByUsername,
 } from "../apiServices/";
-import { getNewToken } from "../store/actions/authenticateAction";
+import {getNewToken} from '../store/actions/authenticateAction'
 const userTableHead = [
   "Fullname",
   "Username",
@@ -21,27 +21,25 @@ const userTableHead = [
   "Action",
 ];
 
-const UserPage = ({ getNewTokenRequest, token }) => {
+
+const UserPage = ({getNewTokenRequest, token}) =>{
 
     const [users, setUsers] = useState([]);
 
     const loadUser = async () => {
       const loadAllDataOfUser = async () => {
-        const { data, status } = await getAllUser(token);
-        return { data, status };
-      };
-      const { status, data } = await tokenRequestInterceptor(
-        loadAllDataOfUser,
-        getNewTokenRequest
-      );
-      if (status === 200) {
-        setUsers((prev) => data);
+        const {data, status} = await getAllUser(token)
+        return {data, status}
       }
-    };
+      const {status, data} = await tokenRequestInterceptor(loadAllDataOfUser, getNewTokenRequest);
+     if(status === 200) {
+        setUsers((prev) => data);
+     }
+  }
 
-    useEffect(() => {
-      loadUser();
-    }, [token]);
+    useEffect(()=>{
+        loadUser();
+    },[token]);
 
     const hangleSearch = (keyword) => {
       if (keyword) {
@@ -109,14 +107,14 @@ const UserPage = ({ getNewTokenRequest, token }) => {
 
 const mapStateToProps = (state) => {
   return {
-    token: state.authenticateReducer.token,
-  };
-};
+    token: state.authenticateReducer.token
+  }
+}
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    getNewTokenRequest: () => dispatch(getNewToken()),
-  };
-};
+    getNewTokenRequest: () => dispatch(getNewToken())
+  }
+}
 
 export default connect(mapStateToProps, mapDispatchToProps)(UserPage);
