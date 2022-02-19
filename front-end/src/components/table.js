@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import PropTypes from "prop-types";
 import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/solid";
 import InputField from "./inputField";
+import Button from "./button";
 
 const Table = ({
   limit,
@@ -11,6 +12,7 @@ const Table = ({
   renderHead,
   tableTitle,
   search,
+  createButtonHandler
 }) => {
   let pages = 1;
   let range = [];
@@ -73,12 +75,15 @@ const Table = ({
         <div className="w-full mx-auto bg-white shadow-lg rounded-sm border border-gray-200">
           <header className="px-5 py-4 border-b border-gray-100">
             <h2 className="font-semibold text-gray-800">{tableTitle}</h2>
-            <InputField
-              type="text"
-              placeholder="Search..."
-              onChange={(e) => searchWithDebounce(e.target.value)}
-              className="w-1/5 rounded-md mt-1 border-gray-300"
-            />
+            <div className="w-full flex justify-between">
+              <InputField
+                type="text"
+                placeholder="Search..."
+                onChange={(e) => searchWithDebounce(e.target.value)}
+                className="w-1/5 rounded-md mt-1 border-gray-300"
+              />
+              <Button title="Create" type="primary" onClick={createButtonHandler} />
+            </div>
           </header>
           <div className="p-3">
             <div className="overflow-x-auto">
@@ -151,6 +156,7 @@ Table.propsType = {
   renderHead: PropTypes.func,
   tableTitle: PropTypes.string,
   search: PropTypes.func,
+  createButtonHandler: PropTypes.func
 };
 
 export default Table;

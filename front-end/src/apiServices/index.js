@@ -38,3 +38,7 @@ export const getAllUser = (token) => apiInstance.get("/users/", {headers: {Autho
 
 export const searchUserByUsername = (username, token) =>
   apiInstance.get(`users?username=${username}`, {headers: {Authorization: `Bearer ${token}`}});
+
+export const createCategory = (formData) => {
+  apiInstance.post('/categories/', {...formData});
+}
