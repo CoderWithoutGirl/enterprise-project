@@ -7,6 +7,7 @@ import HomePage from "../screens/home";
 import LoginPage from "../screens/login";
 import TestScreen from "../screens/test";
 import Departments from "../screens/departments";
+import Categories from "../screens/categories";
 import UserPage from "../screens/user";
 import ErrorPage from '../screens/error'
 import { roles } from "../constants/role";
@@ -45,6 +46,14 @@ const AppRouter = () => {
             <PrivateRoute>
               <Departments />
             </PrivateRoute>
+          }
+        />
+        <Route
+          path="/category"
+          element={
+            <UnauthorizeRoute>
+              <Categories />
+            </UnauthorizeRoute>
           }
         />
         <Route
