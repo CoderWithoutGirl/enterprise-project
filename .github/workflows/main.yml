@@ -45,6 +45,17 @@ jobs:
         run: |
           yarn
           yarn test
+        env:
+          PORT: ${{ secrets.PORT }}
+          DB_URL: ${{ secrets.DB_URL }}
+          REDIS_PORT: ${{ secrets.REDIS_PORT }}
+          REDIS_HOST: ${{ secrets.REDIS_HOST }}
+          USER: ${{ secrets.USER }}
+          ADMIN: ${{ secrets.ADMIN }}
+          ENCRYPT_KEY: ${{ secrets.ENCRYPT_KEY }}
+          SECRET_KEY: ${{ secrets.SECRET_KEY }}
+          SMTP_USER: ${{ secrets.SMTP_USER }}
+          SMTP_PASS: ${{ secrets.SMTP_PASS }}
   # push_to_Docker_Hub:
   #     name: Push Images to DockerHub
   #     # The type of runner that the job will run on
