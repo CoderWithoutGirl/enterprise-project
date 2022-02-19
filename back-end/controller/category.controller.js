@@ -1,7 +1,7 @@
 const {createCategory} = require('../service/category.service');
 
 const categoryController = {
-    createCategory: async (req,rep) => {
+    createCategory: async (req,res) => {
         const defaultCategory = req.body;
         console.log(defaultCategory);
         try {

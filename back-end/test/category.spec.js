@@ -37,9 +37,9 @@ describe("POST /categories/", () => {
         }
     });
 
-    it("Test create Departments with name of departments is longer than 50 characters", async () => {
+    it("Test create Category with name is longer than 50 characters", async () => {
         try {
-            const newCategory = await createDepartment(
+            const newCategory = await createCategory(
                 {
                     name: "Machine Learning Machine Learning Machine Learning Machine Learning"
                 });
