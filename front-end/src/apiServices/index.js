@@ -18,7 +18,7 @@ unauthorizeAPIInstance.interceptors.request.use((request) => {
 export const login = (formData) =>
   unauthorizeAPIInstance.post("/auth/login", { ...formData });
 export const register = (formData) =>
-  unauthorizeAPIInstance.post("/ath/register", { ...formData });
+  unauthorizeAPIInstance.post("/auth/register", { ...formData });
 
 export const refreshToken = (refreshToken) =>
   unauthorizeAPIInstance.post("/auth/refresh-token", { refreshToken });

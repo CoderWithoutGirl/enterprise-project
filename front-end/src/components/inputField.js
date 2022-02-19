@@ -12,7 +12,7 @@ const InputField = ({type, placeholder, ...rest}) => {
 };
 
 InputField.propsType = {
-  type: PropsType.oneOf(["text", "password", "email"]),
+  type: PropsType.oneOf(["text", "password", "email", "number"]),
   placeholder: PropsType.string
 }
 

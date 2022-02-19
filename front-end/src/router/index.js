@@ -7,6 +7,7 @@ import HomePage from "../screens/home";
 import LoginPage from "../screens/login";
 import TestScreen from "../screens/test";
 import UserPage from "../screens/user";
+import RegisterPage from "../screens/register";
 
 const AppRouter = () => {
     return (
@@ -49,6 +50,14 @@ const AppRouter = () => {
             element={
               <ApplicationBaseLayout>
                 <UserPage />
+              </ApplicationBaseLayout>
+            }
+          />
+          <Route
+            path="/register"
+            element={
+              <ApplicationBaseLayout>
+                <RegisterPage />
               </ApplicationBaseLayout>
             }
           />

@@ -19,3 +19,26 @@ describe("POST /auth/login", () => {
     expect(response.body).toHaveProperty("refreshToken");
   });
 });
+
+describe("POST /auth/register", () => {
+  //
+  it("Should return success create new user", async () => {
+    const requestBody = {
+      gender: "male",
+      dateOfBirth: "2021-02-09T17:00:00.000Z",
+      address: "test stress",
+      age: 30,
+      confirmPassword: "Test12345@",
+      password: "Test12345@",
+      username: "test@test.com",
+      fullname: "Nguyen van test"
+    };
+
+    const response = await request(app)
+      .post("/api/auth/register")
+      .send(requestBody);
+      
+    expect(response.statusCode).toBe(201);
+    expect(response.body.roles === "staff")
+  });
+});
