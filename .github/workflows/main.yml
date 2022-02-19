@@ -6,9 +6,9 @@ name: CI-CD
 on:
   # Triggers the workflow on push or pull request events but only for the main branch
   push:
-    branches: [ main, develop ]
+    branches: [ master, develop ]
   pull_request:
-    branches: [ main, develop ]
+    branches: [ master, develop ]
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
@@ -23,14 +23,15 @@ jobs:
     strategy:
       matrix:
         node-version: [16.x]
-
-    # Run build and test only if the commit message says build app
-    if: "contains(github.event.commits[0].message, '[build app]')"
     
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
+      
+      # Install docker-compose
+      - name: Start containers
+        run: docker-compose -f "docker-compose.yml" up -d --build
 
       - name: setup node
         uses: actions/setup-node@master
@@ -42,12 +43,27 @@ jobs:
         run: |
           sudo npm install -g yarn
       # npm ci 
+      
       # build and test the apps     
       - name: build & test
+        working-directory: ./back-end
         run: |
-          cd back-end
           yarn
           yarn test
+        env:
+          PORT: ${{ secrets.PORT }}
+          DB_URL: ${{ secrets.DB_URL }}
+          REDIS_PORT: ${{ secrets.REDIS_PORT }}
+          REDIS_HOST: ${{ secrets.REDIS_HOST }}
+          USER: ${{ secrets.USER }}
+          ADMIN: ${{ secrets.ADMIN }}
+          ENCRYPT_KEY: ${{ secrets.ENCRYPT_KEY }}
+          SECRET_KEY: ${{ secrets.SECRET_KEY }}
+          SMTP_USER: ${{ secrets.SMTP_USER }}
+          SMTP_PASS: ${{ secrets.SMTP_PASS }}
+      - name: Stop containers
+        if: always()
+        run: docker-compose -f "docker-compose.yml" down
   # push_to_Docker_Hub:
   #     name: Push Images to DockerHub
   #     # The type of runner that the job will run on
