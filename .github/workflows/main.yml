@@ -31,7 +31,7 @@ jobs:
       
       # Install docker-compose
       - name: Start containers
-        run: docker-compose -f "docker-compose.yml" up -d --build
+        run: docker-compose -f "docker-develop.yml" up -d --build
 
       - name: setup node
         uses: actions/setup-node@master
@@ -43,7 +43,7 @@ jobs:
         run: |
           sudo npm install -g yarn
       # npm ci 
-      
+
       # build and test the apps     
       - name: build & test
         working-directory: ./back-end
