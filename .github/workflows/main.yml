@@ -28,6 +28,10 @@ jobs:
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
+      
+      # Install docker-compose
+      - name: Start containers
+        run: docker-compose -f "docker-compose.yml" up -d --build
 
       - name: setup node
         uses: actions/setup-node@master
@@ -39,6 +43,7 @@ jobs:
         run: |
           sudo npm install -g yarn
       # npm ci 
+      
       # build and test the apps     
       - name: build & test
         working-directory: ./back-end
@@ -56,6 +61,9 @@ jobs:
           SECRET_KEY: ${{ secrets.SECRET_KEY }}
           SMTP_USER: ${{ secrets.SMTP_USER }}
           SMTP_PASS: ${{ secrets.SMTP_PASS }}
+      - name: Stop containers
+        if: always()
+        run: docker-compose -f "docker-compose.yml" down
   # push_to_Docker_Hub:
   #     name: Push Images to DockerHub
   #     # The type of runner that the job will run on
