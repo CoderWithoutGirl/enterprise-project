@@ -5,7 +5,7 @@ import Button from "../components/button";
 import { useForm } from "react-hook-form";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { createCategory } from '../apiServices';
+import { createCategory,getCategory } from '../apiServices';
 import { toast } from 'react-toastify';
 import { ErrorMessage } from '@hookform/error-message';
 
@@ -56,6 +56,21 @@ function Categories() {
         }
     };
 
+    const [post, setPost] = React.useState(null);
+
+    React.useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const apiRes = await getCategory();
+                console.log(">>", apiRes)
+                await setPost(apiRes);
+            } catch (error) {
+                console.log("Fetch failed", error.message);
+            }
+        }
+        fetchData();
+
+    }, []);
 
     return (
         <>

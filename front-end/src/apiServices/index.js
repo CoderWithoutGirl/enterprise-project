@@ -29,3 +29,7 @@ export const createDepartment = (formData) =>
 export const createCategory = (formData) =>
   unauthorizeAPIInstance.post("/categories/", { ...formData });
 
+export const getCategory = async () => {
+  const result = await unauthorizeAPIInstance.get("/categories");
+  return result;
+}

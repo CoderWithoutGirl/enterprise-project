@@ -20,4 +20,8 @@ const createCategory = async (defaultCategory) => {
     }
 }
 
-module.exports = {createCategory};
+const getCategory= async () =>{
+    let result = await Category.find({});
+    return result;
+}
+module.exports = {createCategory, getCategory};
