@@ -1,13 +1,19 @@
-import React, { useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import Form from '../components/form';
 import InputField from "../components/inputField";
 import Button from "../components/button";
+import Table from "../components/table";
 import { useForm } from "react-hook-form";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { createDepartment } from '../apiServices';
+import { createDepartment, getAllDepartment } from '../apiServices';
 import { toast } from 'react-toastify';
 import { ErrorMessage } from '@hookform/error-message';
+
+const userTableHead = [
+    "Name",
+    "Description",
+  ];
 
 
 const departmentFormValidationSchema = yup.object({
@@ -16,6 +22,18 @@ const departmentFormValidationSchema = yup.object({
 });
 
 function Departments() {
+
+    const [departments, setDepartments] = useState([]);
+
+    const loadDepartment = async () => {
+        const { data } = await getAllDepartment();
+        setDepartments(prev => data);
+        console.log(data);
+    }
+
+    useEffect(() => {
+        loadDepartment();
+    }, []);
 
     const {
         register,
@@ -56,6 +74,23 @@ function Departments() {
         }
     };
 
+    const renderTableHead = (item, index) => (
+        <th key={index} class="p-2 whitespace-nowrap">
+            <div className="font-semibold text-left">{item}</div>
+        </th>
+    );
+
+    const renderTableBody = (item, index) => (
+        <tr key={index}>
+            <td className="p-2 whitespace-nowrap">
+                <div className="text-left">{item.name}</div>
+            </td>
+            <td className="p-2 whitespace-nowrap">
+                <div className="text-left">{item.description}</div>
+            </td>
+        </tr>
+    );
+
 
     return (
         <>
@@ -76,13 +111,13 @@ function Departments() {
                         errors={errors}
                         name="name"
                         render={({ message }) => <div
-                        className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative"
-                        role="alert"
-                    >
-                        <span className="block sm:inline">
-                            {message}
-                        </span>
-                    </div>}
+                            className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative"
+                            role="alert"
+                        >
+                            <span className="block sm:inline">
+                                {message}
+                            </span>
+                        </div>}
                     />
                     <InputField
                         type="text"
@@ -95,13 +130,13 @@ function Departments() {
                         errors={errors}
                         name="description"
                         render={({ message }) => <div
-                        className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative"
-                        role="alert"
-                    >
-                        <span className="block sm:inline">
-                            {message}
-                        </span>
-                    </div>}
+                            className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative"
+                            role="alert"
+                        >
+                            <span className="block sm:inline">
+                                {message}
+                            </span>
+                        </div>}
                     />
                     <Button
                         onClick={handleSubmit(onSubmit)}
@@ -110,42 +145,17 @@ function Departments() {
                         title="Create"
                     />
                 </Form>
-                {/* <form className="mt-8 space-y-6" action="#" method="POST">
-                        <div className="rounded-md shadow-sm -space-y-px">
-                            <div>
-                                <label htmlFor="name" className="sr-only">
-                                    Name
-                                </label>
-                                <input
-                                    {...register("name")}
-                                    type="text"
-                                    className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
-                                    placeholder="Name"
-                                />
-                            </div>
-                            <div>
-                                <label htmlFor="description" className="sr-only">
-                                    Description
-                                </label>
-                                <input
-                                    {...register("description")}
-                                    type="text"
-                                    required
-                                    className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-b-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
-                                    placeholder="Description"
-                                />
-                            </div>
-                        </div>
-                        <div>
-                            <button
-                                onClick={handleSubmit(onSubmit)}
-                                type="submit"
-                                className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-                            >
-                                Create
-                            </button>
-                        </div>
-                    </form> */}
+            </div>
+            <div>
+                <Table
+                    limit={20}
+                    tableHead={userTableHead}
+                    tableData={departments}
+                    renderData={renderTableBody}
+                    renderHead={renderTableHead}
+                    tableTitle={"Deaprtment Table"}
+                    // search={hangleSearch}
+                />
             </div>
         </>
     )

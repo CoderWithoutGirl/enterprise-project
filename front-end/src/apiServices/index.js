@@ -25,3 +25,6 @@ export const refreshToken = (refreshToken) =>
 
 export const createDepartment = (formData) =>
   unauthorizeAPIInstance.post("/departments/", { ...formData });
+
+export const getAllDepartment = () =>
+  unauthorizeAPIInstance.get("/departments/");

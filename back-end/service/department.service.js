@@ -17,5 +17,10 @@ const createDepartment = async (defaultDepartment) => {
     }
 };
 
-module.exports = { createDepartment };
+const getAllDepartments = async () =>{
+    const departmentDB = await Department.find().sort([["createdAt", "asc"]]).exec();
+    return [...departmentDB];
+}
+
+module.exports = { createDepartment,  getAllDepartments};
 
