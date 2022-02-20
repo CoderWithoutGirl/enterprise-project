@@ -1,96 +1,120 @@
 import React, {useState, useEffect} from 'react';
+import {connect} from 'react-redux';
 import Button from "../components/button";
 import Form from "../components/form";
 import InputField from "../components/inputField";
 import Table from "../components/table";
-import { getAllUser, searchUserByUsername } from "../apiServices/user";
-
+import { useNavigate } from 'react-router-dom';
+import {
+  tokenRequestInterceptor,
+  getAllUser,
+  searchUserByUsername,
+} from "../apiServices/";
+import {getNewToken} from '../store/actions/authenticateAction'
 const userTableHead = [
-    "Fullname",
-    "Username",
-    "Email",
-    "Role",
-    "Address",
-    "Department",
-    "Action",
-  ];
+  "Fullname",
+  "Username",
+  "Email",
+  "Role",
+  "Address",
+  "Department",
+  "Action",
+];
 
 
-const UserPage = () =>{
+const UserPage = ({getNewTokenRequest, token}) =>{
 
     const [users, setUsers] = useState([]);
 
     const loadUser = async () => {
-      const {data} = await getAllUser();
-      setUsers(prev => data);
-      console.log(data);
+      const loadAllDataOfUser = async () => {
+        const {data, status} = await getAllUser(token)
+        return {data, status}
+      }
+      const {status, data} = await tokenRequestInterceptor(loadAllDataOfUser, getNewTokenRequest);
+     if(status === 200) {
+        setUsers((prev) => data);
+     }
   }
 
     useEffect(()=>{
         loadUser();
-    },[]);
+    },[token]);
 
     const hangleSearch = (keyword) => {
-      if(keyword){
-        searchUserByUsername(keyword).then((res)=>{
-          setUsers(res.data);
-        }).catch((err)=>{
-          console.log(err);
-        });
-      }
-      else{
+      if (keyword) {
+        searchUserByUsername(keyword)
+          .then((res) => {
+            setUsers(res.data);
+          })
+          .catch((err) => {
+            console.log(err);
+          });
+      } else {
         loadUser();
       }
-    }
+    };
 
     const renderTableHead = (item, index) => (
-        <th key={index} class="p-2 whitespace-nowrap">
-          <div className="font-semibold text-left">{item}</div>
-        </th>
-      );
-    
-      const renderTableBody = (item, index) => (
-        <tr key={index}>
-          <td className="p-2 whitespace-nowrap">
-            <div className="text-left">{item.fullname}</div>
-          </td>
-          <td className="p-2 whitespace-nowrap">
-            <div className="text-left">{item.username}</div>
-          </td>
-          <td className="p-2 whitespace-nowrap">
-            <div className="text-left">{item.email}</div>
-          </td>
-          <td className="p-2 whitespace-nowrap">
-            <div className="text-left">{item.roles}</div>
-          </td>
-          <td className="p-2 whitespace-nowrap">
-            <div className="text-left">{item.address}</div>
-          </td>
-          <td className="p-2 whitespace-nowrap">
-            <div className="text-left">{item.department}</div>
-          </td>
-          <td className="p-2 whitespace-nowrap">
-            <div className="text-left flex justify-around">
-              <Button type="warning" title="Edit" />
-              <Button type="danger" title="Delete"  />
-            </div>
-          </td>
-        </tr>
+      <th key={index} class="p-2 whitespace-nowrap">
+        <div className="font-semibold text-left">{item}</div>
+      </th>
+    );
+
+    const renderTableBody = (item, index) => (
+      <tr key={index}>
+        <td className="p-2 whitespace-nowrap">
+          <div className="text-left">{item.fullname}</div>
+        </td>
+        <td className="p-2 whitespace-nowrap">
+          <div className="text-left">{item.username}</div>
+        </td>
+        <td className="p-2 whitespace-nowrap">
+          <div className="text-left">{item.email}</div>
+        </td>
+        <td className="p-2 whitespace-nowrap">
+          <div className="text-left">{item.roles}</div>
+        </td>
+        <td className="p-2 whitespace-nowrap">
+          <div className="text-left">{item.address}</div>
+        </td>
+        <td className="p-2 whitespace-nowrap">
+          <div className="text-left">{item.department}</div>
+        </td>
+        <td className="p-2 whitespace-nowrap">
+          <div className="text-left flex justify-around">
+            <Button type="warning" title="Edit" />
+            <Button type="danger" title="Delete" />
+          </div>
+        </td>
+      </tr>
     );
 
     return (
-        <div>
-           <Table
-            limit={20}
-            tableHead={userTableHead}
-            tableData={users}
-            renderData={renderTableBody}
-            renderHead={renderTableHead}
-            tableTitle={"User Table"}
-            search={hangleSearch}
-            />
-        </div>
+      <div>
+        <Table
+          limit={20}
+          tableHead={userTableHead}
+          tableData={users}
+          renderData={renderTableBody}
+          renderHead={renderTableHead}
+          tableTitle={"User Table"}
+          search={hangleSearch}
+        />
+      </div>
     );
+  };
+
+const mapStateToProps = (state) => {
+  return {
+    token: state.authenticateReducer.token
+  }
 }
 
-export default UserPage;
+const mapDispatchToProps = (dispatch) => {
+  return {
+    getNewTokenRequest: () => dispatch(getNewToken())
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(UserPage);

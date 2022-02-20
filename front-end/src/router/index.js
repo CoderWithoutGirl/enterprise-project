@@ -6,50 +6,70 @@ import ApplicationBaseLayout from "../layout/ApplicationBaseLayout";
 import HomePage from "../screens/home";
 import LoginPage from "../screens/login";
 import TestScreen from "../screens/test";
+import Departments from "../screens/departments";
+import Categories from "../screens/categories";
 import UserPage from "../screens/user";
 import RegisterPage from "../screens/register";
+import ErrorPage from '../screens/error'
+import { roles } from "../constants/role";
 
 const AppRouter = () => {
-    return (
-      <BrowserRouter>
-        <Routes>
-          <Route
-            path="/"
+  return (
+    <BrowserRouter>
+      <Routes>
+        <Route
+          path="/"
+          element={
+            <ApplicationBaseLayout>
+              <HomePage />
+            </ApplicationBaseLayout>
+          }
+        />
+        <Route
+          path="/test"
+          element={
+            <ApplicationBaseLayout>
+              <TestScreen />
+            </ApplicationBaseLayout>
+          }
+        />
+        <Route
+          path="/login"
+          element={
+            <UnauthorizeRoute>
+              <LoginPage />
+            </UnauthorizeRoute>
+          }
+        />
+        <Route
+          path="/department"
+          element={
+            <PrivateRoute>
+              <Departments />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/category"
+          element={
+            <UnauthorizeRoute>
+              <Categories />
+            </UnauthorizeRoute>
+          }
+        />
+        <Route
+            path="/user"
             element={
-              <ApplicationBaseLayout>
-                <HomePage />
-              </ApplicationBaseLayout>
-            }
-          />
-          <Route
-            path="/test"
-            element={
-              <ApplicationBaseLayout>
-                <TestScreen />
-              </ApplicationBaseLayout>
-            }
-          />
-          <Route
-            path="/private"
-            element={
-              <PrivateRoute>
-                <HomePage />
+              <PrivateRoute allowRoles={[roles.QA_MANAGER, roles.ADMIN]}>
+                <UserPage />
               </PrivateRoute>
             }
           />
-          <Route
-            path="/login"
-            element={
-              <UnauthorizeRoute>
-                <LoginPage />
-              </UnauthorizeRoute>
-            }
-          />
-          <Route
-            path="/user"
+        <Route
+            path="*"
             element={
               <ApplicationBaseLayout>
-                <UserPage />
+                <ErrorPage />
               </ApplicationBaseLayout>
             }
           />

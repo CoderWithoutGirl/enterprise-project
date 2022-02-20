@@ -1,4 +1,4 @@
-const authenticatePrefix = "APPLICATION_AUTHENTICATE/"
+const authenticatePrefix = "APPLICATION_AUTHENTICATE"
 
 export const authenticateConstant = {
     LOGIN: `${authenticatePrefix}/LOGIN`,

@@ -16,23 +16,23 @@ passport.use(new LocalStrategy(
 ));
 
 passport.use(
-    new JwtStrategy(
-      {
-        secretOrKey: process.env.SECRET_KEY,
-        jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
-      },
-      async (payload, next) => {
-        try {
-          let user = await User.findById(payload.subject);
-          if (user) {
-            return next(null, user);
-          }
-          return next(null, false);
-        } catch (error) {
-          console.log(error);
-          return next(error, false);
+  new JwtStrategy(
+    {
+      secretOrKey: process.env.SECRET_KEY,
+      jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
+    },
+    async (payload, next) => {
+      try {
+        let user = await User.findOne({ username: payload.subject });
+        if (user) {
+          return next(null, user);
         }
-      },
-    ),
-  );
+        return next(null, false);
+      } catch (error) {
+        console.log(error);
+        return next(error, false);
+      }
+    }
+  )
+);
 

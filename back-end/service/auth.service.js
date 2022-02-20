@@ -13,9 +13,8 @@ const signToken = (payload) => {
       issuer: "enterprice-project-v1",
       subject: payload,
     },
-    process.env.SECRET_KEY,
-    {
-      expiresIn: "300s",
+    process.env.SECRET_KEY,{
+      expiresIn: '120s'
     }
   );
 };
@@ -60,7 +59,7 @@ const refreshJwtToken = async (token) => {
 
   // return basic details and tokens
   return {
-    jwtToken,
+    token: jwtToken,
   };
 };
 

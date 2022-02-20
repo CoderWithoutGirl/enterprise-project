@@ -5,8 +5,8 @@ const {LOGIN_SUCCESS, LOUGOUT_SUCCESS, GET_NEW_TOKEN_SUCCESS} = authenticateCons
 const initialState = {
   isAuthenticated: false,
   user: {},
-  token: {},
-  refreshToken: {}
+  token: "",
+  refreshToken: ""
 };
 
 const authenticateReducer = (state = initialState, action) => {

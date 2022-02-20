@@ -22,7 +22,7 @@ const Button = ({type, title, role, ...rest}) => {
     }
 
     return (
-      <button className={`${typeCheck()} text-white inline-block rounded-md font-semibold px-4 py-3 w-2/5`} type={role} {...rest}>
+      <button className={`${typeCheck()} text-white inline-block rounded-md font-semibold px-4 py-3 w-fit`} type={role} {...rest}>
         {title}
       </button>
     );

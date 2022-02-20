@@ -1,6 +1,7 @@
 const db = {};
 const mongoose = require('mongoose');
 const User = require('../model/user');
+const Department = require('../model/department');
 
 mongoose.Promise = global.Promise;
 
@@ -9,7 +10,7 @@ db.mongoose = mongoose;
 db.seedData = async () => {
     try {
         const userInDbCount = await User.estimatedDocumentCount();
-        if(!userInDbCount) {
+        if (!userInDbCount) {
             const admin = new User({
                 username: 'admin',
                 password: 'admin@123',
@@ -18,7 +19,7 @@ db.seedData = async () => {
                 email: "admin123@gmail.com",
                 age: 21,
                 gender: 'male',
-                roles: process.env.QAMANAGER
+                role: process.env.ADMIN
             });
             await admin.save();
             const userTest1 = await new User({
@@ -29,7 +30,7 @@ db.seedData = async () => {
               dateOfBirth: new Date(),
               age: 21,
               gender: "male",
-              roles: process.env.STAFF,
+              role: process.env.QAMANAGER,
             });
             await userTest1.save();
             const userTest2 = await new User({
@@ -40,7 +41,7 @@ db.seedData = async () => {
               dateOfBirth: new Date(),
               age: 21,
               gender: "male",
-              roles: process.env.STAFF,
+              role: process.env.QACOORDINATOR,
             });
             await userTest2.save();
             const userTest3 = await new User({
@@ -51,7 +52,7 @@ db.seedData = async () => {
               dateOfBirth: new Date(),
               age: 21,
               gender: "male",
-              roles: process.env.STAFF,
+              role: process.env.STAFF,
             });
             await userTest3.save();
             console.log("Account seeded");
@@ -62,13 +63,15 @@ db.seedData = async () => {
     }
 }
 
+
+
 db.connect = async (dbConnectionUrl) => {
     try {
-        await mongoose.connect(dbConnectionUrl, {useUnifiedTopology: true, useNewUrlParser: true});
+        await mongoose.connect(dbConnectionUrl, { useUnifiedTopology: true, useNewUrlParser: true });
         await db.seedData();
         console.log('DB connected');
     } catch (error) {
-       console.error(`Connecting error: ${error}`);
+        console.error(`Connecting error: ${error}`);
     }
 }
 
