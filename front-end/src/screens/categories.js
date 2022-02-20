@@ -1,7 +1,8 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import Form from '../components/form';
 import InputField from "../components/inputField";
 import Button from "../components/button";
+import Table from "../components/table";
 import { useForm } from "react-hook-form";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -10,12 +11,23 @@ import { toast } from 'react-toastify';
 import { ErrorMessage } from '@hookform/error-message';
 
 
+
 const categoryFormValidationSchema = yup.object({
     name: yup.string().required("Name must be filled").max(50),
     description: yup.string().required("Description must be filled").max(200),
 });
 
+const customerTableHead = [
+    "Id",
+    "Name",
+    "Description",
+    "Created Day",
+    "Updated Day",
+  ];
+
 function Categories() {
+    const [data, setData] = useState(null);
+    const [open, setOpen] = useState(false);
 
     const {
         register,
@@ -58,23 +70,86 @@ function Categories() {
 
     const [post, setPost] = React.useState(null);
 
-    React.useEffect(() => {
-        const fetchData = async () => {
-            try {
-                const apiRes = await getCategory();
-                console.log(">>", apiRes)
-                await setPost(apiRes);
-            } catch (error) {
-                console.log("Fetch failed", error.message);
-            }
+    const fetchData = async () => {
+        try {
+            const apiRes = await getCategory();
+            return apiRes.data.data;
+        } catch (error) {
+            console.log("Fetch failed", error.message);
         }
-        fetchData();
+    }
 
+    React.useEffect( async () => {
+       const getData = await fetchData();
+       await setData(getData);
     }, []);
+    
+    // async function hello() { 
+    //     const dataTest = await fetchData();
+    //     console.log(dataTest.data.data);
+    //     const getData = dataTest.data.data;
+    //     return getData;
+    // };
 
+    // React.useEffect(() => {
+    //     hello();
+    //  }, []);
+ 
+    
+    
+    
+    const searchByNameExample = (searchParam) => {
+        if (searchParam !== "") {
+        const filtering = data.filter((item) => item.name.includes(searchParam));
+        console.log(searchParam);
+        console.log(filtering);
+        setData(filtering);
+        } else {
+        setData(data);
+        }
+    };
+        
+    const renderTableHead = (item, index) => (
+        <th key={index} class="p-2 whitespace-nowrap">
+          <div className="font-semibold text-left">{item}</div>
+        </th>
+      );
+    
+    const renderTableBody = (item, index) => (
+        <tr key={index}>
+        <td className="p-2 whitespace-nowrap">
+            <div className="text-left">{item.id}</div>
+        </td>
+        <td className="p-2 whitespace-nowrap">
+            <div className="text-left">{item.name}</div>
+        </td>
+        <td className="p-2 whitespace-nowrap">
+            <div className="text-left">{item.description}</div>
+        </td>
+        {/* <td className="p-2 whitespace-nowrap">
+            <div className="text-left">{item.cr}</div>
+        </td> */}
+    
+        </tr>
+    );
+
+
+
+    
+
+        
     return (
         <>
             <div className="w-2/6 flex justify-center mx-auto my-20">
+                <Table
+                    search={searchByNameExample}
+                    limit={10}
+                    tableHead={customerTableHead}
+                    tableData={data}
+                    renderData={renderTableBody}
+                    renderHead={renderTableHead}
+                    tableTitle={"Test Table"}
+                />
                 <Form
                     title="Create Category"
                 >
@@ -123,6 +198,8 @@ function Categories() {
                         title="Create"
                     />
                 </Form>
+
+                
                 
             </div>
         </>
