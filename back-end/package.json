@@ -32,7 +32,8 @@
     "testEnvironment": "node",
     "coveragePathIgnorePatterns": [
       "/node_modules/"
-    ]
+    ],
+    "testTimeout": 50000
   },
   "devDependencies": {
     "@types/jest": "^27.4.0",

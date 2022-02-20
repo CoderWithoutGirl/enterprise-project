@@ -1,0 +1,49 @@
+version: "3.3"
+
+services:
+  mongo:
+    container_name: mongo
+    image: mongo:latest
+    volumes:
+      - .docker/data/db:/data/db
+    ports:
+      - 27017:27017
+  redis:
+    image: redis:latest
+    container_name: redis
+    environment:
+      - ALLOW_EMPTY_PASSWORD=yes
+    volumes:
+    - .docker/data/redis:/data
+    ports:
+      - 6379:6379
+  redis-commander:
+    container_name: redis-commander
+    image: rediscommander/redis-commander
+    restart: always
+    environment:
+      - REDIS_HOSTS=local:redis:6379
+    ports:
+      - "8081:8081"
+  server:
+    container_name: server
+    restart: always
+    build:
+      dockerfile: Dockerfile
+      context: ./back-end
+    environment:
+      - PORT=8080
+      - DB_URL=mongodb://mongo:27017/enterprise-project
+      - USER='user'
+      - ADMIN='admin'
+      - ENCRYPT_KEY='enterprise-web-development-v1-key'
+      - SECRET_KEY='enterprise-web-development-v1-jwt-secret-key'
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - SMTP_USER=coderwithourgirl@gmail.com
+      - SMTP_PASS=Password@123
+    ports:
+      - "8080:80"
+    depends_on:
+      - mongo
+      - redis
