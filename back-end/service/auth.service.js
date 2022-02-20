@@ -64,15 +64,34 @@ const refreshJwtToken = async (token) => {
 };
 
 const register = async (registerAccount) => {
-  const { username } = registerAccount;
+  const { username, password , confirmPassword } = registerAccount;
   const checkAccountExistedInDb = await User.findOne({ username });
   if (checkAccountExistedInDb) {
     throw new Error("Account already exists");
     return;
-  } else {
-    const createAccount = new User({ ...registerAccount });
-    await createAccount.save();
-    return createAccount;
+  }
+  else if (password !== confirmPassword) {
+    throw new Error("Password and confirm password do not match");
+    return;
+  }
+  else {
+    try{
+      const createAccount = new User({ ...registerAccount, email: username, roles: process.env.STAFF });
+      await createAccount.save();
+      return createAccount;
+    }
+    catch(error){
+      if (error.name === "ValidationError") {
+        let errors = {};
+  
+        Object.keys(error.errors).forEach((key) => {
+          errors[key] = error.errors[key].message;
+        });
+        console.log(errors);
+  
+        throw new Error(errors);
+      }
+    }
   }
 };
 
