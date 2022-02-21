@@ -9,6 +9,7 @@ import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { login } from "../apiServices";
 import SelectOption from "../components/SelectOption";
+import DateTimePicker from "../components/DateTimePicker";
 const customerTableHead = [
   "Id",
   "Name",
@@ -246,6 +247,12 @@ const loginFormValidationSchema = yup.object({
 const TestScreen = () => {
   const [data, setData] = useState(testData);
   const [open, setOpen] = useState(false);
+  const [date, setDate] = useState(new Date());
+
+  const handleChange = (e) => {
+    console.log(e.target.value);
+    setDate(prev => e.target.value);
+  }
 
   const {
     register,
@@ -335,6 +342,7 @@ const TestScreen = () => {
               placeholder="Type: Password"
             />
             <SelectOption onChange={handleSelected} listData={data} defaultValue={selectedValue} />
+            <DateTimePicker defaultValue={date} onChange={handleChange} />
             <div className="w-3/5 flex flex-wrap justify-between items-center">
               <Button
                 type="primary"
