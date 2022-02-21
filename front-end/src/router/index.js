@@ -9,7 +9,9 @@ import TestScreen from "../screens/test";
 import Departments from "../screens/departments";
 import Categories from "../screens/categories";
 import UserPage from "../screens/user";
-
+import RegisterPage from "../screens/register";
+import ErrorPage from '../screens/error'
+import { roles } from "../constants/role";
 
 const AppRouter = () => {
   return (
@@ -32,14 +34,6 @@ const AppRouter = () => {
           }
         />
         <Route
-          path="/private"
-          element={
-            <PrivateRoute>
-              <HomePage />
-            </PrivateRoute>
-          }
-        />
-        <Route
           path="/login"
           element={
             <UnauthorizeRoute>
@@ -50,9 +44,9 @@ const AppRouter = () => {
         <Route
           path="/department"
           element={
-            <UnauthorizeRoute>
+            <PrivateRoute>
               <Departments />
-            </UnauthorizeRoute>
+            </PrivateRoute>
           }
         />
         <Route
@@ -66,15 +60,30 @@ const AppRouter = () => {
         <Route
             path="/user"
             element={
-              <ApplicationBaseLayout>
+              <PrivateRoute allowRoles={[roles.QA_MANAGER, roles.ADMIN]}>
                 <UserPage />
+              </PrivateRoute>
+            }
+          />
+        <Route
+            path="*"
+            element={
+              <ApplicationBaseLayout>
+                <ErrorPage />
               </ApplicationBaseLayout>
             }
           />
-      </Routes>
-    </BrowserRouter>
-  );
-
+          <Route
+            path="/register"
+            element={
+              <ApplicationBaseLayout>
+                <RegisterPage />
+              </ApplicationBaseLayout>
+            }
+          />
+        </Routes>
+      </BrowserRouter>
+    );
 }
 
 export default AppRouter;

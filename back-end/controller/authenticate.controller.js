@@ -16,6 +16,7 @@ const authenticateControler = {
     },
     register: async (req, res) => {
         const registerAccount = req.body;
+        console.log(registerAccount);
         try {
             const createAccount = await register(registerAccount);
             res.status(201).json({

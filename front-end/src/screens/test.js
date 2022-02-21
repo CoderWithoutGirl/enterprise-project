@@ -8,6 +8,7 @@ import { useForm } from "react-hook-form";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { login } from "../apiServices";
+import SelectOption from "../components/SelectOption";
 const customerTableHead = [
   "Id",
   "Name",
@@ -253,6 +254,8 @@ const TestScreen = () => {
     getValues,
   } = useForm();
 
+  const [selectedValue, setSelectedValue] = useState(data[0].name);
+
   const submitLoginForm = async (formData) => {
     console.log(formData);
     const { status, data } = await login(formData);
@@ -269,6 +272,12 @@ const TestScreen = () => {
       setData(testData);
     }
   };
+
+  const handleSelected = (e) => {
+    e.preventDefault();
+    setSelectedValue(prev => e.target.value);
+    console.log(selectedValue);
+  }
 
   const renderTableHead = (item, index) => (
     <th key={index} class="p-2 whitespace-nowrap">
@@ -312,43 +321,32 @@ const TestScreen = () => {
         renderData={renderTableBody}
         renderHead={renderTableHead}
         tableTitle={"Test Table"}
+        createButtonHandler={() => setOpen(true)}
       />
-      <Modal open={open} setOpen={setOpen} title="Test Modal">
-        <div className="w-full flex justify-center mx-auto">
+      <Modal open={open} setOpen={setOpen}>
+        <div className="w-full">
           <Form title="Test Form">
-            <InputField type="text" placeholder="Type: Text" />
-            <InputField type="password" placeholder="Type: Password" />
-            <InputField type="email" placeholder="Type: Email" />
+            <InputField
+              type="text"
+              placeholder="Type: Text"
+            />
+            <InputField
+              type="password"
+              placeholder="Type: Password"
+            />
+            <SelectOption onChange={handleSelected} listData={data} defaultValue={selectedValue} />
             <div className="w-3/5 flex flex-wrap justify-between items-center">
-              <Button type="primary" title="Login" />
+              <Button
+                type="primary"
+                title="Login"
+                role="submit"
+                onClick={handleSubmit(submitLoginForm)}
+              />
               <Button type="secondary" title="Register" />
             </div>
           </Form>
         </div>
       </Modal>
-      <div className="w-2/6 flex justify-center mx-auto my-20">
-        <Form title="Test Form">
-          <InputField
-            type="text"
-            placeholder="Type: Text"
-            {...register("username")}
-          />
-          <InputField
-            type="password"
-            placeholder="Type: Password"
-            {...register("password")}
-          />
-          <div className="w-2/5 flex flex-wrap justify-between items-center">
-            <Button
-              type="primary"
-              title="Login"
-              role="submit"
-              onClick={handleSubmit(submitLoginForm)}
-            />
-            <Button type="secondary" title="Register" />
-          </div>
-        </Form>
-      </div>
     </div>
   );
 };
