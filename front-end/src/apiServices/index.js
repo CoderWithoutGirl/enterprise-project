@@ -26,7 +26,7 @@ export const tokenRequestInterceptor = async (apiCall, refreshToken) => {
 export const login = (formData) =>
   apiInstance.post("/auth/login", { ...formData });
 export const register = (formData) =>
-  apiInstance.post("/ath/register", { ...formData });
+  apiInstance.post("/auth/register", { ...formData });
 
 export const refreshToken = (refreshToken) =>
   apiInstance.post("/auth/refresh-token", { refreshToken });

@@ -1,16 +1,16 @@
 import React, {useState, useEffect} from 'react';
 import {connect} from 'react-redux';
-import Button from "../components/button";
-import Form from "../components/form";
-import InputField from "../components/inputField";
-import Table from "../components/table";
-import { useNavigate } from 'react-router-dom';
+import Button from "../../components/button";
+import Table from "../../components/table";
 import {
   tokenRequestInterceptor,
   getAllUser,
   searchUserByUsername,
-} from "../apiServices/";
-import {getNewToken} from '../store/actions/authenticateAction'
+} from "../../apiServices";
+import {getNewToken} from '../../store/actions/authenticateAction';
+import Modal from "../../components/modal";
+import RegisterPage from "./register";
+
 const userTableHead = [
   "Fullname",
   "Username",
@@ -25,6 +25,7 @@ const userTableHead = [
 const UserPage = ({getNewTokenRequest, token}) =>{
 
     const [users, setUsers] = useState([]);
+    const [open, setOpen] = useState(false);
 
     const loadUser = async () => {
       const loadAllDataOfUser = async () => {
@@ -35,7 +36,7 @@ const UserPage = ({getNewTokenRequest, token}) =>{
      if(status === 200) {
         setUsers((prev) => data);
      }
-  }
+    }
 
     useEffect(()=>{
         loadUser();
@@ -100,7 +101,11 @@ const UserPage = ({getNewTokenRequest, token}) =>{
           renderHead={renderTableHead}
           tableTitle={"User Table"}
           search={hangleSearch}
+          createButtonHandler={() => setOpen(true)}
         />
+        <Modal open={open} setOpen={setOpen}>
+          <RegisterPage loadUser={loadUser}/>
+        </Modal>
       </div>
     );
   };
