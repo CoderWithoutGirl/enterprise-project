@@ -8,6 +8,7 @@ import { useForm } from "react-hook-form";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { login } from "../apiServices";
+import SelectOption from "../components/SelectOption";
 const customerTableHead = [
   "Id",
   "Name",
@@ -253,6 +254,8 @@ const TestScreen = () => {
     getValues,
   } = useForm();
 
+  const [selectedValue, setSelectedValue] = useState(data[0].name);
+
   const submitLoginForm = async (formData) => {
     console.log(formData);
     const { status, data } = await login(formData);
@@ -269,6 +272,12 @@ const TestScreen = () => {
       setData(testData);
     }
   };
+
+  const handleSelected = (e) => {
+    e.preventDefault();
+    setSelectedValue(prev => e.target.value);
+    console.log(selectedValue);
+  }
 
   const renderTableHead = (item, index) => (
     <th key={index} class="p-2 whitespace-nowrap">
@@ -325,6 +334,7 @@ const TestScreen = () => {
               type="password"
               placeholder="Type: Password"
             />
+            <SelectOption onChange={handleSelected} listData={data} defaultValue={selectedValue} />
             <div className="w-3/5 flex flex-wrap justify-between items-center">
               <Button
                 type="primary"
