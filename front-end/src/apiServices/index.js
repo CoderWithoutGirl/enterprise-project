@@ -30,6 +30,9 @@ export const createCategory = (formData) =>
   unauthorizeAPIInstance.post("/categories/", { ...formData });
 
 export const getCategory = async () => {
-  const result = await unauthorizeAPIInstance.get("/categories");
+  const result = await unauthorizeAPIInstance.get("/categories/");
   return result;
 }
+
+export const searchCategoryByName = (name) =>
+    unauthorizeAPIInstance.get(`categories?name=${name}`);
