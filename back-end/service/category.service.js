@@ -20,4 +20,14 @@ const createCategory = async (defaultCategory) => {
     }
 }
 
-module.exports = {createCategory};
+const getCategory= async () =>{
+    let result = await Category.find({});
+    return result;
+}
+
+const getCategoryByName = async (name) => {
+    const filterCategory = await Category.find({name: name}).sort([["createdAt", "asc"]]);
+    return filterCategory;
+}
+
+module.exports = {createCategory, getCategory, getCategoryByName};
