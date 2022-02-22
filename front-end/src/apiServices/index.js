@@ -13,8 +13,8 @@ apiInstance.interceptors.request.use((request) => {
 });
 
 export const tokenRequestInterceptor = async (apiCall, refreshToken) => {
-  const {status, data} = await apiCall();
-  if(status === 401) {
+  const { status, data } = await apiCall();
+  if (status === 401) {
     refreshToken();
     return await apiCall();
   }
@@ -31,22 +31,29 @@ export const register = (formData) =>
 export const refreshToken = (refreshToken) =>
   apiInstance.post("/auth/refresh-token", { refreshToken });
 
-export const createDepartment = (formData, token) =>
-  apiInstance.post("/departments/", { ...formData }, {headers: {Authorization: `Beaer ${token}`}});
-  
-export const getAllUser = (token) => apiInstance.get("/users/", {headers: {Authorization: `Bearer ${token}`}});
+
+export const getAllUser = (token) => apiInstance.get("/users/", { headers: { Authorization: `Bearer ${token}` } });
 
 export const searchUserByUsername = (username, token) =>
-  apiInstance.get(`users?username=${username}`, {headers: {Authorization: `Bearer ${token}`}});
+  apiInstance.get(`users?username=${username}`, { headers: { Authorization: `Bearer ${token}` } });
 
-<<<<<<< HEAD
-export const createDepartment = (formData) =>
-  unauthorizeAPIInstance.post("/departments/", { ...formData });
 
-export const getAllDepartment = () =>
-  unauthorizeAPIInstance.get("/departments/");
-=======
+export const createDepartment = (formData, token) =>
+  apiInstance.post("/departments/", { ...formData }, { headers: { Authorization: `Bearer ${token}` } });
+
+export const searchDepartByName = (name, token) =>
+  apiInstance.get(`departments?name=${name}`, { headers: { Authorization: `Bearer ${token}` } });
+
+export const getAllDepartment = (token) =>
+  apiInstance.get("/departments/", { headers: { Authorization: `Bearer ${token}` } });
+
+export const findDepartmentByID = (token, id) =>
+  apiInstance.get(`/departments/${id}`, { headers: { Authorization: `Bearer ${token}` } });
+
+
+export const updateDepartment = (formData, id, token) =>
+  apiInstance.put(`/departments/${id}`, { ...formData }, { headers: { Authorization: `Bearer ${token}` } });
+
 export const createCategory = (formData) => {
-  apiInstance.post('/categories/', {...formData});
+  apiInstance.post('/categories/', { ...formData });
 }
->>>>>>> 5d191c8d13663fc171f9981738b014f979a300d5
