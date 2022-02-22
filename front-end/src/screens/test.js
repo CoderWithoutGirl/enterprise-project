@@ -10,6 +10,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { login } from "../apiServices";
 import SelectOption from "../components/SelectOption";
 import DateTimePicker from "../components/DateTimePicker";
+import Password from "../components/password";
 const customerTableHead = [
   "Id",
   "Name",
@@ -337,8 +338,7 @@ const TestScreen = () => {
               type="text"
               placeholder="Type: Text"
             />
-            <InputField
-              type="password"
+            <Password
               placeholder="Type: Password"
             />
             <SelectOption onChange={handleSelected} listData={data} defaultValue={selectedValue} />
