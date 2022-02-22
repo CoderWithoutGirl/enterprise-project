@@ -74,9 +74,17 @@ const register = async (registerAccount) => {
     throw new Error("Password and confirm password do not match");
     return;
   }
+  else if (!String(password).match(/^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{8,})/)) {
+    throw new Error("Password not strong enough");
+    return;
+  }
+  else if (!String(username).match(/^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/)) {
+    throw new Error("Username not an email address");
+    return;
+  }
   else {
     try{
-      const createAccount = new User({ ...registerAccount, email: username, roles: process.env.STAFF });
+      const createAccount = new User({ ...registerAccount, email: username, role: process.env.STAFF });
       await createAccount.save();
       return createAccount;
     }

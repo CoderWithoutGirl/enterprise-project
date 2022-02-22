@@ -1,11 +1,11 @@
 import React, {useEffect} from 'react';
 
 import { useForm } from "react-hook-form";
-import {register as registerApi} from '../apiServices/index';
+import {register as registerApi} from '../../apiServices/index';
 import {toast} from 'react-toastify';
-import Form from '../components/form';
-import InputField from "../components/inputField";
-import Button from "../components/button";
+import Form from '../../components/form';
+import InputField from "../../components/inputField";
+import Button from "../../components/button";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 
@@ -28,7 +28,7 @@ const registerFormValidationSchema = yup.object({
     gender: yup.string().required("Gender must be filled")
 });
 
-const RegisterPage = () =>{
+const RegisterPage = ({loadUser}) =>{
 
     const {
         register,
@@ -77,6 +77,7 @@ const RegisterPage = () =>{
                 dateOfBirth:"", 
                 gender:"" 
             })
+            loadUser();
         }
         else {
             toast.warning(data.message);
@@ -85,7 +86,7 @@ const RegisterPage = () =>{
 
     return (
         <>
-            <div className="w-2/6 flex justify-center mx-auto my-20">
+            <div className="w-full">
                 <Form title="Create Account">
                     <InputField
                         type="text"

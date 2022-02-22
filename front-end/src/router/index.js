@@ -8,8 +8,7 @@ import LoginPage from "../screens/login";
 import TestScreen from "../screens/test";
 import Departments from "../screens/departments";
 import Categories from "../screens/categories";
-import UserPage from "../screens/user";
-import RegisterPage from "../screens/register";
+import UserPage from "../screens/users/";
 import ErrorPage from '../screens/error'
 import { roles } from "../constants/role";
 
@@ -70,14 +69,6 @@ const AppRouter = () => {
             element={
               <ApplicationBaseLayout>
                 <ErrorPage />
-              </ApplicationBaseLayout>
-            }
-          />
-          <Route
-            path="/register"
-            element={
-              <ApplicationBaseLayout>
-                <RegisterPage />
               </ApplicationBaseLayout>
             }
           />

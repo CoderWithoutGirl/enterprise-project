@@ -1,4 +1,4 @@
-const {getAllUser, getUserByUsername} = require ('../service/user.service.js');
+const {getAllUser, getUserByUsername, getUserById} = require ('../service/user.service.js');
 
 const userController = {
     getAllUser: async (req, res) => {
@@ -11,6 +11,11 @@ const userController = {
             const user = await getAllUser();
             res.status(200).json(user);
         }
+    },
+    getUserById: async (req, res) => {
+        const id = req.params.id;
+        const result = await getUserById(id);
+        res.status(200).json(result);
     }
 }
 
