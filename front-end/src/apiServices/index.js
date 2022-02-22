@@ -41,6 +41,13 @@ export const getSingleUser = (token, id) => apiInstance.get(`/users/${id}`, {hea
 export const searchUserByUsername = (username, token) =>
   apiInstance.get(`users?username=${username}`, {headers: {Authorization: `Bearer ${token}`}});
 
+export const getCategory = async () => {
+  const result = await apiInstance.get("/categories/");
+  return result;
+}
+
+export const searchCategoryByName = (name) =>
+    apiInstance.get(`categories?name=${name}`);
 export const createCategory = (formData) => {
   apiInstance.post('/categories/', {...formData});
 }
