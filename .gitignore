@@ -7,8 +7,8 @@ coverage/
 
 # production
 build/
-/statics/documents/
-/statics/excels/
+/statics/documents/*
+/statics/excels/*
 
 .docker/
 # misc
