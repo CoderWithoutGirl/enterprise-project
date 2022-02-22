@@ -2,7 +2,6 @@ import PropsType from 'prop-types';
 const DateTimePicker = ({defaultValue, onChange, maxDate, minDate, ...rest}) => {
     return (
         <input
-          datepicker
           type="date"
           className='border-1 rounded-lg w-full h-12 px-4'
           defaultValue={defaultValue}
