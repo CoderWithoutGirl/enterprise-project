@@ -11,6 +11,7 @@ import { login } from "../apiServices";
 import SelectOption from "../components/SelectOption";
 import DateTimePicker from "../components/DateTimePicker";
 import Password from "../components/password";
+import TextAreaField from "../components/text-area";
 const customerTableHead = [
   "Id",
   "Name",
@@ -341,6 +342,7 @@ const TestScreen = () => {
             <Password
               placeholder="Type: Password"
             />
+            <TextAreaField rows="3" placeholder="Description" onChange={e => console.log(e.target.value)} />
             <SelectOption onChange={handleSelected} listData={data} defaultValue={selectedValue} />
             <DateTimePicker defaultValue={date} onChange={handleChange} />
             <div className="w-3/5 flex flex-wrap justify-between items-center">
