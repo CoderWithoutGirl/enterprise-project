@@ -8,7 +8,7 @@ import LoginPage from "../screens/login";
 import TestScreen from "../screens/test";
 import Departments from "../screens/departments";
 import Categories from "../screens/categories";
-import UserPage from "../screens/user";
+import UserPage from "../screens/users/";
 import ErrorPage from '../screens/error'
 import { roles } from "../constants/role";
 
@@ -72,10 +72,9 @@ const AppRouter = () => {
               </ApplicationBaseLayout>
             }
           />
-      </Routes>
-    </BrowserRouter>
-  );
-
+        </Routes>
+      </BrowserRouter>
+    );
 }
 
 export default AppRouter;

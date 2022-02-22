@@ -26,13 +26,15 @@ export const tokenRequestInterceptor = async (apiCall, refreshToken) => {
 export const login = (formData) =>
   apiInstance.post("/auth/login", { ...formData });
 export const register = (formData) =>
-  apiInstance.post("/ath/register", { ...formData });
+  apiInstance.post("/auth/register", { ...formData });
 
 export const refreshToken = (refreshToken) =>
   apiInstance.post("/auth/refresh-token", { refreshToken });
 
 
 export const getAllUser = (token) => apiInstance.get("/users/", { headers: { Authorization: `Bearer ${token}` } });
+
+export const getSingleUser = (token, id) => apiInstance.get(`/users/${id}`, {headers: {Authorization: `Bearer ${token}`}});
 
 export const searchUserByUsername = (username, token) =>
   apiInstance.get(`users?username=${username}`, { headers: { Authorization: `Bearer ${token}` } });
@@ -54,6 +56,13 @@ export const findDepartmentByID = (token, id) =>
 export const updateDepartment = (formData, id, token) =>
   apiInstance.put(`/departments/${id}`, { ...formData }, { headers: { Authorization: `Bearer ${token}` } });
 
+export const getCategory = async () => {
+  const result = await apiInstance.get("/categories/");
+  return result;
+}
+
+export const searchCategoryByName = (name) =>
+    apiInstance.get(`categories?name=${name}`);
 export const createCategory = (formData) => {
-  apiInstance.post('/categories/', { ...formData });
+  apiInstance.post('/categories/', {...formData});
 }

@@ -64,15 +64,42 @@ const refreshJwtToken = async (token) => {
 };
 
 const register = async (registerAccount) => {
-  const { username } = registerAccount;
+  const { username, password , confirmPassword } = registerAccount;
   const checkAccountExistedInDb = await User.findOne({ username });
   if (checkAccountExistedInDb) {
     throw new Error("Account already exists");
     return;
-  } else {
-    const createAccount = new User({ ...registerAccount });
-    await createAccount.save();
-    return createAccount;
+  }
+  else if (password !== confirmPassword) {
+    throw new Error("Password and confirm password do not match");
+    return;
+  }
+  else if (!String(password).match(/^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{8,})/)) {
+    throw new Error("Password not strong enough");
+    return;
+  }
+  else if (!String(username).match(/^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/)) {
+    throw new Error("Username not an email address");
+    return;
+  }
+  else {
+    try{
+      const createAccount = new User({ ...registerAccount, email: username, role: process.env.STAFF });
+      await createAccount.save();
+      return createAccount;
+    }
+    catch(error){
+      if (error.name === "ValidationError") {
+        let errors = {};
+  
+        Object.keys(error.errors).forEach((key) => {
+          errors[key] = error.errors[key].message;
+        });
+        console.log(errors);
+  
+        throw new Error(errors);
+      }
+    }
   }
 };
 
