@@ -14,19 +14,7 @@ const expressSession = require("express-session");
 
 const rootRouter = require("./router/index");
 
-// (async () => {
-//   console.log(process.env.REDIS_HOST + process.env.REDIS_PORT);
-//   const client = createClient({
-//     url: `redis://${process.env.REDIS_HOST}:${process.env.REDIS_PORT}`,
-//   });
-
-//   await client.connect();
-//   console.log("connected");
-//   client.on("error", (err) => console.log("Redis Client Error", err));
-
-//   await client.set("test", "OK");
-//   const value = await client.get("key");
-// })();
+app.use("/statics", express.static("statics"));
 
 // Apply application middleware
 app.use(passport.initialize());
