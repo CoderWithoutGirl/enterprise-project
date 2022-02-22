@@ -6,10 +6,12 @@ import {
   tokenRequestInterceptor,
   getAllUser,
   searchUserByUsername,
+  getSingleUser
 } from "../../apiServices";
 import {getNewToken} from '../../store/actions/authenticateAction';
 import Modal from "../../components/modal";
 import RegisterPage from "./register";
+import DetailPage from "./detail";
 
 const userTableHead = [
   "Fullname",
@@ -25,7 +27,9 @@ const userTableHead = [
 const UserPage = ({getNewTokenRequest, token}) =>{
 
     const [users, setUsers] = useState([]);
+    const [user, setUser] = useState({});
     const [open, setOpen] = useState(false);
+    const [openDetail, setOpenDetail] = useState(false);
 
     const loadUser = async () => {
       const loadAllDataOfUser = async () => {
@@ -44,20 +48,43 @@ const UserPage = ({getNewTokenRequest, token}) =>{
 
     const hangleSearch = (keyword) => {
       if (keyword) {
-        searchUserByUsername(keyword)
-          .then((res) => {
-            setUsers(res.data);
-          })
-          .catch((err) => {
-            console.log(err);
-          });
+        const search = async () => {
+          const loadAllDataOfSearchUser = async () => {
+            const {data, status} = await searchUserByUsername(keyword,token)
+            return {data, status}
+          }
+          const {status, data} = await tokenRequestInterceptor(loadAllDataOfSearchUser, getNewTokenRequest);
+         if(status === 200) {
+            setUsers((prev) => data);
+         }
+        }
+        search();
       } else {
         loadUser();
       }
     };
 
+    const detailHandler = (e, id)=>{
+      e.preventDefault();
+      console.log(id);
+      const loadSingleUser = async () =>{
+        const loadSingleUser = async () => {
+          const {data, status} = await getSingleUser(token,id)
+          console.log(data);
+          return {data, status}
+        }
+        const {status, data} = await tokenRequestInterceptor(loadSingleUser, getNewTokenRequest);
+  
+        if(status === 200) {
+            setUser((prev) => data);
+        }
+      }
+      loadSingleUser();
+      setOpenDetail(prev => !prev);
+    }
+
     const renderTableHead = (item, index) => (
-      <th key={index} class="p-2 whitespace-nowrap">
+      <th key={index} className="p-2 whitespace-nowrap">
         <div className="font-semibold text-left">{item}</div>
       </th>
     );
@@ -84,7 +111,7 @@ const UserPage = ({getNewTokenRequest, token}) =>{
         </td>
         <td className="p-2 whitespace-nowrap">
           <div className="text-left flex justify-around">
-            <Button type="warning" title="Edit" />
+            <Button type="warning" title="Detail" onClick={(e) => detailHandler(e, item.id)} />
             <Button type="danger" title="Delete" />
           </div>
         </td>
@@ -105,6 +132,9 @@ const UserPage = ({getNewTokenRequest, token}) =>{
         />
         <Modal open={open} setOpen={setOpen}>
           <RegisterPage loadUser={loadUser}/>
+        </Modal>
+        <Modal open={openDetail} setOpen={setOpenDetail}>
+          <DetailPage user={user} />
         </Modal>
       </div>
     );

@@ -36,6 +36,8 @@ export const createDepartment = (formData, token) =>
   
 export const getAllUser = (token) => apiInstance.get("/users/", {headers: {Authorization: `Bearer ${token}`}});
 
+export const getSingleUser = (token, id) => apiInstance.get(`/users/${id}`, {headers: {Authorization: `Bearer ${token}`}});
+
 export const searchUserByUsername = (username, token) =>
   apiInstance.get(`users?username=${username}`, {headers: {Authorization: `Bearer ${token}`}});
 

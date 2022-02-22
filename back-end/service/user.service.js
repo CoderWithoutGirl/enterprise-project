@@ -11,4 +11,8 @@ const getUserByUsername = async (username) => {
     return await User.find({username: username}).sort([["createdAt", "asc"]]);
 }
 
-module.exports = {getAllUser, getUserByUsername};
+const getUserById = async (id) => {
+    return await User.findById(id);
+}
+
+module.exports = {getAllUser, getUserByUsername, getUserById};
