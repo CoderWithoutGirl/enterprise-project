@@ -3,7 +3,12 @@ dotenv.config();
 const db = require("../persistance/db");
 const mongoose = require("mongoose");
 const CategoryModel = require("../model/category")
-const { createCategory } = require('../service/category.service');
+const { 
+    createCategory, 
+    updateDepartment, 
+    searchDepartment, 
+    getAllDepartments ,
+} = require('../service/category.service');
 
 describe("POST /categories/", () => {
 
@@ -59,6 +64,18 @@ describe("POST /categories/", () => {
             expect(error).toBeTruthy();
         }
     });
+
+    afterAll(() => {
+        mongoose.disconnect();
+    })
+});
+
+describe("POST /categories/", () => {
+    beforeAll(() => {
+        db.connect("mongodb://localhost:27017/test-enterprise-project");
+    })
+
+    
 
     afterAll(() => {
         mongoose.disconnect();
