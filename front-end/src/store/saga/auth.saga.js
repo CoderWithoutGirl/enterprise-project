@@ -1,7 +1,7 @@
 import { takeLatest, put, call } from "redux-saga/effects";
 import { toast } from "react-toastify";
 
-import { login, refreshToken } from "../../apiServices";
+import { login, refreshToken, logout } from "../../apiServices";
 import {
   loginSuccess,
   getNewTokenSuccess,
@@ -9,7 +9,7 @@ import {
 } from "../actions/authenticateAction";
 import { authenticateConstant } from "../../constants";
 
-const { LOGIN, GET_NEW_TOKEN } = authenticateConstant;
+const { LOGIN, GET_NEW_TOKEN, LOGOUT } = authenticateConstant;
 
 function* postLoginForm(action) {
   const { payload } = action;
@@ -38,7 +38,16 @@ function* getNewToken() {
   }
 }
 
+function* revokeTokenAndLogout(action) {
+  const {payload} = action;
+  const {status} = yield call(logout, payload);
+  if(status === 200) { 
+    yield put(logoutSucess());
+  }
+}
+
 export default function* authenticateSaga() {
   yield takeLatest(LOGIN, postLoginForm);
   yield takeLatest(GET_NEW_TOKEN, getNewToken);
+  yield takeLatest(LOGOUT, revokeTokenAndLogout);
 }

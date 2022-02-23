@@ -4,7 +4,7 @@ import { Disclosure, Menu, Transition } from '@headlessui/react'
 import { MenuIcon, XIcon } from '@heroicons/react/outline'
 import { Fragment } from 'react';
 import { Link } from 'react-router-dom';
-import { logoutSucess } from '../store/actions/authenticateAction';
+import { logout } from '../store/actions/authenticateAction';
 
 const navigation = [
   { name: 'Dashboard', href: '/', current: true },
@@ -17,13 +17,13 @@ function classNames(...classes) {
   return classes.filter(Boolean).join(' ')
 }
 
-const Navbar = ({authenticateReducer, logout}) => {
+const Navbar = ({authenticateReducer, doLogout}) => {
 
   const {isAuthenticated} = authenticateReducer;
 
   const handleLogout = (e) => {
     e.preventDefault();
-    logout();
+    doLogout(authenticateReducer.refreshToken);
   }
 
   return (
@@ -189,7 +189,7 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    logout: () => dispatch(logoutSucess())
+    doLogout: (refreshToken) => dispatch(logout({refreshToken}))
   }
 }
 
