@@ -9,7 +9,7 @@ const UserSchema = mongoose.Schema({
     dateOfBirth: {type: Date, required: true},
     address: {type: String, required: false},
     age: {type: Number, required: true},
-    department: {type: Number, required: false},
+    department: {type: String, required: false},
     gender: {type: String, required: true, enum: ['male', 'female', 'unkown']},
     role: {type: String, required: true, enum: [process.env.QACOORDINATOR, process.env.ADMIN, process.env.QAMANAGER, process.env.STAFF]},
     createdAt: {type: Date, required: true, 

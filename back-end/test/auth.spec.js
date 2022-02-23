@@ -4,9 +4,14 @@ const db = require("../persistance/db");
 const mongoose = require("mongoose");
 const UserModel = require("../model/user")
 const { register } = require("../service/auth.service");
+const DepartmentModel = require("../model/department");
+const {
+    createDepartment,
+
+} = require('../service/department.service');
 
 describe("POST /auth/register", () => {
-  
+
     beforeAll(async () => {
         db.connect("mongodb://localhost:27017/test-enterprise-project");
     })
@@ -38,7 +43,7 @@ describe("POST /auth/register", () => {
                 "username": "testcorrect@test.com",
                 "fullname": "Nguyen van test"
             });
-        }catch(e) {
+        } catch (e) {
             expect(e).toBeTruthy();
         }
 
@@ -56,7 +61,7 @@ describe("POST /auth/register", () => {
                 "username": "testpassword@test.com",
                 "fullname": "Nguyen van test"
             });
-        }catch(e) {
+        } catch (e) {
             expect(e).toBeTruthy();
         }
 
@@ -74,7 +79,7 @@ describe("POST /auth/register", () => {
                 "username": "testpasswordstrong@test.com",
                 "fullname": "Nguyen van test"
             });
-        }catch(e) {
+        } catch (e) {
             expect(e).toBeTruthy();
         }
 
@@ -92,7 +97,7 @@ describe("POST /auth/register", () => {
                 "username": "testemail",
                 "fullname": "Nguyen van test"
             });
-        }catch(e) {
+        } catch (e) {
             expect(e).toBeTruthy();
         }
 
@@ -110,7 +115,7 @@ describe("POST /auth/register", () => {
                 "username": "testgender@test.com",
                 "fullname": "Nguyen van test"
             });
-        }catch(e) {
+        } catch (e) {
             expect(e).toBeTruthy();
         }
     });
@@ -127,7 +132,7 @@ describe("POST /auth/register", () => {
                 "username": "testdateofbirth@test.com",
                 "fullname": "Nguyen van test"
             });
-        }catch(e) {
+        } catch (e) {
             expect(e).toBeTruthy();
         }
     });
@@ -144,7 +149,7 @@ describe("POST /auth/register", () => {
                 "username": "testfullname@test.com",
                 "fullname": ""
             });
-        }catch(e) {
+        } catch (e) {
             expect(e).toBeTruthy();
         }
     });
@@ -161,10 +166,33 @@ describe("POST /auth/register", () => {
                 "username": "testage@test.com",
                 "fullname": "nguyen van test"
             });
-        }catch(e) {
+        } catch (e) {
             expect(e).toBeTruthy();
         }
     });
+
+    it("Test assign Staff's account to department", async () => {
+        try {
+            const newDep = await createDepartment(
+                {
+                    name: "Staff Affair8", description: "Manage student"
+                });
+            const newUser = await register({
+                "gender": "male",
+                "dateOfBirth": "20000-05-19T17:00:00.000+00:00",
+                "address": "test stress",
+                "age": 200,
+                "confirmPassword": "Test12345@",
+                "password": "Test12345@",
+                "username": "testage@test.com",
+                "fullname": "nguyen van test",
+                "department": "Staff Affair8"
+            });
+            expect(newUser.department).toEqual(newDep.name);
+        } catch (e) {
+            expect(e).toBeTruthy();
+        }
+    })
 
     afterAll(() => {
         mongoose.disconnect();
