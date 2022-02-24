@@ -3,6 +3,7 @@ import PrivateRoute from "./customRouters/privateRouter";
 import UnauthorizeRoute from "./customRouters/unauthorizeRouter";
 
 import ApplicationBaseLayout from "../layout/ApplicationBaseLayout";
+import DashBoardLayout from "../layout/DashboardLayout";
 import HomePage from "../screens/home";
 import LoginPage from "../screens/login";
 import TestScreen from "../screens/test";
@@ -19,9 +20,9 @@ const AppRouter = () => {
         <Route
           path="/"
           element={
-            <ApplicationBaseLayout>
+            <DashBoardLayout>
               <HomePage />
-            </ApplicationBaseLayout>
+            </DashBoardLayout>
           }
         />
         <Route

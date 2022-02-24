@@ -31,7 +31,6 @@ const generateRefreshToken = async (user, ipAddress) => {
 };
 
 const getRefreshToken = async (token) => {
-  console.log(token);
   const refreshTokenInDb = await RefreshToken.findOne({ token }).populate(
     "user"
   );
@@ -44,11 +43,8 @@ const getRefreshToken = async (token) => {
 
 
 //TODO: CHange Revoke token function
-const revokeToken = async (token, ipAddress) => {
-  const refreshTokenInDb = await getRefreshToken(token);
-  refreshTokenInDb.revoked = Date.now();
-  refreshTokenInDb.revokedByIp = ipAddress;
-  await refreshTokenInDb.save();
+const revokeToken = async (token) => {
+  await RefreshToken.findOneAndDelete({token})
 };
 
 const refreshJwtToken = async (token) => {
