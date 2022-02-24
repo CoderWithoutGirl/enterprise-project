@@ -14,6 +14,7 @@ const expressSession = require("express-session");
 
 const rootRouter = require("./router/index");
 
+global.__basedir = __dirname;
 app.use("/statics", express.static("statics"));
 
 // Apply application middleware
@@ -35,6 +36,7 @@ app.use(helmet());
 app.use(morgan("dev"));
 app.use(errorhandler());
 app.use(express.json({ urlEncoded: true }));
+app.use(express.urlencoded({ extended: false }));
 app.use(passport.session());
 
 db.connect(process.env.DB_URL);
