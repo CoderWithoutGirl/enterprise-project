@@ -1,4 +1,4 @@
-const {createCategory,getCategory,  getCategoryByName} = require('../service/category.service');
+const {createCategory,getCategory,  getCategoryByName, findIdCategory, updateCategory} = require('../service/category.service');
 
 const categoryController = {
     createCategory: async (req,res) => {
@@ -32,6 +32,15 @@ const categoryController = {
             res.status(200).json({
                 data: results
             })
+        }
+    },
+
+    getOneCategoryById: async (req, res) =>{
+        const { id } = req.params;
+        try {
+            res.status(200).json({data: await findIdCategory(id)})
+        } catch (error) {
+            res.status(400).json({ message: error.message, status: 400 });
         }
     },
 

@@ -51,9 +51,9 @@ const AppRouter = () => {
         <Route
           path="/category"
           element={
-            <UnauthorizeRoute>
+            <PrivateRoute>
               <Categories />
-            </UnauthorizeRoute>
+            </PrivateRoute>
           }
         />
         <Route
