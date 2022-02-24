@@ -30,6 +30,9 @@ export const refreshToken = (refreshToken) =>
 export const getAllUser = (token) =>
   apiInstance.get("/users/", { headers: { Authorization: `Bearer ${token}` } });
 
+export const logout = (refreshToken) => 
+  apiInstance.post('/auth/logout', {...refreshToken});
+
 export const getSingleUser = (token, id) =>
   apiInstance.get(`/users/${id}`, {
     headers: { Authorization: `Bearer ${token}` },
@@ -40,6 +43,7 @@ export const searchUserByUsername = (username, token) =>
     headers: { Authorization: `Bearer ${token}` },
   });
 
+//Department
 export const createDepartment = (formData, token) =>
   apiInstance.post(
     "/departments/",
@@ -69,18 +73,6 @@ export const updateDepartment = (formData, id, token) =>
     { headers: { Authorization: `Bearer ${token}` } }
   );
 
-export const getCategory = async () => {
-  const result = await apiInstance.get("/categories/");
-  return result;
-};
-
-export const searchCategoryByName = (name) =>
-  apiInstance.get(`categories?name=${name}`);
-
-export const createCategory = (formData) => {
-  apiInstance.post("/categories/", { ...formData });
-};
-
 export const uploadExcelCreateUser = (formData, token) =>
   apiInstance.post("/users/uploadexcel", formData, {
     headers: {
@@ -101,3 +93,19 @@ export const cancelUserExcel = (filename, token) =>
   apiInstance.get(`/users/cancel/${filename}`, {
     headers: { Authorization: `Bearer ${token}` },
   });
+
+//Category
+export const createCategory = (formData, token) =>
+  apiInstance.post("/categories/", { ...formData }, { headers: { Authorization: `Bearer ${token}` } });
+
+export const searchCategoryByName = (name, token) =>
+  apiInstance.get(`categories?name=${name}`, { headers: { Authorization: `Bearer ${token}` } });
+
+export const getCategory = (token) =>
+  apiInstance.get("/categories/", { headers: { Authorization: `Bearer ${token}` } });
+
+export const findCategoryByID = (token, id) =>
+  apiInstance.get(`/categories/${id}`, { headers: { Authorization: `Bearer ${token}` } });
+
+  export const updateCategory = (formData, id, token) =>
+  apiInstance.put(`/categories/${id}`, { ...formData }, { headers: { Authorization: `Bearer ${token}` } });

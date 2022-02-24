@@ -5,7 +5,7 @@ const SelectOption = ({ listData, defaultValue, ...rest }) => {
     <select {...rest} className="border-1 rounded-lg w-full h-12 px-4" value={defaultValue}>
       {listData.length &&
         listData.map((item, index) => (
-          <option value={item.name} key={index}>
+          <option disabled={defaultValue === item.name ? true : false} value={item.name} key={index}>
             {item.name}
           </option>
         ))}

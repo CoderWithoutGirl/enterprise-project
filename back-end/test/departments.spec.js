@@ -128,7 +128,6 @@ describe("PUT /departments/:id", () => {
             });
         await newDep5.save();
         const findDepart = await DepartmentModel.findOne({ name: "Staff Accademic"})
-        console.log(findDepart);
         try {
             await updateDepartment(findDepart._id, 'ManageAccademic');
         } catch (error) {

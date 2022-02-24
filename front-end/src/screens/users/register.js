@@ -6,8 +6,11 @@ import { toast } from "react-toastify";
 import Form from "../../components/form";
 import InputField from "../../components/inputField";
 import Button from "../../components/button";
+import SelectOption from "../../components/SelectOption";
+import { connect } from 'react-redux';
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
+import { getNewToken } from '../../store/actions/authenticateAction'
 
 const registerFormValidationSchema = yup.object({
   fullname: yup.string().required("Fullname must be filled"),
@@ -63,6 +66,33 @@ const RegisterPage = ({ loadUser }) => {
     setValue(e.target.name, e.target.value);
     setError(e.target.value, null);
   };
+
+    const [departments, setDepartments] = useState([]);
+
+    const loadDepartment = async () => {
+        const loadAllDataOfDepartment = async () => {
+            const { data, status } = await getAllDepartment(token);
+            return { data, status }
+        }
+        const { status, data } = await tokenRequestInterceptor(loadAllDataOfDepartment, getNewTokenRequest);
+        if (status === 200) {
+            setDepartments((prev) => data);
+            setValue('department', data[0].name);
+        }
+    }
+
+    useEffect(() => {
+        register("username")
+        register("password")
+        register("confirmPassword")
+        register("address")
+        register("age")
+        register("dateOfBirth")
+        register("gender")
+        register("fullname")
+        register("department")
+        loadDepartment()
+    }, [register, token])
 
   const onSubmit = async (formData) => {
     const { status, data } = await registerApi(formData);
@@ -180,7 +210,7 @@ const RegisterPage = ({ loadUser }) => {
             name="age"
             value={getValues("age")}
             onChange={onChange}
-          />
+8          />
           {errors.age?.message && (
             <div
               className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative"
