@@ -3,13 +3,25 @@ import Form from '../components/form';
 import InputField from "../components/inputField";
 import Button from "../components/button";
 import Table from "../components/table";
+import Modal from '../components/modal';
+import { connect } from 'react-redux';
 import { useForm } from "react-hook-form";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { createCategory,getCategory,searchCategoryByName } from '../apiServices';
+import {
+    createCategory,
+    getCategory,
+    searchCategoryByName,
+    updateCategory,
+    tokenRequestInterceptor,
+    findCategoryByID
+} from '../apiServices';
+
 import { toast } from 'react-toastify';
 import { ErrorMessage } from '@hookform/error-message';
-import { PencilAltIcon, TrashIcon} from "@heroicons/react/outline";
+// import { PencilAltIcon, TrashIcon} from "@heroicons/react/outline";
+
+import { getNewToken } from '../store/actions/authenticateAction'
 
 const categoryFormValidationSchema = yup.object({
     name: yup.string().required("Name must be filled").max(50),
@@ -23,12 +35,30 @@ const customerTableHead = [
     "Created At",
     "Updated At",
     "Actions",
-  ];
+];
 
-function Categories() {
-    const [data, setData] = useState([]);
+function Categories({ getNewTokenRequest, token }) {
+    const [categories, setCategories] = useState([]);
     const [open, setOpen] = useState(false);
+    const [editOpen, setEditOpen] = useState(false);
+    const [editCategory, setEditCategory] = useState({});
 
+
+    const fetchData = async () => {
+        const loadAllDataOfCategory = async () => {
+            const { data, status } = await getCategory(token);
+            return { data, status }
+        }
+        const { status, data } = await tokenRequestInterceptor(loadAllDataOfCategory, getNewTokenRequest);
+        if (status === 200) {
+            setCategories((prev) => data.data);
+        }
+    }
+
+    console.log(categories);
+    useEffect(() => {
+        fetchData();
+    }, [token]);
 
     const {
         register,
@@ -48,186 +78,253 @@ function Categories() {
         register("description")
     }, [register])
 
+
+
     const onChange = (e) => {
         setValue(e.target.name, e.target.value)
         setError(e.target.value, null);
     }
 
+    const toggle = (e) => {
+        e.preventDefault();
+        setOpen(prev => !prev)
+    }
 
-    const onSubmit = async (formData) => {
-        console.log(formData);
-        const { status, data } = await createCategory(formData);
-        if (status === 400) {
-            toast.error(data.message)
+    const onSubmit = async (formdata) => {
+        const createDataofCategory = async () => {
+            const { status, data } = await createCategory(formdata, token);
+            return { data, status }
         }
-        else if (status === 201) {
-            toast.success(data.message)
+        const { status, data } = await tokenRequestInterceptor(createDataofCategory, getNewTokenRequest);
+        if (status === 201) {
+            toast.success("Create success")
             reset({ name: "", description: "" })
+            setOpen(prev => !prev)
+            fetchData();
         }
         else {
-            toast.warning(data.message);
+            toast.error(data.message)
         }
     };
 
-    const [post, setPost] = React.useState(null);
+    const update = async (e) => {
+        e.preventDefault();
+        const updateCate = async () => {
+            const { data, status } = await updateCategory(editCategory, editCategory._id, token);
+            console.log(data);
+            return { data, status }
+        }
+        const { status, data } = await tokenRequestInterceptor(updateCate, getNewTokenRequest);
+        console.log(data)
 
-    const fetchData = async () => {
-        try {
-            const {data, status} = await getCategory();
-            setData(prev => data.data);
-            console.log(data.data)
-        } catch (error) {
-            console.log("Fetch failed", error.message);
+        if (status === 200) {
+            toast.success(data.message)
+            setEditCategory((prev) => data);
+            fetchData();
+            setEditOpen(prev => !prev);
         }
     }
 
-    React.useEffect(() => {
-       fetchData();
-    }, []);
-    
-    // async function hello() { 
-    //     const dataTest = await fetchData();
-    //     console.log(dataTest.data.data);
-    //     const getData = dataTest.data.data;
-    //     return getData;
-    // };
+    const [post, setPost] = React.useState(null);
 
-    // React.useEffect(() => {
-    //     hello();
-    //  }, []);
- 
-    
-    
-    
-    // const searchByName= (searchParam) => {
-    //     if (searchParam !== "") {
-    //         const filtering = data.filter((item) => item.name.includes(searchParam));
-    //         console.log(searchParam);
-    //         console.log(filtering);
-    //         setData(filtering);
-    //     } 
-    //     else {
-    //         setData(data);
-    //     }
-    // };
+    const editHandler = (e, _id) => {
+        e.preventDefault();
+        console.log(_id)
+        const getSingleCategory = async () => {
+            const loadAllDataOfCategory = async () => {
+                const { data, status } = await findCategoryByID(token, _id);
+                return { data, status }
+            }
+            const { status, data } = await tokenRequestInterceptor(loadAllDataOfCategory, getNewTokenRequest);
+
+            if (status === 200) {
+                setEditCategory((prev) => data.data);
+            }
+        }
+        getSingleCategory();
+        setEditOpen(prev => !prev)
+    }
+
+    const onEditChange = (e) => {
+        setEditCategory(prev => ({ ...prev, [e.target.name]: e.target.value }))
+    }
 
     const handleSearch = (keyword) => {
-        if(keyword){
-            searchCategoryByName(keyword).then((res)=>{
-            setData(res.data);
-          }).catch((err)=>{
-            console.log(err);
-          });
+        if (keyword) {
+            searchCategoryByName(keyword).then((res) => {
+                setCategories(res.data);
+            }).catch((err) => {
+                console.log(err);
+            });
         }
-        else{
-          fetchData();
+        else {
+            fetchData();
         }
-      }
-        
+    }
+
     const renderTableHead = (item, index) => (
         <th key={index} class="p-2 whitespace-nowrap">
-          <div className="font-semibold text-left">{item}</div>
+            <div className="font-semibold text-left">{item}</div>
         </th>
-      );
-    
+    );
+
     const renderTableBody = (item, index) => (
         <tr key={index}>
-        <td className="p-2 whitespace-nowrap">
-            <div className="text-left">{(index+1)}</div>
-        </td>
-        <td className="p-2 whitespace-nowrap">
-            <div className="text-left">{item.name}</div>
-        </td>
-        <td className="p-2 whitespace-nowrap">
-            <div className="text-left">{item.description}</div>
-        </td>
-        <td className="p-2 whitespace-nowrap">
-            <div className="text-left">{item.createdAt.slice(0,10)}</div>
-        </td>
-        <td className="p-2 whitespace-nowrap">
-            <div className="text-left">{item.updatedAt.slice(0,10)}</div>
-        </td>
-        <td className="p-2 whitespace-nowrap">
-            <div className="text-left">
-                <Button type="primary"  title={<PencilAltIcon/>} />
-                <Button type="danger"  title={<TrashIcon/>} />
-            </div>
-        </td>
+            <td className="p-2 whitespace-nowrap">
+                <div className="text-left">{(index + 1)}</div>
+            </td>
+            <td className="p-2 whitespace-nowrap">
+                <div className="text-left">{item.name}</div>
+            </td>
+            <td className="p-2 whitespace-nowrap">
+                <div className="text-left">{item.description}</div>
+            </td>
+            <td className="p-2 whitespace-nowrap">
+                <div className="text-left">{item.createdAt.slice(0, 10)}</div>
+            </td>
+            <td className="p-2 whitespace-nowrap">
+                <div className="text-left">{item.updatedAt.slice(0, 10)}</div>
+            </td>
+            <td className="p-2 whitespace-nowrap">
+                <div className="text-left">
+                    {/* <Button type="primary"  title={<PencilAltIcon/>} />
+                <Button type="danger"  title={<TrashIcon/>} /> */}
+                    <Button
+                        type="primary"
+                        title="Edit"
+                        onClick={e => editHandler(e, item._id)}
+                    />
+                    <Button
+                        type="danger"
+                        title="Delete"
+                    />
+                </div>
+            </td>
         </tr>
     );
 
 
-
-    
-
-        
     return (
         <>
-        <div className="w-full my-20">
-            <Table
-                limit={10}
-                tableHead={customerTableHead}
-                tableData={data}
-                renderData={renderTableBody}
-                renderHead={renderTableHead}
-                tableTitle={"List Category"}
-                search={handleSearch}
-            />
-            <div className="w-2/6 flex justify-center mx-auto my-20">
-                <Form
-                    title="Create Category"
-                >
-                    <InputField
-                        type="text"
-                        placeholder="Name"
-                        name="name"
-                        value={getValues('name')}
-                        onChange={onChange}
-                    />
-                    <ErrorMessage
-                        errors={errors}
-                        name="name"
-                        render={({ message }) => <div
-                        className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative"
-                        role="alert"
-                    >
-                        <span className="block sm:inline">
-                            {message}
-                        </span>
-                    </div>}
-                    />
-                    <InputField
-                        type="text"
-                        placeholder="Description"
-                        name="description"
-                        value={getValues('description')}
-                        onChange={onChange}
-                    />
-                    <ErrorMessage
-                        errors={errors}
-                        name="description"
-                        render={({ message }) => <div
-                        className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative"
-                        role="alert"
-                    >
-                        <span className="block sm:inline">
-                            {message}
-                        </span>
-                    </div>}
-                    />
-                    <Button
-                        onClick={handleSubmit(onSubmit)}
-                        role="submit"
-                        type="primary"
-                        title="Create"
-                    />
-                </Form>
+            <div className="w-full my-20">
+                <Table
+                    limit={10}
+                    tableHead={customerTableHead}
+                    tableData={categories}
+                    renderData={renderTableBody}
+                    renderHead={renderTableHead}
+                    tableTitle={"List Category"}
+                    createButtonHandler={() => setOpen(true)}
+                    search={handleSearch}
+                />
 
-                
+                <Modal open={editOpen} setOpen={setEditOpen}>
+                    <div className="w-full">
+                        <Form
+                            title="Update Category"
+                        >
+                            <InputField
+                                type="text"
+                                placeholder="Description"
+                                name="description"
+                                value={editCategory?.description}
+                                onChange={onEditChange}
+
+                            />
+                            <div className="w-3/5 flex flex-wrap justify-between items-center">
+                                <Button
+                                    onClick={update}
+                                    role="submit"
+                                    type="primary"
+                                    title="Update"
+                                />
+                                <Button
+                                    type="danger"
+                                    title="Cancel"
+                                    onClick={editHandler}
+                                />
+                            </div>
+                        </Form>
+                    </div>
+                </Modal>
+
+
+                <Modal open={open} setOpen={setOpen}>
+                    <div className="w-full">
+                        <Form
+                            title="Create Category"
+                        >
+                            <InputField
+                                type="text"
+                                placeholder="Name"
+                                name="name"
+                                value={getValues('name')}
+                                onChange={onChange}
+                            />
+                            <ErrorMessage
+                                errors={errors}
+                                name="name"
+                                render={({ message }) => <div
+                                    className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative"
+                                    role="alert"
+                                >
+                                    <span className="block sm:inline">
+                                        {message}
+                                    </span>
+                                </div>}
+                            />
+                            <InputField
+                                type="text"
+                                placeholder="Description"
+                                name="description"
+                                value={getValues('description')}
+                                onChange={onChange}
+                            />
+                            <ErrorMessage
+                                errors={errors}
+                                name="description"
+                                render={({ message }) => <div
+                                    className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative"
+                                    role="alert"
+                                >
+                                    <span className="block sm:inline">
+                                        {message}
+                                    </span>
+                                </div>}
+                            />
+                            <div className="w-3/5 flex flex-wrap justify-between items-center">
+                                <Button
+                                    onClick={handleSubmit(onSubmit)}
+                                    role="submit"
+                                    type="primary"
+                                    title="Create"
+                                />
+                                <Button
+                                    type="danger"
+                                    title="Cancel"
+                                    onClick={toggle}
+                                />
+                            </div>
+
+                        </Form>
+                    </div>
+                </Modal>
+
             </div>
-        </div>
         </>
     )
 }
 
-export default Categories;
+const mapStateToProps = (state) => {
+    return {
+        token: state.authenticateReducer.token
+    }
+}
+
+const mapDispatchToProps = (dispatch) => {
+    return {
+        getNewTokenRequest: () => dispatch(getNewToken())
+    }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(Categories);

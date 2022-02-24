@@ -5,16 +5,16 @@ const mongoose = require("mongoose");
 const CategoryModel = require("../model/category")
 const { 
     createCategory, 
-    updateDepartment, 
-    searchDepartment, 
-    getAllDepartments ,
+    updateCategory,
+    getCategory,
 } = require('../service/category.service');
 
-describe("POST /categories/", () => {
 
-    beforeAll(() => {
-        db.connect("mongodb://localhost:27017/test-enterprise-project");
-    })
+beforeAll(() => {
+    db.connect("mongodb://localhost:27017/test-enterprise-project");
+})
+
+describe("POST /categories/", () => {
 
     it("Test create Category with correct value", async () => {
         const newCategory = await createCategory(
@@ -29,7 +29,6 @@ describe("POST /categories/", () => {
         const checkCategoryExistedInDb = await CategoryModel.findOne({ name: "Blockchain" });
         expect(checkCategoryExistedInDb).toBeTruthy();
     });
-
 
     it("Test create Category with name of category is null", async () => {
         try {
@@ -65,19 +64,36 @@ describe("POST /categories/", () => {
         }
     });
 
-    afterAll(() => {
-        mongoose.disconnect();
+});
+
+describe("GET /categories/", () => {
+
+    it("Test should return all category from database", async () => {
+        const catogoryList = await getCategory()
+        expect(catogoryList).toBeTruthy();
+    });
+
+});
+
+describe("PUT /categories/:id", () => {
+    it("Test should return update category description", async () => {
+        const newCategory = new CategoryModel(
+            {
+                name: "AI", description: "No Problem"
+            });
+        await newCategory.save();
+        const findCategory = await CategoryModel.findOne({ name: "AI"})
+        console.log(findCategory);
+        try {
+            await updateCategory(findCategory._id, 'Very Hard');
+        } catch (error) {
+            expect(error).toBeFalsy();
+        }
+
     })
 });
 
-describe("POST /categories/", () => {
-    beforeAll(() => {
-        db.connect("mongodb://localhost:27017/test-enterprise-project");
-    })
 
-    
-
-    afterAll(() => {
-        mongoose.disconnect();
-    })
-});
+afterAll(() => {
+    mongoose.disconnect();
+})

@@ -1,4 +1,4 @@
-const {createCategory,getCategory,  getCategoryByName} = require('../service/category.service');
+const {createCategory,getCategory,  getCategoryByName, findIdCategory, updateCategory} = require('../service/category.service');
 
 const categoryController = {
     createCategory: async (req,res) => {
@@ -33,18 +33,27 @@ const categoryController = {
                 data: results
             })
         }
-        // try {
-        //     const results = await getCategory();
-        //     res.status(200).json({
-        //         data: results
-        //     })
-        // } catch (error) {
-        //     res.status(500).json({
-        //         message: error.message
-        //     });
-        //     next(error)
-        // }
-    }
+    },
+
+    getOneCategoryById: async (req, res) =>{
+        const { id } = req.params;
+        try {
+            res.status(200).json({data: await findIdCategory(id)})
+        } catch (error) {
+            res.status(400).json({ message: error.message, status: 400 });
+        }
+    },
+
+    updateCategory: async (req, res) =>{
+        const { id } = req.params;
+        const { description } = req.body;
+        try {
+            await updateCategory(id, description);
+            res.status(200).json({message: 'Update Category Successfully.'})
+        } catch (error) {
+            res.status(400).json({ message: error.message, status: 400 });
+        }
+    },
 
 
 }
