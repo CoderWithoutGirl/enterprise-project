@@ -1,34 +1,42 @@
-import React, {useEffect} from 'react';
+import React, { useEffect, useState } from 'react';
 
 import { useForm } from "react-hook-form";
-import {register as registerApi} from '../../apiServices/index';
-import {toast} from 'react-toastify';
+import {
+    register as registerApi,
+    getAllDepartment,
+    tokenRequestInterceptor,
+} from '../../apiServices/index';
+import { toast } from 'react-toastify';
 import Form from '../../components/form';
 import InputField from "../../components/inputField";
 import Button from "../../components/button";
+import SelectOption from "../../components/SelectOption";
+import { connect } from 'react-redux';
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
+import { getNewToken } from '../../store/actions/authenticateAction'
 
 const registerFormValidationSchema = yup.object({
-    fullname:yup.string().required("Fullname must be filled"),
+    fullname: yup.string().required("Fullname must be filled"),
     username: yup.string().email('Username be a valid email').max(255).required('Username is required'),
     password: yup.string()
-                .required('No password provided.') 
-                .min(8, 'Password is too short - should be 8 chars minimum.')
-                .matches(/[a-zA-Z]/, 'Password can only contain Latin letters.'),
+        .required('No password provided.')
+        .min(8, 'Password is too short - should be 8 chars minimum.')
+        .matches(/[a-zA-Z]/, 'Password can only contain Latin letters.'),
     confirmPassword: yup.string()
-                .oneOf([yup.ref('password'), null], 'Passwords must match'),
+        .oneOf([yup.ref('password'), null], 'Passwords must match'),
     age: yup
-    .number()
-    .required("Please supply your age")
-    .min(1, "You must be at least 1 years")
-    .max(100, "You must be at most 100 years"),
+        .number()
+        .required("Please supply your age")
+        .min(1, "You must be at least 1 years")
+        .max(100, "You must be at most 100 years"),
     address: yup.string().required("Address must be filled").max(500),
     dateOfBirth: yup.date().required("Date of Birth is required"),
-    gender: yup.string().required("Gender must be filled")
+    gender: yup.string().required("Gender must be filled"),
+    department: yup.string().required("Department must be selected")
 });
 
-const RegisterPage = ({loadUser}) =>{
+const RegisterPage = ({ loadUser, token, getNewTokenRequest }) => {
 
     const {
         register,
@@ -43,6 +51,21 @@ const RegisterPage = ({loadUser}) =>{
         resolver: yupResolver(registerFormValidationSchema),
     });
 
+
+    const [departments, setDepartments] = useState([]);
+
+    const loadDepartment = async () => {
+        const loadAllDataOfDepartment = async () => {
+            const { data, status } = await getAllDepartment(token);
+            return { data, status }
+        }
+        const { status, data } = await tokenRequestInterceptor(loadAllDataOfDepartment, getNewTokenRequest);
+        if (status === 200) {
+            setDepartments((prev) => data);
+            setValue('department', data[0].name);
+        }
+    }
+
     useEffect(() => {
         register("username")
         register("password")
@@ -52,12 +75,15 @@ const RegisterPage = ({loadUser}) =>{
         register("dateOfBirth")
         register("gender")
         register("fullname")
-    }, [register])
+        register("department")
+        loadDepartment()
+    }, [register, token])
 
     const onChange = (e) => {
         setValue(e.target.name, e.target.value)
         setError(e.target.value, null);
     }
+
 
     const onSubmit = async (formData) => {
         console.log(formData);
@@ -68,14 +94,14 @@ const RegisterPage = ({loadUser}) =>{
         }
         else if (status === 201) {
             toast.success(data.message)
-            reset({ 
-                name: "", 
-                password: "", 
-                confirmPassword:"", 
-                address:"",
-                age:"", 
-                dateOfBirth:"", 
-                gender:"" 
+            reset({
+                name: "",
+                password: "",
+                confirmPassword: "",
+                address: "",
+                age: "",
+                dateOfBirth: "",
+                gender: ""
             })
             loadUser();
         }
@@ -226,7 +252,14 @@ const RegisterPage = ({loadUser}) =>{
                             </span>
                         </div>
                     )}
-                    
+
+                    <SelectOption
+                        name="department"
+                        onChange={onChange}
+                        listData={departments}
+                        defaultValue={getValues('department')}
+                    />
+
                     <Button
                         onClick={handleSubmit(onSubmit)}
                         role="submit"
@@ -238,5 +271,17 @@ const RegisterPage = ({loadUser}) =>{
         </>
     );
 }
-  
-export default RegisterPage;
+
+const mapStateToProps = (state) => {
+    return {
+        token: state.authenticateReducer.token
+    }
+}
+
+const mapDispatchToProps = (dispatch) => {
+    return {
+        getNewTokenRequest: () => dispatch(getNewToken())
+    }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(RegisterPage);

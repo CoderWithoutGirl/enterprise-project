@@ -122,7 +122,7 @@ function Departments({ getNewTokenRequest, token }) {
 
         if (status === 200) {
             toast.success(data.message)
-            setEditDepartment((prev) => data);
+            setEditDepartment((prev) => {});
             loadDepartment();
             setEditOpen(prev => !prev);
         }

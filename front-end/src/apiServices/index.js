@@ -31,7 +31,9 @@ export const register = (formData) =>
 export const refreshToken = (refreshToken) =>
   apiInstance.post("/auth/refresh-token", { refreshToken });
 
-//User
+export const logout = (refreshToken) => 
+  apiInstance.post('/auth/logout', {...refreshToken});
+
 export const getAllUser = (token) => apiInstance.get("/users/", { headers: { Authorization: `Bearer ${token}` } });
 
 export const getSingleUser = (token, id) => apiInstance.get(`/users/${id}`, {headers: {Authorization: `Bearer ${token}`}});
