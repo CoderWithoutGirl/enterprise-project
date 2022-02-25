@@ -3,6 +3,8 @@ const userController = require("../controller/user.controller");
 const passport = require("passport");
 const { uploadExcel } = require("../middleware/mutler");
 const { authorize } = require("../middleware/authorization");
+
+userRouter.put('/:id',[passport.authenticate('jwt', {session: false}), authorize(process.env.ADMIN)], userController.assignStaff);
 userRouter.get(
   "/",
   [

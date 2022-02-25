@@ -5,6 +5,7 @@ const {
   readExcelData,
   createUserByExcel,
   deleteExcel,
+  assignStaff,
 } = require("../service/user.service.js");
 
 const userController = {
@@ -22,6 +23,16 @@ const userController = {
     const id = req.params.id;
     const result = await getUserById(id);
     res.status(200).json(result);
+  },
+  assignStaff: async (req, res) => {
+    const { role, department } = req.body;
+    const { id } = req.params;
+    try {
+      await assignStaff(role, department, id);
+      res.status(200).json({ message: "Assign Staff Account Successfully." });
+    } catch (error) {
+      res.status(400).json({ message: error.message, status: 400 });
+    }
   },
   createUserExcel: async (req, res) => {
     try {

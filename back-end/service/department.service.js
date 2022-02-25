@@ -23,8 +23,9 @@ const getAllDepartments = async () =>{
 }
 
 const searchDepartment = async (name) => {
-    const departmentFilter = await Department.find({name: name}).sort([["createdAt", "asc"]])
-    return departmentFilter;
+    const listDepartInDb = await Department.find().sort([["createdAt", "asc"]]);
+    const dataFiltering = listDepartInDb.filter((item) => item.name.includes(name));
+    return dataFiltering;
 }
 
 const findIdDepartment = async (id) =>{
