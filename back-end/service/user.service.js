@@ -15,4 +15,19 @@ const getUserById = async (id) => {
     return await User.findById(id);
 }
 
-module.exports = {getAllUser, getUserByUsername, getUserById};
+const assignStaff = async (role, department, id) =>{
+    const userInDb = await User.findById(id);
+    const allUserInDep = await User.find({department: department});
+    if(userInDb.role === role){ 
+        throw new Error('this user is already a QA coordinator')
+    }
+    else if(allUserInDep.filter(user => user.role === role).length >0) {
+        await User.findOneAndUpdate({department: department, role: role}, {role: process.env.STAFF});
+        await User.findByIdAndUpdate(id, {role: role});
+    }
+    else{
+        await User.findByIdAndUpdate(id, {role: role});
+    }
+}
+
+module.exports = {getAllUser, getUserByUsername, getUserById, assignStaff};

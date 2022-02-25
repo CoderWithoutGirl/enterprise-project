@@ -10,7 +10,7 @@ const {
 const passport = require('passport');
 const {authorize} = require('../middleware/authorization')
 
-departmentRouter.use([passport.authenticate('jwt', {session: false}), authorize(process.env.QAMANAGER)])
+departmentRouter.use([passport.authenticate('jwt', {session: false}), authorize([process.env.QAMANAGER, process.env.ADMIN])])
 departmentRouter.get('/',  getAllDepartments);
 departmentRouter.get('/:id',  getOneDepartmentById);
 departmentRouter.post('/', createDepartment);

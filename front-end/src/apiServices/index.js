@@ -34,11 +34,13 @@ export const refreshToken = (refreshToken) =>
 
 export const getAllUser = (token) => apiInstance.get("/users/", { headers: { Authorization: `Bearer ${token}` } });
 
-export const getSingleUser = (token, id) => apiInstance.get(`/users/${id}`, {headers: {Authorization: `Bearer ${token}`}});
+export const getSingleUser = (token, id) => apiInstance.get(`/users/${id}`, { headers: { Authorization: `Bearer ${token}` } });
 
 export const searchUserByUsername = (username, token) =>
   apiInstance.get(`users?username=${username}`, { headers: { Authorization: `Bearer ${token}` } });
 
+export const assignStaff = (formData, id, token) =>
+  apiInstance.put(`/users/${id}`, { ...formData }, { headers: { Authorization: `Bearer ${token}` } });
 
 export const createDepartment = (formData, token) =>
   apiInstance.post("/departments/", { ...formData }, { headers: { Authorization: `Bearer ${token}` } });
@@ -62,7 +64,7 @@ export const getCategory = async () => {
 }
 
 export const searchCategoryByName = (name) =>
-    apiInstance.get(`categories?name=${name}`);
+  apiInstance.get(`categories?name=${name}`);
 export const createCategory = (formData) => {
-  apiInstance.post('/categories/', {...formData});
+  apiInstance.post('/categories/', { ...formData });
 }
