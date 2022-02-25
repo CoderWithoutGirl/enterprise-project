@@ -30,4 +30,23 @@ const getCategoryByName = async (name) => {
     return filterCategory;
 }
 
-module.exports = {createCategory, getCategory, getCategoryByName};
+const findIdCategory = async (id) =>{
+    const categoryDb = await Category.findById(id);
+    if(!categoryDb){
+        throw new Error("Category does not exist");
+    }
+    return categoryDb;
+
+}
+
+const updateCategory = async(id, description) =>{
+    await Category.findByIdAndUpdate(id , {description: description});
+}
+
+module.exports = {
+    createCategory, 
+    getCategory, 
+    getCategoryByName,
+    findIdCategory,
+    updateCategory,
+};

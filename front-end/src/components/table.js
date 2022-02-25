@@ -12,7 +12,8 @@ const Table = ({
   renderHead,
   tableTitle,
   search,
-  createButtonHandler
+  createButtonHandler,
+  importButtonHandler,
 }) => {
   let pages = 1;
   let range = [];
@@ -23,7 +24,9 @@ const Table = ({
   const [currPage, setCurrPage] = useState(0);
 
   useEffect(() => {
-    setDataShow(limit && tableData ? tableData.slice(0, Number(limit)) : tableData)
+    setDataShow(
+      limit && tableData ? tableData.slice(0, Number(limit)) : tableData
+    );
   }, [limit, tableData]);
 
   if (limit !== undefined) {
@@ -82,7 +85,18 @@ const Table = ({
                 onChange={(e) => searchWithDebounce(e.target.value)}
                 className="w-1/5 rounded-md mt-1 border-gray-300"
               />
-              <Button title="Create" type="primary" onClick={createButtonHandler} />
+              <div className="w-1/6 flex justify-around">
+                <Button
+                  title="Import"
+                  type="success"
+                  onClick={importButtonHandler}
+                />
+                <Button
+                  title="Create"
+                  type="primary"
+                  onClick={createButtonHandler}
+                />
+              </div>
             </div>
           </header>
           <div className="p-3">
@@ -156,7 +170,8 @@ Table.propsType = {
   renderHead: PropTypes.func,
   tableTitle: PropTypes.string,
   search: PropTypes.func,
-  createButtonHandler: PropTypes.func
+  createButtonHandler: PropTypes.func,
+  importButtonHandler: PropTypes.func,
 };
 
 export default Table;
