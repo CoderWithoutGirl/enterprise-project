@@ -9,7 +9,7 @@ import TestScreen from "../screens/test";
 import Departments from "../screens/departments";
 import Categories from "../screens/categories";
 import UserPage from "../screens/users/";
-import ErrorPage from '../screens/error'
+import ErrorPage from "../screens/error";
 import { roles } from "../constants/role";
 import UserInDepartment from "../screens/userInDepartment/";
 
@@ -73,15 +73,10 @@ const AppRouter = () => {
             </PrivateRoute>
           }
         />
-        <Route
-          path="*"
-          element={
-              <ErrorPage />
-          }
-        />
+        <Route path="*" element={<ErrorPage />} />
       </Routes>
     </BrowserRouter>
   );
-}
+};
 
 export default AppRouter;

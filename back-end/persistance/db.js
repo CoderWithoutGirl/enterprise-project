@@ -18,7 +18,7 @@ db.seedData = async () => {
                 dateOfBirth: new Date(),
                 email: "admin123@gmail.com",
                 age: 21,
-                gender: 'male',
+                gender: 'Male',
                 role: process.env.ADMIN
             });
             await admin.save();
@@ -29,7 +29,7 @@ db.seedData = async () => {
               email: "user@gmail.com",
               dateOfBirth: new Date(),
               age: 21,
-              gender: "male",
+              gender: "Male",
               role: process.env.QAMANAGER,
             });
             await userTest1.save();
@@ -40,7 +40,7 @@ db.seedData = async () => {
               email: "user2@gmail.com",
               dateOfBirth: new Date(),
               age: 21,
-              gender: "male",
+              gender: "Male",
               role: process.env.QACOORDINATOR,
             });
             await userTest2.save();
@@ -51,7 +51,7 @@ db.seedData = async () => {
               email: "user3@gmail.com",
               dateOfBirth: new Date(),
               age: 21,
-              gender: "male",
+              gender: "Male",
               role: process.env.STAFF,
             });
             await userTest3.save();

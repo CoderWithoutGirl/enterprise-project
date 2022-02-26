@@ -9,10 +9,10 @@ const PrivateRoute = ({ isAuthenticated, children, allowRoles = roles.ALL, user 
     allowRoles?.includes(user?.role) ? (
       <DashBoardLayout>{children}</DashBoardLayout>
     ) : (
-      <Navigate to="/error" state={{ from: location }} replace />
+      <Navigate to="/error" state={{ from: location }} />
     )
   ) : (
-    <Navigate to="/login" state={{ from: location }} replace />
+    <Navigate to="/login" state={{ from: location }} />
   );
 };
 
