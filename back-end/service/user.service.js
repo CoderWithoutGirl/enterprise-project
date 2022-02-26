@@ -22,6 +22,23 @@ const getUserByUsername = async (username) => {
   return dataFiltering;
 };
 
+const getUserByDepartment = async (department) => {
+  const listUserInDb = await User.find({
+    department: department,
+    role: process.env.STAFF,
+  }).sort([["createdAt", "asc"]]);
+  const qaCoordinatorOfDepartment = await User.findOne({
+    department,
+    role: process.env.QACOORDINATOR,
+  });
+  if(qaCoordinatorOfDepartment) {
+    return [qaCoordinatorOfDepartment,...listUserInDb]
+  }
+  else {
+    return listUserInDb;
+  }
+}
+
 const getUserById = async (id) => {
   return await User.findById(id);
 };
@@ -41,72 +58,45 @@ const assignStaff = async (role, department, id) =>{
     }
 }
 
-module.exports = {getAllUser, getUserByUsername, getUserById, assignStaff};
-const readExcelData = async (filename) => {
+const excelDataExtractor = async (filename) => {
   const obj = xlsx.parse(__basedir + `/statics/excels/${filename}`);
   const { data } = obj[0];
-  const jsonData = [];
-  const length = data.length;
-  for (let i = 0; i < length; i++) {
-    if (data[i][0] === undefined) {
-      return jsonData;
-    }
-    jsonData.push([
-      { value: data[i][0] },
-      { value: data[i][1] },
-      { value: data[i][2] },
-      { value: data[i][3] },
-      { value: data[i][4] },
-      { value: data[i][5] },
-      {
-        value: parseInt(data[i][6]) ? new Date(data[i][6]) : data[i][6],
-      },
-      { value: data[i][7] },
-    ]);
-  }
-  return jsonData;
+  return data.map((item) => [
+    { value: item[0] },
+    { value: item[1] },
+    { value: item[2] },
+    { value: item[3] },
+    { value: item[4] },
+    { value: item[5] },
+    {
+      value: parseInt(item[6]) ? new Date(item[6]) : item[6],
+    },
+    { value: item[7] },
+  ]);
 };
 
-const migrationToDb = async (filename) => {
+const importDataFromExcelToDb = async (filename) => {
   const obj = xlsx.parse(__basedir + `/statics/excels/${filename}`);
   const { data } = obj[0];
-  const jsonData = [];
-  const length = data.length;
-  for (let i = 1; i < length; i++) {
-    if (data[i][0] === undefined) {
-      return jsonData;
-    }
-    jsonData.push([
-      { value: data[i][0] },
-      { value: data[i][1] },
-      { value: data[i][2] },
-      { value: data[i][3] },
-      { value: data[i][4] },
-      { value: data[i][5] },
-      { value: new Date(data[i][6]) },
-      { value: data[i][7] },
-    ]);
-  }
-  return jsonData;
+  return data.slice(1).map((item, index) => ({
+    fullname: item[0],
+    username: item[1],
+    email: item[1],
+    password: item[2],
+    confirmPassword: item[3],
+    address: item[4],
+    age: item[5],
+    dateOfBirth: item[6],
+    gender: item[7],
+    role: process.env.STAFF,
+  }));
 };
 
 const createUserByExcel = async (filename) => {
-  const data = await migrationToDb(filename);
+  const data = await importDataFromExcelToDb(filename);
   let array = data.map(async (user) => {
     try {
-      User.findOne({ username: user[1].value }) && null;
-      const useObj = new User({
-        fullname: user[0].value,
-        username: user[1].value,
-        email: user[1].value,
-        password: user[2].value,
-        confirmPassword: user[3].value,
-        address: user[4].value,
-        age: user[5].value,
-        dateOfBirth: user[6].value,
-        gender: user[7].value,
-        role: process.env.STAFF,
-      });
+      const useObj = new User({...user});
       await useObj.save();
       return useObj;
     } catch (e) {
@@ -132,6 +122,8 @@ module.exports = {
   getUserByUsername,
   getUserById,
   createUserByExcel,
-  readExcelData,
+  excelDataExtractor,
   deleteExcel,
+  assignStaff,
+  getUserByDepartment
 };

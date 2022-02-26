@@ -2,18 +2,26 @@ const {
   getAllUser,
   getUserByUsername,
   getUserById,
-  readExcelData,
+  excelDataExtractor,
   createUserByExcel,
   deleteExcel,
+  getUserByDepartment,
   assignStaff,
 } = require("../service/user.service.js");
 
 const userController = {
   getAllUser: async (req, res) => {
-    const username = req.query.username;
+    const {username, department} = req.query;
     if (username) {
       const result = await getUserByUsername(username);
       res.status(200).json(result);
+      return;
+    }
+    else if(department) {
+      console.log(department);
+      const result = await getUserByDepartment(department);
+      res.status(200).json(result);
+      return;
     } else {
       const user = await getAllUser();
       res.status(200).json(user);
@@ -46,7 +54,7 @@ const userController = {
   uploadExcel: async (req, res) => {
     try {
       const filename = req.file.filename;
-      const jsonData = await readExcelData(filename);
+      const jsonData = await excelDataExtractor(filename);
       res.status(200).json({ status: 200, data: jsonData, filename: filename });
     } catch (err) {
       console.log(err);

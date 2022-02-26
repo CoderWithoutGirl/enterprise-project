@@ -15,7 +15,7 @@ const signToken = (payload) => {
     },
     process.env.SECRET_KEY,
     {
-      expiresIn: "120s",
+      expiresIn: "1800s",
     }
   );
 };
