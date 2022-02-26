@@ -3,6 +3,10 @@ import PropTypes from "prop-types";
 import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/solid";
 import InputField from "./inputField";
 import Button from "./button";
+import {
+  UploadIcon,
+  PlusCircleIcon,
+} from "@heroicons/react/solid";
 
 const Table = ({
   limit,
@@ -73,8 +77,8 @@ const Table = ({
   const searchWithDebounce = debounce(search, 1000);
 
   return (
-    <section className="antialiased text-gray-600 mb-20 px-4">
-      <div className="flex flex-col justify-center h-full">
+    <section className="antialiased text-gray-600 mt-20 px-4 rounded-xl">
+      <div className="flex flex-col justify-center h-full rounded-xl">
         <div className="w-full mx-auto bg-white shadow-lg rounded-sm border border-gray-200">
           <header className="px-5 py-4 border-b border-gray-100">
             <h2 className="font-semibold text-gray-800">{tableTitle}</h2>
@@ -83,15 +87,19 @@ const Table = ({
                 type="text"
                 placeholder="Search..."
                 onChange={(e) => searchWithDebounce(e.target.value)}
-                className="w-1/5 rounded-md mt-1 border-gray-300"
+                className="w-[80px] sm:w-1/5 rounded-md mt-1 border-gray-300"
               />
-              <div className="w-1/6 flex justify-around">
+              <div className="w-fit flex gap-3 justify-around items-center">
+                {importButtonHandler && (
+                  <Button
+                    icon={UploadIcon}
+                    title="Import"
+                    type="success"
+                    onClick={importButtonHandler}
+                  />
+                )}
                 <Button
-                  title="Import"
-                  type="success"
-                  onClick={importButtonHandler}
-                />
-                <Button
+                  icon={PlusCircleIcon}
                   title="Create"
                   type="primary"
                   onClick={createButtonHandler}

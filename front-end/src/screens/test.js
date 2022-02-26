@@ -257,17 +257,14 @@ const TestScreen = () => {
   }
 
   const {
-    register,
     handleSubmit,
-    formState: { errors },
-    getValues,
-  } = useForm();
+  } = useForm({resolver: yupResolver(loginFormValidationSchema)});
 
   const [selectedValue, setSelectedValue] = useState(data[0].name);
 
   const submitLoginForm = async (formData) => {
     console.log(formData);
-    const { status, data } = await login(formData);
+    const {  data } = await login(formData);
     console.log(data);
   };
 

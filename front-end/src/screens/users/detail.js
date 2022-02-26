@@ -2,13 +2,13 @@ import React from 'react';
 
 const DetailPage = ({user}) =>{
     if (user.dateOfBirth != null) {
-        var currentTime = new Date(user.dateOfBirth);
-        var month = currentTime.getMonth() + 1;
-        var day = currentTime.getDate();
-        var year = currentTime.getFullYear();
+        let currentTime = new Date(user.dateOfBirth);
+        let month = currentTime.getMonth() + 1;
+        let day = currentTime.getDate();
+        let year = currentTime.getFullYear();
         var dateOfBirthFormated = day + "/" + month + "/" + year;
    }
-    
+
 
     return (
         <>

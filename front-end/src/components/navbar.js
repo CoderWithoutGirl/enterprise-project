@@ -102,7 +102,7 @@ const Navbar = ({authenticateReducer, doLogout}) => {
                         <Menu.Item>
                           {({ active }) => (
                             <a
-                              href="#"
+                              href="/profile"
                               className={classNames(
                                 active ? "bg-gray-100" : "",
                                 "block px-4 py-2 text-sm text-gray-700"
@@ -115,7 +115,7 @@ const Navbar = ({authenticateReducer, doLogout}) => {
                         <Menu.Item>
                           {({ active }) => (
                             <a
-                              href="#"
+                              href="/settings"
                               className={classNames(
                                 active ? "bg-gray-100" : "",
                                 "block px-4 py-2 text-sm text-gray-700"
@@ -145,9 +145,6 @@ const Navbar = ({authenticateReducer, doLogout}) => {
                   <div className='flex gap-x-8'>
                     <Link to="/login" className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
                       Login
-                    </Link>
-                    <Link to="/login" className="border-2 border-blue-500 hover:border-blue-700 text-white font-bold py-2 px-4 rounded">
-                      Register
                     </Link>
                   </div>
                 )}

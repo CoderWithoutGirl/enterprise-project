@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { connect } from "react-redux";
 import Button from "../../components/button";
 import Table from "../../components/table";
@@ -15,9 +15,10 @@ import { getNewToken } from "../../store/actions/authenticateAction";
 import Modal from "../../components/modal";
 import RegisterPage from "./register";
 import DetailPage from "./detail";
-import { UploadIcon } from "@heroicons/react/solid";
 import SpreadSheet from "react-spreadsheet";
 import { toast } from "react-toastify";
+import {IdentificationIcon, BackspaceIcon, UploadIcon} from '@heroicons/react/solid'
+
 
 const userTableHead = [
   "Fullname",
@@ -26,7 +27,7 @@ const userTableHead = [
   "Role",
   "Address",
   "Department",
-  "Action",
+  "Actions",
 ];
 
 const UserPage = ({ getNewTokenRequest, token }) => {
@@ -39,29 +40,24 @@ const UserPage = ({ getNewTokenRequest, token }) => {
   const [data, setData] = useState([]);
   const [filename, setFilename] = useState("");
 
-const UserPage = ({ getNewTokenRequest, token }) => {
-
-  const [users, setUsers] = useState([]);
-  const [user, setUser] = useState({});
-  const [open, setOpen] = useState(false);
-  const [openDetail, setOpenDetail] = useState(false);
-  const [editOpen, setEditOpen] = useState(false);
-  const [valueAssign, setValueAssign] = useState({});
-
-  const loadUser = async () => {
+  const loadUser = useCallback(async () => {
     const loadAllDataOfUser = async () => {
-      const { data, status } = await getAllUser(token)
-      return { data, status }
-    }
-    const { status, data } = await tokenRequestInterceptor(loadAllDataOfUser, getNewTokenRequest);
+      const { data, status } = await getAllUser(token);
+      return { data, status };
+    };
+    const { status, data } = await tokenRequestInterceptor(
+      loadAllDataOfUser,
+      getNewTokenRequest
+    );
     if (status === 200) {
       setUsers((prev) => data);
     }
-  }
+  }, [token, getNewTokenRequest]);
 
   useEffect(() => {
     loadUser();
-  }, [token]);
+    document.title="Users"
+  }, [loadUser]);
 
   const hangleSearch = (keyword) => {
     if (keyword) {
@@ -103,46 +99,9 @@ const UserPage = ({ getNewTokenRequest, token }) => {
     setOpenDetail(prev => !prev);
   }
 
-  const editHandler = (e, id) => {
-    e.preventDefault();
-    console.log(id);
-    const loadSingleUser = async () => {
-      const loadSingleUser = async () => {
-        const { data, status } = await getSingleUser(token, id)
-        return { data, status }
-      }
-      const { status, data } = await tokenRequestInterceptor(loadSingleUser, getNewTokenRequest);
-      console.log(data);
-      if (status === 200) {
-        // setUser((prev) => data);
-        setValueAssign((prev) => data);
-      }
-    }
-    loadSingleUser();
-    setEditOpen(prev => !prev)
-  }
+ 
 
 
-  const assign = async (e) => {
-    e.preventDefault();
-    const assignStaffRequest = async () => {
-      const { data, status } = await assignStaff({ role: roles.QA_COORDINATOR, department: valueAssign.department }, valueAssign.id, token);
-      console.log(data);
-      return { data, status }
-    }
-
-    const { status, data } = await tokenRequestInterceptor(assignStaffRequest, getNewTokenRequest);
-    console.log(data)
-
-
-    if (status === 200) {
-      toast.success(data.message)
-      setValueAssign((prev) => ({role: "", department: ""}));
-      setEditOpen(prev => !prev)
-      loadUser();
-    }
-  }
-  };
 
 
   const uploadFile = (e) => {
@@ -171,7 +130,7 @@ const UserPage = ({ getNewTokenRequest, token }) => {
       const { data, status } = await cancelUserExcel(filename, token);
       return { data, status };
     };
-    const { status, data } = await tokenRequestInterceptor(
+    const { status } = await tokenRequestInterceptor(
       cancelCreateExcelUser,
       getNewTokenRequest
     );
@@ -188,7 +147,7 @@ const UserPage = ({ getNewTokenRequest, token }) => {
       const { data, status } = await confirmUserExcel(filename, token);
       return { data, status };
     };
-    const { status, data } = await tokenRequestInterceptor(
+    const { status } = await tokenRequestInterceptor(
       confirmCreateExcelUser,
       getNewTokenRequest
     );
@@ -197,12 +156,19 @@ const UserPage = ({ getNewTokenRequest, token }) => {
       setOpenImport(false);
       setData([]);
       setFilename("");
+      loadUser();
     }
   };
 
   const renderTableHead = (item, index) => (
     <th key={index} className="p-2 whitespace-nowrap">
-      <div className="font-semibold text-left">{item}</div>
+      <div
+        className={`font-semibold ${
+          item.toLowerCase() === "actions" ? "text-center" : "text-left"
+        }`}
+      >
+        {item}
+      </div>
     </th>
   );
 
@@ -227,10 +193,9 @@ const UserPage = ({ getNewTokenRequest, token }) => {
         <div className="text-left">{item.department}</div>
       </td>
       <td className="p-2 whitespace-nowrap">
-        <div className="text-left flex justify-around">
-          <Button type="warning" title="Detail" onClick={(e) => detailHandler(e, item.id)} />
-          <Button type="danger" title="Delete" />
-          <Button type="secondary" title="Assign" onClick={(e) => editHandler(e, item.id)} />
+        <div className="flex gap-3">
+          <Button icon={IdentificationIcon} type="warning" title="Detail" onClick={(e) => detailHandler(e, item.id)} />
+          <Button icon={BackspaceIcon} type="danger" title="Delete" />
         </div>
       </td>
     </tr>
@@ -247,26 +212,19 @@ const UserPage = ({ getNewTokenRequest, token }) => {
         tableTitle={"User Table"}
         search={hangleSearch}
         createButtonHandler={() => setOpen(true)}
+        importButtonHandler={() => setOpenImport(!openImport)}
       />
       <Modal open={open} setOpen={setOpen}>
-        <RegisterPage loadUser={loadUser} />
+        <RegisterPage close={() => setOpen(!open)} loadUser={loadUser} token={token} getNewTokenRequest={getNewTokenRequest} />
       </Modal>
       <Modal open={openDetail} setOpen={setOpenDetail}>
         <DetailPage user={user} />
       </Modal>
-      <Modal open={editOpen} setOpen={setEditOpen}>
-        <div className="w-full">
-          <Form
-            title="Assign QA COORDINATOR"
-          >
-            <Assign user={valueAssign} role={roles.QA_COORDINATOR} handleSubmit={assign} setOpen={setEditOpen} />
-          </Form>
-        </div>
-      </Modal>
+      
       <Modal open={openImport} setOpen={setOpenImport}>
-        <div className="flex justify-center mt-8">
+        <div className="flex justify-center w-fit mt-8">
           {data.length ? (
-            <div className="lg:w-10">
+            <div className="w-full">
               <SpreadSheet data={data} />
               <div className="flex justify-center p-2 space-x-4">
                 <button
@@ -342,4 +300,4 @@ const mapDispatchToProps = (dispatch) => {
   };
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(UserPage);
+export default connect(mapStateToProps, mapDispatchToProps)(UserPage)

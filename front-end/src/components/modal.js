@@ -2,7 +2,6 @@ import { Fragment, useRef } from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import PropsType from "prop-types";
 import ReactDOM from "react-dom";
-import { XCircleIcon } from "@heroicons/react/outline";
 
 const Modal = ({ open, setOpen, title, children, ...rest }) => {
   const cancelButtonRef = useRef(null);
@@ -11,11 +10,11 @@ const Modal = ({ open, setOpen, title, children, ...rest }) => {
     <Transition.Root show={open} as={Fragment}>
       <Dialog
         as="div"
-        className="fixed z-10 inset-0 overflow-y-auto"
+        className="w-screen fixed z-10 inset-0 overflow-y-auto"
         initialFocus={cancelButtonRef}
         onClose={setOpen}
       >
-        <div className="flex items-end justify-center min-h-screen text-center sm:block sm:p-0">
+        <div className="w-screen flex items-end justify-center min-h-screen text-center sm:block sm:p-0">
           <Transition.Child
             as={Fragment}
             enter="ease-out duration-300"
@@ -43,9 +42,9 @@ const Modal = ({ open, setOpen, title, children, ...rest }) => {
             leaveFrom="opacity-100 translate-y-0 sm:scale-100"
             leaveTo="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
           >
-            <div className="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:align-middle sm:max-w-lg sm:w-full">
+            <div className="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:align-middle sm:max-w-max sm:w-full">
               <div className="bg-white">
-                <div className="w-full">
+                <div className="w-full max-h-[40rem] overflow-y-auto">
                   <div className="text-center sm:mt-0 sm:text-left">
                     {title !== "" && (
                       <Dialog.Title

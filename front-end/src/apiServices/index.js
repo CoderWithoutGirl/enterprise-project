@@ -18,7 +18,7 @@ export const tokenRequestInterceptor = async (apiCall, refreshToken) => {
     return { status, data };
   }
 };
-
+// Authenticate
 export const login = (formData) =>
   apiInstance.post("/auth/login", { ...formData });
 export const register = (formData) =>
@@ -27,22 +27,60 @@ export const register = (formData) =>
 export const refreshToken = (refreshToken) =>
   apiInstance.post("/auth/refresh-token", { refreshToken });
 
-export const getAllUser = (token) =>
-  apiInstance.get("/users/", { headers: { Authorization: `Bearer ${token}` } });
+export const logout = (refreshToken) =>
+  apiInstance.post("/auth/logout", { ...refreshToken });
 
-export const logout = (refreshToken) => 
-  apiInstance.post('/auth/logout', {...refreshToken});
+// Users
+export const getAllUser = (token) =>
+  apiInstance.get("/users/", {
+    headers: { Authorization: `Bearer ${token}` },
+  });
 
 export const getSingleUser = (token, id) =>
   apiInstance.get(`/users/${id}`, {
     headers: { Authorization: `Bearer ${token}` },
   });
 
+export const getUserByDepartment = (token, deparment) => 
+   apiInstance.get(`/users/?department=${deparment}`, {
+     headers: { Authorization: `Bearer ${token}` },
+   }); 
+
 export const searchUserByUsername = (username, token) =>
   apiInstance.get(`users?username=${username}`, {
     headers: { Authorization: `Bearer ${token}` },
   });
 
+export const assignStaff = (formData, id, token) =>
+  apiInstance.put(
+    `users/${id}`,
+    { ...formData },
+    {
+      headers: { Authorization: `Bearer ${token}` },
+    }
+  );
+
+export const uploadExcelCreateUser = (formData, token) =>
+  apiInstance.post("/users/uploadexcel", formData, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+      "Content-Type":
+        "multipart/form-data; boundary=<calculated when request is sent>",
+    },
+  });
+
+export const confirmUserExcel = (filename, token) =>
+  apiInstance.get(`/users/confirm/${filename}`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
+export const cancelUserExcel = (filename, token) =>
+  apiInstance.get(`/users/cancel/${filename}`, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+    
 //Department
 export const createDepartment = (formData, token) =>
   apiInstance.post(
@@ -73,39 +111,36 @@ export const updateDepartment = (formData, id, token) =>
     { headers: { Authorization: `Bearer ${token}` } }
   );
 
-export const uploadExcelCreateUser = (formData, token) =>
-  apiInstance.post("/users/uploadexcel", formData, {
-    headers: {
-      Authorization: `Bearer ${token}`,
-      "Content-Type":
-        "multipart/form-data; boundary=<calculated when request is sent>",
-    },
-  });
+//Category
+export const createCategory = (formData, token) =>
+  apiInstance.post(
+    "/categories/",
+    { ...formData },
+    { headers: { Authorization: `Bearer ${token}` } }
+  );
 
-export const confirmUserExcel = (filename, token) =>
-  apiInstance.get(`/users/confirm/${filename}`, {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  });
-
-export const cancelUserExcel = (filename, token) =>
-  apiInstance.get(`/users/cancel/${filename}`, {
+export const searchCategoryByName = (name, token) =>
+  apiInstance.get(`categories?name=${name}`, {
     headers: { Authorization: `Bearer ${token}` },
   });
 
-//Category
-export const createCategory = (formData, token) =>
-  apiInstance.post("/categories/", { ...formData }, { headers: { Authorization: `Bearer ${token}` } });
-
-export const searchCategoryByName = (name, token) =>
-  apiInstance.get(`categories?name=${name}`, { headers: { Authorization: `Bearer ${token}` } });
-
 export const getCategory = (token) =>
-  apiInstance.get("/categories/", { headers: { Authorization: `Bearer ${token}` } });
+  apiInstance.get("/categories/", {
+    headers: { Authorization: `Bearer ${token}` },
+  });
 
 export const findCategoryByID = (token, id) =>
-  apiInstance.get(`/categories/${id}`, { headers: { Authorization: `Bearer ${token}` } });
+  apiInstance.get(`/categories/${id}`, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
 
-  export const updateCategory = (formData, id, token) =>
-  apiInstance.put(`/categories/${id}`, { ...formData }, { headers: { Authorization: `Bearer ${token}` } });
+export const updateCategory = (formData, id, token) =>
+  apiInstance.put(
+    `/categories/${id}`,
+    { ...formData },
+    { headers: { Authorization: `Bearer ${token}` } }
+  );
+
+//Sub Router
+
+export const getAllSubRoute = () => apiInstance.get('/sub-route');

@@ -1,4 +1,5 @@
 const HomePage = () => {
+  document.title ="Home"
     return (
       <div className="container">
         <div className="relative pt-[120px] lg:pt-[150px] pb-[110px] bg-white">
@@ -138,7 +139,7 @@ const HomePage = () => {
                 </div>
               </div>
               <div className="hidden lg:block lg:w-1/12"></div>
-              <div className="w-full lg:w-6/12 px-4">
+              <div className="hidden sm:w-full lg:w-6/12 px-4">
                 <div className="lg:text-right lg:ml-auto">
                   <div className="relative inline-block z-10 pt-11 lg:pt-0">
                     <img

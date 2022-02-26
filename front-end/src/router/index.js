@@ -3,7 +3,6 @@ import PrivateRoute from "./customRouters/privateRouter";
 import UnauthorizeRoute from "./customRouters/unauthorizeRouter";
 
 import ApplicationBaseLayout from "../layout/ApplicationBaseLayout";
-import DashBoardLayout from "../layout/DashboardLayout";
 import HomePage from "../screens/home";
 import LoginPage from "../screens/login";
 import TestScreen from "../screens/test";
@@ -12,17 +11,26 @@ import Categories from "../screens/categories";
 import UserPage from "../screens/users/";
 import ErrorPage from '../screens/error'
 import { roles } from "../constants/role";
+import UserInDepartment from "../screens/userInDepartment/";
 
 const AppRouter = () => {
   return (
     <BrowserRouter>
       <Routes>
         <Route
+          path="/login"
+          element={
+            <UnauthorizeRoute>
+              <LoginPage />
+            </UnauthorizeRoute>
+          }
+        />
+        <Route
           path="/"
           element={
-            <DashBoardLayout>
+            <PrivateRoute>
               <HomePage />
-            </DashBoardLayout>
+            </PrivateRoute>
           }
         />
         <Route
@@ -34,15 +42,7 @@ const AppRouter = () => {
           }
         />
         <Route
-          path="/login"
-          element={
-            <UnauthorizeRoute>
-              <LoginPage />
-            </UnauthorizeRoute>
-          }
-        />
-        <Route
-          path="/department"
+          path="/departments"
           element={
             <PrivateRoute>
               <Departments />
@@ -50,7 +50,15 @@ const AppRouter = () => {
           }
         />
         <Route
-          path="/category"
+          path="/departments/:department"
+          element={
+            <PrivateRoute>
+              <UserInDepartment />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/categories"
           element={
             <PrivateRoute>
               <Categories />
@@ -58,24 +66,22 @@ const AppRouter = () => {
           }
         />
         <Route
-            path="/user"
-            element={
-              <PrivateRoute allowRoles={[roles.QA_MANAGER, roles.ADMIN]}>
-                <UserPage />
-              </PrivateRoute>
-            }
-          />
+          path="/users"
+          element={
+            <PrivateRoute allowRoles={[roles.QA_MANAGER, roles.ADMIN]}>
+              <UserPage />
+            </PrivateRoute>
+          }
+        />
         <Route
-            path="*"
-            element={
-              <ApplicationBaseLayout>
-                <ErrorPage />
-              </ApplicationBaseLayout>
-            }
-          />
-        </Routes>
-      </BrowserRouter>
-    );
+          path="*"
+          element={
+              <ErrorPage />
+          }
+        />
+      </Routes>
+    </BrowserRouter>
+  );
 }
 
 export default AppRouter;

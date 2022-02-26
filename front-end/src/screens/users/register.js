@@ -1,16 +1,23 @@
-import React, { useEffect } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 
 import { useForm } from "react-hook-form";
-import { register as registerApi } from "../../apiServices/index";
+import {
+  register as registerApi,
+  getAllDepartment,
+  tokenRequestInterceptor,
+} from "../../apiServices/index";
 import { toast } from "react-toastify";
 import Form from "../../components/form";
 import InputField from "../../components/inputField";
 import Button from "../../components/button";
 import SelectOption from "../../components/SelectOption";
-import { connect } from 'react-redux';
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { getNewToken } from '../../store/actions/authenticateAction'
+import Password from "../../components/password";
+import DateTimePicker from "../../components/DateTimePicker";
+import { ErrorMessage } from "@hookform/error-message";
+import ErrorMessageCustom from "../../components/errorMessage";
+import {PlusCircleIcon} from '@heroicons/react/solid'
 
 const registerFormValidationSchema = yup.object({
   fullname: yup.string().required("Fullname must be filled"),
@@ -37,62 +44,53 @@ const registerFormValidationSchema = yup.object({
   gender: yup.string().required("Gender must be filled"),
 });
 
-const RegisterPage = ({ loadUser }) => {
+
+const RegisterPage = ({ close, loadUser, token, getNewTokenRequest }) => {
   const {
     register,
     handleSubmit,
     formState: { errors },
     setValue,
-    setError,
     getValues,
     reset,
   } = useForm({
     mode: "onChange",
     resolver: yupResolver(registerFormValidationSchema),
+    defaultValues: {
+      username: "",
+      password: "",
+      confirmPassword: "",
+      address: "",
+      age: 2,
+      dateOfBirth: "",
+      gender: "Male",
+      fullname: "",
+      department: "",
+    },
   });
 
-  useEffect(() => {
-    register("username");
-    register("password");
-    register("confirmPassword");
-    register("address");
-    register("age");
-    register("dateOfBirth");
-    register("gender");
-    register("fullname");
-  }, [register]);
+  const [departments, setDepartments] = useState([]);
 
-  const onChange = (e) => {
-    setValue(e.target.name, e.target.value);
-    setError(e.target.value, null);
-  };
-
-    const [departments, setDepartments] = useState([]);
-
-    const loadDepartment = async () => {
-        const loadAllDataOfDepartment = async () => {
-            const { data, status } = await getAllDepartment(token);
-            return { data, status }
-        }
-        const { status, data } = await tokenRequestInterceptor(loadAllDataOfDepartment, getNewTokenRequest);
-        if (status === 200) {
-            setDepartments((prev) => data);
-            setValue('department', data[0].name);
-        }
+  const loadDepartment = useCallback(async () => {
+    const loadAllDataOfDepartment = async () => {
+      const { data, status } = await getAllDepartment(token);
+      return { data, status };
+    };
+    const { status, data } = await tokenRequestInterceptor(
+      loadAllDataOfDepartment,
+      getNewTokenRequest
+    );
+    if (status === 200) {
+      setDepartments((prev) => data);
+      setValue("department", data[0].name);
     }
+  }, [token, setValue, getNewTokenRequest]);
 
-    useEffect(() => {
-        register("username")
-        register("password")
-        register("confirmPassword")
-        register("address")
-        register("age")
-        register("dateOfBirth")
-        register("gender")
-        register("fullname")
-        register("department")
-        loadDepartment()
-    }, [register, token])
+
+
+  useEffect(() => {
+    loadDepartment();
+  }, [loadDepartment]);
 
   const onSubmit = async (formData) => {
     const { status, data } = await registerApi(formData);
@@ -110,6 +108,7 @@ const RegisterPage = ({ loadUser }) => {
         gender: "",
       });
       loadUser();
+      close();
     } else {
       toast.warning(data.message);
     }
@@ -117,145 +116,101 @@ const RegisterPage = ({ loadUser }) => {
 
   return (
     <>
-      <div className="w-full">
+      <div className="w-screen sm:max-w-xl">
         <Form title="Create Account">
           <InputField
             type="text"
             placeholder="Fullname"
-            name="fullname"
-            value={getValues("fullname")}
-            onChange={onChange}
+            {...register("fullname")}
           />
-          {errors.fullname?.message && (
-            <div
-              className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative"
-              role="alert"
-            >
-              <span className="block sm:inline">
-                {errors.fullname?.message}
-              </span>
-            </div>
-          )}
+          <ErrorMessage
+            name="fullname"
+            errors={errors}
+            render={({ message }) => <ErrorMessageCustom message={message} />}
+          />
+
           <InputField
             type="text"
             placeholder="Username"
+            {...register("username")}
+          />
+          <ErrorMessage
             name="username"
-            value={getValues("username")}
-            onChange={onChange}
+            errors={errors}
+            render={({ message }) => <ErrorMessageCustom message={message} />}
           />
-          {errors.username?.message && (
-            <div
-              className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative"
-              role="alert"
-            >
-              <span className="block sm:inline">
-                {errors.username?.message}
-              </span>
-            </div>
-          )}
-          <InputField
-            type="password"
-            placeholder="password"
+          <Password placeholder="password" {...register("password")} />
+          <ErrorMessage
             name="password"
-            value={getValues("password")}
-            onChange={onChange}
+            errors={errors}
+            render={({ message }) => <ErrorMessageCustom message={message} />}
           />
-          {errors.password?.message && (
-            <div
-              className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative"
-              role="alert"
-            >
-              <span className="block sm:inline">
-                {errors.password?.message}
-              </span>
-            </div>
-          )}
-          <InputField
-            type="password"
-            placeholder="confirmPassword"
+
+          <Password
+            placeholder="Confirm Password"
+            {...register("confirmPassword")}
+          />
+          <ErrorMessage
             name="confirmPassword"
-            value={getValues("confirmPassword")}
-            onChange={onChange}
+            errors={errors}
+            render={({ message }) => <ErrorMessageCustom message={message} />}
           />
-          {errors.confirmPassword?.message && (
-            <div
-              className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative"
-              role="alert"
-            >
-              <span className="block sm:inline">
-                {errors.confirmPassword?.message}
-              </span>
-            </div>
-          )}
+
           <InputField
             type="text"
             placeholder="Address"
-            name="address"
-            value={getValues("address")}
-            onChange={onChange}
+            {...register("address")}
           />
-          {errors.address?.message && (
-            <div
-              className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative"
-              role="alert"
-            >
-              <span className="block sm:inline">{errors.address?.message}</span>
-            </div>
-          )}
+          <ErrorMessage
+            name="address"
+            errors={errors}
+            render={({ message }) => <ErrorMessageCustom message={message} />}
+          />
+
           <InputField
             type="number"
             min="1"
             max="100"
             placeholder="Age"
+            {...register("age")}
+          />
+          <ErrorMessage
             name="age"
-            value={getValues("age")}
-            onChange={onChange}
+            errors={errors}
+            render={({ message }) => <ErrorMessageCustom message={message} />}
           />
-          {errors.age?.message && (
-            <div
-              className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative"
-              role="alert"
-            >
-              <span className="block sm:inline">{errors.age?.message}</span>
-            </div>
-          )}
-          <InputField
-            type="text"
-            placeholder="Date Of Birth"
-            name="dateOfBirth"
-            value={getValues("dateOfBirth")}
-            onChange={onChange}
-          />
-          {errors.dateOfBirth?.message && (
-            <div
-              className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative"
-              role="alert"
-            >
-              <span className="block sm:inline">
-                {errors.dateOfBirth?.message}
-              </span>
-            </div>
-          )}
-          <InputField
-            type="text"
-            placeholder="Gender"
-            name="gender"
-            value={getValues("gender")}
-            onChange={onChange}
-          />
-          {errors.gender?.message && (
-            <div
-              className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative"
-              role="alert"
-            >
-              <span className="block sm:inline">{errors.gender?.message}</span>
-            </div>
-          )}
 
+          <DateTimePicker
+            placeholder="Date Of Birth"
+            {...register("dateOfBirth")}
+            max={new Date()}
+            min={new Date("1/1/1950")}
+          />
+          <ErrorMessage
+            name="dateOfBirth"
+            errors={errors}
+            render={({ message }) => <ErrorMessageCustom message={message} />}
+          />
+          <SelectOption
+            {...register("gender")}
+            defaultValue={getValues("gender")}
+            listData={[
+              { name: "Male" },
+              { name: "Female" },
+              { name: "Unknown" },
+            ]}
+          />
+
+          <SelectOption
+            {...register("department")}
+            defaultValue={getValues("department")}
+            listData={departments}
+          />
           <Button
             onClick={handleSubmit(onSubmit)}
             role="submit"
             type="primary"
+            icon={PlusCircleIcon}
             title="Create"
           />
         </Form>
