@@ -70,7 +70,6 @@ function Departments({ getNewTokenRequest, token, updateRouter }) {
       loadAllDataOfDepartment,
       getNewTokenRequest
     );
-    console.log(data);
     if (status === 200) {
       setDepartments((prev) => data);
     }

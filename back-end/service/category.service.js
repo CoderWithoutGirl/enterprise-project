@@ -26,8 +26,9 @@ const getCategory= async () =>{
 }
 
 const getCategoryByName = async (name) => {
-    const filterCategory = await Category.find({name: name}).sort([["createdAt", "asc"]]);
-    return filterCategory;
+    const filterCategory = await Category.find().sort([["createdAt", "asc"]]);
+    const results = filterCategory.filter(item => item.name.includes(name));
+    return results;
 }
 
 const findIdCategory = async (id) =>{

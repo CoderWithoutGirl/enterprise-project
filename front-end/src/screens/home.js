@@ -2,7 +2,7 @@ const HomePage = () => {
   document.title ="Home"
     return (
       <div className="container">
-        <div className="relative pt-[120px] lg:pt-[150px] pb-[110px] bg-white">
+        <div className="relative pt-[120px] lg:pt-[150px] bg-white">
           <div className="container">
             <div className="flex flex-wrap">
               <div className="w-full lg:w-5/12 px-4">
