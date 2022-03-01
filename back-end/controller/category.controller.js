@@ -29,9 +29,7 @@ const categoryController = {
         } 
         else{
             const results = await getCategory();
-            res.status(200).json({
-                data: results
-            })
+            res.status(200).json(results)
         }
     },
 

@@ -54,7 +54,7 @@ function Categories({ getNewTokenRequest, token }) {
       getNewTokenRequest
     );
     if (status === 200) {
-      setCategories((prev) => data.data);
+      setCategories((prev) => data);
     }
   }, [token, getNewTokenRequest]);
 
@@ -161,18 +161,18 @@ function Categories({ getNewTokenRequest, token }) {
     setEditCategory((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   };
 
-  const handleSearch = (keyword) => {
-    if (keyword) {
-      searchCategoryByName(keyword)
-        .then((res) => {
-          setCategories(res.data);
-        })
-        .catch((err) => {
-          console.log(err);
-        });
-    } else {
-      fetchData();
-    }
+  const handleSearch = async (keyword) => {
+      const loadAllDataOfCategory = async () => {
+        const { data, status } = await searchCategoryByName(keyword, token);
+        return { data, status };
+      };
+      const { status, data } = await tokenRequestInterceptor(
+        loadAllDataOfCategory,
+        getNewTokenRequest
+      );
+      if (status === 200) {
+        setCategories((prev) => data);
+      }
   };
 
   const renderTableHead = (item, index) => (
