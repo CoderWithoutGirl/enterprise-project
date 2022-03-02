@@ -41,6 +41,7 @@ function Departments({ getNewTokenRequest, token, updateRouter }) {
   const [open, setOpen] = useState(false);
   const [editOpen, setEditOpen] = useState(false);
   const [editDepartment, setEditDepartment] = useState({});
+  
 
   const loadDepartment = useCallback(async () => {
     const loadAllDataOfDepartment = async () => {
@@ -132,7 +133,7 @@ function Departments({ getNewTokenRequest, token, updateRouter }) {
 
     if (status === 200) {
       toast.success(data.message);
-      setEditDepartment((prev) => {});
+      setEditDepartment((prev) => { });
       loadDepartment();
       setEditOpen((prev) => !prev);
     }
@@ -161,6 +162,7 @@ function Departments({ getNewTokenRequest, token, updateRouter }) {
     setEditOpen((prev) => !prev);
   };
 
+
   const onEditChange = (e) => {
     setEditDepartment((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   };
@@ -168,16 +170,14 @@ function Departments({ getNewTokenRequest, token, updateRouter }) {
   const renderTableHead = (item, index) => (
     <th
       key={index}
-      class={`p-2 ${
-        item.toLowerCase() !== "actions"
-          ? "whitespace-nowrap"
-          : "flex justify-center"
-      }`}
+      class={`p-2 ${item.toLowerCase() !== "actions"
+        ? "whitespace-nowrap"
+        : "flex justify-center"
+        }`}
     >
       <div
-        className={`font-semibold ${
-          item.toLowerCase() === "actions" ? "text-center w-fit" : "text-left"
-        }`}
+        className={`font-semibold ${item.toLowerCase() === "actions" ? "text-center w-fit" : "text-left"
+          }`}
       >
         {item}
       </div>
@@ -281,6 +281,7 @@ function Departments({ getNewTokenRequest, token, updateRouter }) {
           </Form>
         </div>
       </Modal>
+     
     </div>
   );
 }
