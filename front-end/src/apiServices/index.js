@@ -41,10 +41,10 @@ export const getSingleUser = (token, id) =>
     headers: { Authorization: `Bearer ${token}` },
   });
 
-export const getUserByDepartment = (token, deparment) => 
-   apiInstance.get(`/users/?department=${deparment}`, {
-     headers: { Authorization: `Bearer ${token}` },
-   }); 
+export const getUserByDepartment = (token, deparment) =>
+  apiInstance.get(`/users/?department=${deparment}`, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
 
 export const searchUserByUsername = (username, token) =>
   apiInstance.get(`users?username=${username}`, {
@@ -80,7 +80,7 @@ export const cancelUserExcel = (filename, token) =>
   apiInstance.get(`/users/cancel/${filename}`, {
     headers: { Authorization: `Bearer ${token}` },
   });
-    
+
 //Department
 export const createDepartment = (formData, token) =>
   apiInstance.post(
@@ -143,4 +143,15 @@ export const updateCategory = (formData, id, token) =>
 
 //Sub Router
 
-export const getAllSubRoute = () => apiInstance.get('/sub-route');
+export const getAllSubRoute = () => apiInstance.get("/sub-route");
+
+//academy
+export const createAcademic = (formData, token) =>
+  apiInstance.post("/academic/", formData, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+
+export const getAllAcademic = (token) =>
+  apiInstance.get("/academic/", {
+    headers: { Authorization: `Bearer ${token}` },
+  });
