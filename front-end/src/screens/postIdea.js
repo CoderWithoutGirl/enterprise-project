@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
-import {CKEditor} from '@ckeditor/ckeditor5-react'
-import ClassicEditor from 'ckeditor5-custom-build/build/ckeditor';
-import '../customLibStyle/ckeditor.css';
+import { CKEditor } from "@ckeditor/ckeditor5-react";
+import ClassicEditor from "ckeditor5-custom-build/build/ckeditor";
+import "../customLibStyle/ckeditor.css";
 
 const PostIdea = () => {
   const [data, setData] = useState("<h2>Hello</h2>");
@@ -48,7 +48,17 @@ const PostIdea = () => {
               <div className="mb-8 text-base">
                 <label className="text-xl text-gray-600">Content</label>
                 <br />
-                <CKEditor editor={ClassicEditor} data={data} />
+                <CKEditor
+                  editor={ClassicEditor}
+                  onReady={(editor) => {
+                    editor.ui
+                      .getEditableElement()
+                      .parentElement.insertBefore(
+                        editor.ui.view.toolbar.element,
+                        editor.ui.getEditableElement()
+                      );
+                  }}
+                />
               </div>
 
               <div className="flex p-1">
