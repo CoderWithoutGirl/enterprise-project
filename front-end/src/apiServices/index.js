@@ -41,10 +41,10 @@ export const getSingleUser = (token, id) =>
     headers: { Authorization: `Bearer ${token}` },
   });
 
-export const getUserByDepartment = (token, deparment) => 
-   apiInstance.get(`/users/?department=${deparment}`, {
-     headers: { Authorization: `Bearer ${token}` },
-   }); 
+export const getUserByDepartment = (token, deparment) =>
+  apiInstance.get(`/users/?department=${deparment}`, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
 
 export const searchUserByUsername = (username, token) =>
   apiInstance.get(`users?username=${username}`, {
@@ -80,7 +80,7 @@ export const cancelUserExcel = (filename, token) =>
   apiInstance.get(`/users/cancel/${filename}`, {
     headers: { Authorization: `Bearer ${token}` },
   });
-    
+
 //Department
 export const createDepartment = (formData, token) =>
   apiInstance.post(
@@ -141,6 +141,22 @@ export const updateCategory = (formData, id, token) =>
     { headers: { Authorization: `Bearer ${token}` } }
   );
 
-//Sub Router
+//Idea feature API endpoint
+export const createIdea = (formData, token) =>
+  apiInstance.post(
+    "/ideas/create",
+    { ...formData },
+    { headers: { Authorization: `Bearer ${token}` } }
+  );
+export const uploadSupportDocument = (formData, token) =>
+  apiInstance.post(
+    "/ideas/upload",
+    formData,
+    { headers: { Authorization: `Bearer ${token}` } }
+  );
+export const uploadEditorContent = (formData, token) =>
+  apiInstance.post("/ideas/document-create", formData, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
 
-export const getAllSubRoute = () => apiInstance.get('/sub-route');
+export const getAllSubRoute = () => apiInstance.get("/sub-route");

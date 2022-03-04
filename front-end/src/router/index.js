@@ -35,7 +35,7 @@ const AppRouter = () => {
           }
         />
         <Route
-          path="/post"
+          path="/contribute"
           element={
             <PrivateRoute>
               <PostIdea />

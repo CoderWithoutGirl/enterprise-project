@@ -4,6 +4,7 @@
 
     /* Set vertical boundaries for the document editor. */
     max-height: 500px !important;
+    width: 100%;
 
     /* This element is a flex container for easier rendering. */
     display: flex;
@@ -28,25 +29,26 @@
     border-radius: 0;
 }
 
-.ck-editor__main {
-    padding: calc( 1 * var(--ck-spacing-large));
-    background: var(--ck-color-base-foreground);
+.ck-editor .ck-content {
+    padding: calc( 1 * var(--ck-spacing-large)) !important;
+    background-color: gray !important;
 
     /* Make it possible to scroll the "page" of the edited content. */
-    overflow-y: auto;
+    overflow-y: auto !important;
+    overflow-x: auto !important;
 }
 
-.ck-editor__main .ck-editor__editable {
+.ck-editor .ck-editor__editable_inline {
     /* Set the dimensions of the "page". */
-    width: 20cm;
-    min-height: 21cm;
+    width: 100%;
+    min-height: 95%;
 
     /* Keep the "page" off the boundaries of the container. */
-    padding: 1cm 2cm 2cm;
+    padding: 3%;
 
     border: 1px hsl( 0,0%,82.7% ) solid;
-    border-radius: var(--ck-border-radius);
-    background: white;
+    border-radius: 2px;
+    background-color: white !important;
 
     /* The "page" should cast a slight shadow (3D illusion). */
     box-shadow: 0 0 5px hsla( 0,0%,0%,.1 );

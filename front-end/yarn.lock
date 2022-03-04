@@ -3085,9 +3085,6 @@ cjs-module-lexer@^1.0.0:
   resolved "https://registry.yarnpkg.com/cjs-module-lexer/-/cjs-module-lexer-1.2.2.tgz#9f84ba3244a512f3a54e5277e8eef4c489864e40"
   integrity sha512-cOU9usZw8/dXIXKtwa8pM0OTJQuJkxMN6w30csNRUerHfeQ5R6U3kkU/FtJeIf3M202OHfY2U8ccInBG7/xogA==
 
-ckeditor5-custom-build@./ckeditor5:
-  version "0.0.1"
-
 ckeditor5-custom-build@./ckeditor5/:
   version "0.0.1"
 
@@ -4540,7 +4537,7 @@ fresh@0.5.2:
     "@testing-library/user-event" "^13.2.1"
     axios "^0.24.0"
     ckeditor5-custom-build "./ckeditor5/"
-    front-end "file:../../../Users/mxngh/AppData/Local/Yarn/Cache/v6/npm-front-end-0.1.0-95a658e0-5e7e-46c7-9895-c0458e8cb463-1646279561782/node_modules/front-end"
+    front-end "file:../../../Users/mxngh/AppData/Local/Yarn/Cache/v6/npm-front-end-0.1.0-12e7db69-4fa6-451b-a86c-c7d2493f0e3c-1646386195617/node_modules/front-end"
     react "^17.0.2"
     react-dom "^17.0.2"
     react-hook-form "^7.24.0"
@@ -4569,7 +4566,7 @@ fresh@0.5.2:
     "@testing-library/user-event" "^13.2.1"
     axios "^0.24.0"
     ckeditor5-custom-build "./ckeditor5/"
-    front-end "file:../../../Users/mxngh/AppData/Local/Yarn/Cache/v6/npm-front-end-0.1.0-57ee5b36-f88f-4456-988d-500c80b863ab-1646279561381/node_modules/front-end"
+    front-end "file:../../../Users/mxngh/AppData/Local/Yarn/Cache/v6/npm-front-end-0.1.0-eaac27bc-c517-4324-b1e7-0b6f6025c327-1646386195089/node_modules/front-end"
     react "^17.0.2"
     react-dom "^17.0.2"
     react-hook-form "^7.24.0"

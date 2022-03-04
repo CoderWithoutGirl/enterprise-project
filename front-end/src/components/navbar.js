@@ -7,10 +7,8 @@ import { Link } from 'react-router-dom';
 import { logout } from '../store/actions/authenticateAction';
 
 const navigation = [
-  { name: 'Dashboard', href: '/', current: true },
-  { name: 'Team', href: '/', current: false },
-  { name: 'Projects', href: '/', current: false },
-  { name: 'Calendar', href: '/', current: false },
+  { name: 'Home', href: '/', current: true },
+  { name: 'Contribute', href: '/contribute', current: false },
 ]
 
 function classNames(...classes) {
