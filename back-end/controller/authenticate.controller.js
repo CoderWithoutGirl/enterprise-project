@@ -41,8 +41,8 @@ const authenticateControler = {
     logout: async (req, res) => {
         const { refreshToken } = req.body;
         try {
-            await revokeToken(refreshToken, req.ip);
-            res.status(200).json({ message: "lougout success", status: 400 });
+            await revokeToken(refreshToken);
+            res.status(200).json({ message: "lougout success", status: 200 });
         } catch (error) {
             res
                 .status(400)

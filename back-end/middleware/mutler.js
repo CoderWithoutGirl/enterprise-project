@@ -16,7 +16,6 @@ const ExcelStorage = multer.diskStorage({
     cb(null, "./statics/excels");
   },
   filename: (req, file, cb) => {
-    console.log(file.originalname);
     const fileName = file.originalname.toLowerCase().split(" ").join("-");
     cb(null, fileName);
   },
@@ -24,8 +23,11 @@ const ExcelStorage = multer.diskStorage({
 
 const documentFilter = (req, file, cb) => {
     if (
-      file.mimetype.includes("docx") ||
-      file.mimetype.includes("doc") || file.mimetype.includes('pdf')
+      file.mimetype.includes("application/msword") ||
+      file.mimetype.includes("application/vnd.openxmlformats") ||
+      file.mimetype.includes("application/pdf") ||
+      file.mimetype.includes("officedocument.wordprocessingml.document") ||
+      file.mimetype.includes("text/markdown")
     ) {
       cb(null, true);
     } else {
@@ -35,13 +37,14 @@ const documentFilter = (req, file, cb) => {
 
 const DocumentStorage = multer.diskStorage({
     destination: (req, file, cb) => {
-        cb(nul, './statics/documents');
+        cb(null, './statics/documents');
     },
     filename: (req, file, cb) => {
          const fileName = file.originalname.toLowerCase().split(" ").join("-");
          cb(null, fileName);
     }
 })
+
 
 const uploadExcel = multer({
   storage: ExcelStorage,
