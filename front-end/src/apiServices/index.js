@@ -141,6 +141,11 @@ export const updateCategory = (formData, id, token) =>
     { headers: { Authorization: `Bearer ${token}` } }
   );
 
+export const deleteCategory = (token, id) =>
+  apiInstance.delete(`/categories/${id}`, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+
 //Idea feature API endpoint
 export const createIdea = (formData, token) =>
   apiInstance.post(

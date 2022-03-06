@@ -44,10 +44,15 @@ const updateCategory = async(id, description) =>{
     await Category.findByIdAndUpdate(id , {description: description});
 }
 
+const deleteCategory = async (id) =>{
+    await Category.findByIdAndDelete(id);
+}
+
 module.exports = {
     createCategory, 
     getCategory, 
     getCategoryByName,
     findIdCategory,
     updateCategory,
+    deleteCategory,
 };

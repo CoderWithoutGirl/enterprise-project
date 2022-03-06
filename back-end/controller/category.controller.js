@@ -1,4 +1,4 @@
-const {createCategory,getCategory,  getCategoryByName, findIdCategory, updateCategory} = require('../service/category.service');
+const {createCategory,getCategory,  getCategoryByName, findIdCategory, updateCategory, deleteCategory} = require('../service/category.service');
 
 const categoryController = {
     createCategory: async (req,res) => {
@@ -48,6 +48,16 @@ const categoryController = {
         try {
             await updateCategory(id, description);
             res.status(200).json({message: 'Update Category Successfully.'})
+        } catch (error) {
+            res.status(400).json({ message: error.message, status: 400 });
+        }
+    },
+
+    deleteCategory : async (req, res) =>{
+        const { id } = req.params;
+        try {
+            await deleteCategory(id);
+            res.status(200).json({message: 'Delete Category Successfully.'})
         } catch (error) {
             res.status(400).json({ message: error.message, status: 400 });
         }
