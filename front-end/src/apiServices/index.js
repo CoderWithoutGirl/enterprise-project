@@ -149,11 +149,9 @@ export const createIdea = (formData, token) =>
     { headers: { Authorization: `Bearer ${token}` } }
   );
 export const uploadSupportDocument = (formData, token) =>
-  apiInstance.post(
-    "/ideas/upload",
-    formData,
-    { headers: { Authorization: `Bearer ${token}` } }
-  );
+  apiInstance.post("/ideas/upload", formData, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
 export const uploadEditorContent = (formData, token) =>
   apiInstance.post("/ideas/document-create", formData, {
     headers: { Authorization: `Bearer ${token}` },
@@ -169,5 +167,15 @@ export const createAcademic = (formData, token) =>
 
 export const getAllAcademic = (token) =>
   apiInstance.get("/academic/", {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+
+export const getAcademicById = (token, id) =>
+  apiInstance.get(`/academic/${id}`, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+
+export const updateAcademic = (formData, id, token) =>
+  apiInstance.put(`/academic/${id}`, formData, {
     headers: { Authorization: `Bearer ${token}` },
   });
