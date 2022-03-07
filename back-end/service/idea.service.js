@@ -1,45 +1,109 @@
-const IdeaModel = require('../model/idea');
-const CategoryModel = require('../model/category');
-const mdpdf = require('mdpdf');
-const fs = require('fs');
-const createIdea = async (title, description, documentLink = "", category, userId) => {
-    const categoryInDB = await CategoryModel.findOne({name: category});
-    const newIdea = new IdeaModel({
-      title,
-      description,
-      documentLink,
-      category: categoryInDB._id,
-      userId
-    });
-    await newIdea.save();
-    return newIdea;
-}
+const IdeaModel = require("../model/idea");
+const CategoryModel = require("../model/category");
+const mdpdf = require("mdpdf");
+
+const filterEnum = {
+  ALPHABET: "ALPHABET",
+  LIKE: "LIKE",
+  DISLIKE: "DISLIKE",
+  DATE_ASC: "DATE_ASC",
+  DATE_DESC: "DATE_DESC",
+};
+
+const getAllIdeaWithFilter = async (filter = filterEnum.ALPHABET, page = 1, limit = 5) => {
+  switch (filter) {
+    case filterEnum.ALPHABET:
+      return (allIdeaInDB = await IdeaModel.find({})
+        .populate("category")
+        .sort({ title: 1 })
+        .skip((page - 1) * limit)
+        .limit(limit));
+    case filterEnum.LIKE:
+      const allPostWithLike = await IdeaModel.find({}).populate('category');
+      return (allIdeaInDB = allPostWithLike.sort(
+        (prevIdea, nextIdea) =>
+          nextIdea.reactions.filter((item) => item.actionType === "Like")
+            .length -
+          prevIdea.reactions.filter((item) => item.actionType === "Like").length
+      ).slice((page - 1)*limit, (page * limit) + 1));
+    case filterEnum.DISLIKE:
+        const allPostWithDislike = await IdeaModel.find({}).populate(
+          "category"
+        );
+      return (allIdeaInDB = allPostWithDislike.sort(
+        (prevIdea, nextIdea) =>
+          nextIdea.reactions.filter((item) => item.actionType === "Dislike")
+            .length -
+          prevIdea.reactions.filter((item) => item.actionType === "Dislike").length
+      ).slice((page - 1)*limit, (page * limit) + 1));
+    case filterEnum.DATE_ASC:
+      return (allIdeaInDB = await IdeaModel.find({})
+        .populate("category")
+        .sort({ createdAt: 1 })
+        .skip((page - 1) * limit)
+        .limit(limit));
+    case filterEnum.DATE_DESC:
+      return (allIdeaInDB = await IdeaModel.find({})
+        .populate("category")
+        .sort({
+          createdAt: -1,
+        })
+        .skip((page - 1) * limit)
+        .limit(limit));
+    default:
+      return (allIdeaInDB = await IdeaModel.find({})
+        .populate("category")
+        .sort({ title: 1 })
+        .skip((page - 1) * limit)
+        .limit(limit));
+  }
+};
+
+const createIdea = async (
+  title,
+  description,
+  documentLink = "",
+  category,
+  userId
+) => {
+  const categoryInDB = await CategoryModel.findOne({ name: category });
+  const newIdea = new IdeaModel({
+    title,
+    description,
+    documentLink,
+    category: categoryInDB._id,
+    userId,
+  });
+  await newIdea.save();
+  return newIdea;
+};
 
 const getFileUrl = (filename) => {
-    const documentLink = `/statics/documents/${filename}`;
-    return documentLink;
-}
+  const documentLink = `/statics/documents/${filename}`;
+  return documentLink;
+};
 
 const createDocumentFromMarkdown = async (mdfile) => {
   try {
-        const options = {
-          source: __basedir + `/statics/documents/${mdfile}`,
-          destination:
-            __basedir +
-            `/statics/documents/document-auto-created-${Date.now()}.pdf`,
-          pdf: {
-            format: "A4",
-            orientation: "portrait",
-          },
-        };
-        const filePath = await mdpdf.convert(options);
-        fs.unlinkSync(__basedir + `/statics/documents/${mdfile}`);
-        return filePath;
-      }
-  catch(error) {
-    console.log(error)
+    const destination = `/statics/documents/document-auto-created-${Date.now()}.pdf`
+    const options = {
+      source: __basedir + `/statics/documents/${mdfile}`,
+      destination:
+        __basedir + destination,
+      pdf: {
+        format: "A4",
+        orientation: "portrait",
+      },
+    };
+    await mdpdf.convert(options);
+    return destination;
+  } catch (error) {
+    console.log(error);
   }
+};
+
+const countAllIdeas = async (limit = 5) => {
+  return Math.ceil(await IdeaModel.estimatedDocumentCount() / limit);
 }
 
-
-module.exports = { getFileUrl, createIdea, createDocumentFromMarkdown };
+module.exports = { getFileUrl, createIdea, createDocumentFromMarkdown, getAllIdeaWithFilter, countAllIdeas };

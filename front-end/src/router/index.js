@@ -30,9 +30,9 @@ const AppRouter = () => {
         <Route
           path="/"
           element={
-            <PrivateRoute>
+            <ApplicationBaseLayout>
               <HomePage />
-            </PrivateRoute>
+            </ApplicationBaseLayout>
           }
         />
         <Route

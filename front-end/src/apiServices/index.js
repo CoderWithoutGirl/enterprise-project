@@ -142,6 +142,7 @@ export const updateCategory = (formData, id, token) =>
   );
 
 //Idea feature API endpoint
+export const getAllIdeaWithFilter = (filter, page = 1) => apiInstance.get(`/ideas?filter=${filter}&page=${page}`)
 export const createIdea = (formData, token) =>
   apiInstance.post(
     "/ideas/create",
