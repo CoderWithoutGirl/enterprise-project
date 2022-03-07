@@ -2,7 +2,7 @@ const IdeaModel = require('../model/idea');
 const CategoryModel = require('../model/category');
 const mdpdf = require('mdpdf');
 const fs = require('fs');
-const createIdea = async (title, description, documentLink, category, userId) => {
+const createIdea = async (title, description, documentLink = "", category, userId) => {
     const categoryInDB = await CategoryModel.findOne({name: category});
     const newIdea = new IdeaModel({
       title,

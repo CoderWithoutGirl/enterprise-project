@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 
 const ReactionSchema = new mongoose.Schema({
   userId: {type: mongoose.Types.ObjectId, ref: "Users"},
-  status: {type: String, enum: ["Like", "Dislike"]}
+  actionType: {type: String, enum: ["Like", "Dislike"]}
 }, {
   timestamps: true
 })
@@ -17,10 +17,10 @@ const IdeaSchema = new mongoose.Schema({
   title: { type: String, required: true },
   description: { type: String, required: true },
   category: { type: mongoose.Types.ObjectId, ref: "Category", required: true},
-  documentLink: {type: String, required: true},
+  documentLink: {type: String},
   userId: {type: mongoose.Types.ObjectId, ref: 'Users'},
-  reaction: [ReactionSchema],
-  comment: [CommentSchema]
+  reactions: [ReactionSchema],
+  comments: [CommentSchema]
 }, {timestamps: true});
 
 
