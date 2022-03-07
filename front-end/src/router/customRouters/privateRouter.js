@@ -2,12 +2,14 @@ import DashBoardLayout from '../../layout/DashboardLayout';
 import { Navigate, useLocation } from "react-router-dom";
 import { connect } from "react-redux";
 import { roles } from "../../constants/role";
+import ApplicationBaseLayout from "../../layout/ApplicationBaseLayout";
+
 
 const PrivateRoute = ({ isAuthenticated, children, allowRoles = roles.ALL, user }) => {
   const location = useLocation();
   return isAuthenticated ? (
     allowRoles?.includes(user?.role) ? (
-      <DashBoardLayout>{children}</DashBoardLayout>
+      user.role === 'ADMIN' ? <DashBoardLayout>{children}</DashBoardLayout> : <ApplicationBaseLayout>{children}</ApplicationBaseLayout>
     ) : (
       <Navigate to="/error" state={{ from: location }} />
     )

@@ -141,7 +141,23 @@ export const updateCategory = (formData, id, token) =>
     { headers: { Authorization: `Bearer ${token}` } }
   );
 
-//Sub Router
+//Idea feature API endpoint
+export const createIdea = (formData, token) =>
+  apiInstance.post(
+    "/ideas/create",
+    { ...formData },
+    { headers: { Authorization: `Bearer ${token}` } }
+  );
+export const uploadSupportDocument = (formData, token) =>
+  apiInstance.post(
+    "/ideas/upload",
+    formData,
+    { headers: { Authorization: `Bearer ${token}` } }
+  );
+export const uploadEditorContent = (formData, token) =>
+  apiInstance.post("/ideas/document-create", formData, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
 
 export const getAllSubRoute = () => apiInstance.get("/sub-route");
 

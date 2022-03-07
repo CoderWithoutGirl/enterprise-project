@@ -7,7 +7,7 @@ const DashBoardLayout = ({ children }) => {
         <SideBar />
       </div>
       <main className="w-5/6 flex justify-center h-full">
-        <div className="w-4/5 sm:mt-20">{children}</div>
+        <div className="w-4/5 sm:mt-5">{children}</div>
       </main>
     </div>
   );
