@@ -6,7 +6,8 @@ const {
 
 const createIdeaWithDocument = async (req, res) => {
     const {title, description, documentLink, category} = req.body;
-    const createdIdea = await createIdea(title, description, documentLink, category);
+    const userId = req?.user?._id | null;
+    const createdIdea = await createIdea(title, description, documentLink, category, userId);
     res.status(201).json({message: "Idea Created", data: createdIdea})
 }
 

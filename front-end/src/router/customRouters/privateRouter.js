@@ -9,7 +9,7 @@ const PrivateRoute = ({ isAuthenticated, children, allowRoles = roles.ALL, user 
   const location = useLocation();
   return isAuthenticated ? (
     allowRoles?.includes(user?.role) ? (
-      user.role === 'ADMIN' ? <DashBoardLayout>{children}</DashBoardLayout> : <ApplicationBaseLayout>{children}</ApplicationBaseLayout>
+      user.role === roles.ADMIN ? <DashBoardLayout>{children}</DashBoardLayout> : <ApplicationBaseLayout>{children}</ApplicationBaseLayout>
     ) : (
       <Navigate to="/error" state={{ from: location }} />
     )
