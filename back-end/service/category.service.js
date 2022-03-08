@@ -1,4 +1,5 @@
 const Category = require("../model/category");
+const IdeaModel = require("../model/idea")
 
 const createCategory = async (defaultCategory) => {
     const {name} = defaultCategory;
@@ -44,9 +45,25 @@ const updateCategory = async(id, description) =>{
     await Category.findByIdAndUpdate(id , {description: description});
 }
 
-const deleteCategory = async (id) =>{
-    await Category.findByIdAndDelete(id);
+
+
+const checkCategoryInUsed = async(id) =>{
+    const checkCategoryUsed = await IdeaModel.find({category:id})
+    return checkCategoryUsed.length > 0 ? true : false;
+    
 }
+
+const deleteCategory = async (id) =>{
+    const checkUsed = await checkCategoryInUsed(id);
+    if (checkUsed){
+        throw new Error("Category used. Please don't delete it");
+    }
+    else{
+        const canDelete = await Category.findByIdAndDelete(id);
+        return canDelete;
+    }
+}
+    
 
 module.exports = {
     createCategory, 

@@ -149,9 +149,8 @@ function Categories({ getNewTokenRequest, token }) {
       const { data, status } = await deleteCategory(
         token,
         categoryDelete._id
-        //  Id tự kiếm truyền vào
+
       )
-      console.log(editCategory._id)
       return { data, status };
     }
     const { status, data } = await tokenRequestInterceptor(
@@ -162,6 +161,9 @@ function Categories({ getNewTokenRequest, token }) {
       toast.success(data.message);
       fetchData();
       setDeleteOpen((prev) => !prev);
+    }
+    if (status === 400) {
+      toast.error(data.message)
     }
   }
 
@@ -216,34 +218,6 @@ function Categories({ getNewTokenRequest, token }) {
       setCategories((prev) => data);
     }
   };
-
-  //Delete
-  // const deleteCate = async (e) => {
-  //   e.preventDefault();
-  //   // const updateCate = async () => {
-  //   //   const { data, status } = await updateCategory(
-  //   //     editCategory,
-  //   //     editCategory._id,
-  //   //     token
-  //   //   );
-  //   //   console.log(data);
-  //   //   return { data, status };
-  //   // };
-  //   const { status, data } = await tokenRequestInterceptor(
-  //     deleteCate,
-  //     getNewTokenRequest
-  //   );
-  //   console.log(data);
-
-  //   if (status === 200) {
-  //     toast.success(data.message);
-  //     setEditCategory((prev) => data);
-  //     fetchData();
-  //     setEditOpen((prev) => !prev);
-  //   }
-  // };
-
-  // const handleDelete = 
 
 
   const renderTableHead = (item, index) => (
