@@ -31,8 +31,8 @@ const getUserByDepartment = async (department) => {
     department,
     role: process.env.QACOORDINATOR,
   });
-  if(qaCoordinatorOfDepartment) {
-    return [qaCoordinatorOfDepartment,...listUserInDb]
+  if (qaCoordinatorOfDepartment) {
+    return [qaCoordinatorOfDepartment, ...listUserInDb]
   }
   else {
     return listUserInDb;
@@ -43,19 +43,42 @@ const getUserById = async (id) => {
   return await User.findById(id);
 };
 
-const assignStaff = async (role, department, id) =>{
-    const userInDb = await User.findById(id);
-    const allUserInDep = await User.find({department: department});
-    if(userInDb.role === role){ 
-        throw new Error('this user is already a QA coordinator')
-    }
-    else if(allUserInDep.filter(user => user.role === role).length >0) {
-        await User.findOneAndUpdate({department: department, role: role}, {role: process.env.STAFF});
-        await User.findByIdAndUpdate(id, {role: role});
-    }
-    else{
-        await User.findByIdAndUpdate(id, {role: role});
-    }
+const assignStaff = async (role, department, id) => {
+  const userInDb = await User.findById(id);
+  const allUserInDep = await User.find({ department: department });
+  if (userInDb.role === role) {
+    throw new Error('this user is already a QA coordinator')
+  }
+  else if (allUserInDep.filter(user => user.role === role).length > 0) {
+    await User.findOneAndUpdate({ department: department, role: role }, { role: process.env.STAFF });
+    await User.findByIdAndUpdate(id, { role: role });
+  }
+  else {
+    await User.findByIdAndUpdate(id, { role: role });
+  }
+}
+
+const assignStaffToManager = async (role, department, id) => {
+  const accountInDB = await User.findByIdAndUpdate(id);
+  const allAccountInDep = await User.find({ role: role})
+  if (accountInDB.role === role) {
+    throw new Error('This user is already a QA Manager')
+  }
+  else if (allAccountInDep.filter(user => user.role === role).length > 0) {
+    await User.findOneAndUpdate({ department: "", role: role }, { role: process.env.STAFF });
+    await User.findByIdAndUpdate(id, { role: role });
+  }
+  else {
+    await User.findByIdAndUpdate(id, { role: role });
+  }
+}
+
+const findStaffWithoutDepartment = async () => {
+  const listUserInDb = await User.find({
+    department: "",
+    role: [process.env.STAFF, process.env.QAMANAGER],
+  })
+  return listUserInDb;
 }
 
 const excelDataExtractor = async (filename) => {
@@ -96,7 +119,7 @@ const createUserByExcel = async (filename) => {
   const data = await importDataFromExcelToDb(filename);
   let array = data.map(async (user) => {
     try {
-      const useObj = new User({...user});
+      const useObj = new User({ ...user });
       await useObj.save();
       return useObj;
     } catch (e) {
@@ -125,5 +148,7 @@ module.exports = {
   excelDataExtractor,
   deleteExcel,
   assignStaff,
-  getUserByDepartment
+  getUserByDepartment,
+  findStaffWithoutDepartment,
+  assignStaffToManager
 };

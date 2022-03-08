@@ -7,6 +7,8 @@ const {
   deleteExcel,
   getUserByDepartment,
   assignStaff,
+  findStaffWithoutDepartment,
+  assignStaffToManager
 } = require("../service/user.service.js");
 
 const userController = {
@@ -40,6 +42,24 @@ const userController = {
       res.status(200).json({ message: "Assign Staff Account Successfully." });
     } catch (error) {
       res.status(400).json({ message: error.message, status: 400 });
+    }
+  },
+  assignStaffToManager: async(req, res) => {
+    const { role, department } = req.body;
+    const { id } = req.params;
+    try {
+      await assignStaffToManager(role, department, id);
+      res.status(200).json({ message: "Assign Staff Account To QA Manager Successfully." });
+    } catch (error) {
+      res.status(400).json({ message: error.message, status: 400 });
+    }
+  },
+  getUserWithoutDepartment: async(req, res) =>{
+    try {
+      const result = await findStaffWithoutDepartment();
+      res.status(200).json(result);
+    } catch (err) {
+      console.log(err);
     }
   },
   createUserExcel: async (req, res) => {

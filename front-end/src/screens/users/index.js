@@ -10,14 +10,19 @@ import {
   uploadExcelCreateUser,
   confirmUserExcel,
   cancelUserExcel,
+  getUserWithoutDepartment,
+  assignStaffToManager
 } from "../../apiServices";
 import { getNewToken } from "../../store/actions/authenticateAction";
 import Modal from "../../components/modal";
+import Form from "../../components/form";
 import RegisterPage from "./register";
 import DetailPage from "./detail";
+import AssignWithoutDepart from "./AssignWithoutDepart";
 import SpreadSheet from "react-spreadsheet";
 import { toast } from "react-toastify";
-import {IdentificationIcon, BackspaceIcon, UploadIcon} from '@heroicons/react/solid'
+import { IdentificationIcon, BackspaceIcon, UploadIcon } from '@heroicons/react/solid'
+import { roles } from "../../constants/role";
 
 
 const userTableHead = [
@@ -36,9 +41,11 @@ const UserPage = ({ getNewTokenRequest, token }) => {
   const [open, setOpen] = useState(false);
   const [openDetail, setOpenDetail] = useState(false);
   const [openImport, setOpenImport] = useState(false);
+  const [openAssign, setOpenAssign] = useState(false);
   const [file, setFile] = useState({});
   const [data, setData] = useState([]);
   const [filename, setFilename] = useState("");
+  const [userAssign, setUserAssign] = useState([]);
 
   const loadUser = useCallback(async () => {
     const loadAllDataOfUser = async () => {
@@ -56,7 +63,7 @@ const UserPage = ({ getNewTokenRequest, token }) => {
 
   useEffect(() => {
     loadUser();
-    document.title="Users"
+    document.title = "Users"
   }, [loadUser]);
 
   const hangleSearch = (keyword) => {
@@ -98,11 +105,6 @@ const UserPage = ({ getNewTokenRequest, token }) => {
     loadSingleUser();
     setOpenDetail(prev => !prev);
   }
-
- 
-
-
-
 
   const uploadFile = (e) => {
     setFile(e.target.files[0]);
@@ -160,12 +162,58 @@ const UserPage = ({ getNewTokenRequest, token }) => {
     }
   };
 
+
+  const getWithoutDepartment = async () => {
+    const loadAllDataOfUser = async () => {
+      const { data, status } = await getUserWithoutDepartment(token);
+      return { data, status };
+    };
+    const { status, data } = await tokenRequestInterceptor(
+      loadAllDataOfUser,
+      getNewTokenRequest
+    );
+    if (status === 200) {
+      setUserAssign((prev) => data);
+    }
+  };
+
+  const handleAssign = async() =>{
+    await getWithoutDepartment();
+    setOpenAssign(true);
+  }
+
+  console.log(userAssign);
+
+  const assignStaff = async (id) => {
+    // e.preventDefault();
+    const assignStaffRequest = async () => {
+      const { data, status } = await assignStaffToManager(
+        { role: roles.QA_MANAGER, department: userAssign.department },
+        id,
+        token
+      );
+      
+      return { data, status };
+    };
+
+    const { status, data } = await tokenRequestInterceptor(
+      assignStaffRequest,
+      getNewTokenRequest
+    );
+    if (status === 200) {
+      toast.success(data.message);
+      setUserAssign((prev) => ({ role: "", department: "" }));
+      setOpenAssign((prev) => !prev);
+      loadUser();
+    }
+  };
+
+
   const renderTableHead = (item, index) => (
     <th key={index} className="p-2 whitespace-nowrap">
       <div
-        className={`font-semibold ${
-          item.toLowerCase() === "actions" ? "text-center" : "text-left"
-        }`}
+        className={`font-semibold ${item.toLowerCase() === "actions" ? "text-center" : "text-left"
+          }`}
       >
         {item}
       </div>
@@ -213,6 +261,7 @@ const UserPage = ({ getNewTokenRequest, token }) => {
         search={hangleSearch}
         createButtonHandler={() => setOpen(true)}
         importButtonHandler={() => setOpenImport(!openImport)}
+        assignButtonHandler={handleAssign}
       />
       <Modal open={open} setOpen={setOpen}>
         <RegisterPage close={() => setOpen(!open)} loadUser={loadUser} token={token} getNewTokenRequest={getNewTokenRequest} />
@@ -220,7 +269,7 @@ const UserPage = ({ getNewTokenRequest, token }) => {
       <Modal open={openDetail} setOpen={setOpenDetail}>
         <DetailPage user={user} />
       </Modal>
-      
+
       <Modal open={openImport} setOpen={setOpenImport}>
         <div className="flex justify-center w-fit mt-8">
           {data.length ? (
@@ -282,6 +331,14 @@ const UserPage = ({ getNewTokenRequest, token }) => {
               </div>
             </div>
           )}
+        </div>
+      </Modal>
+
+      <Modal open={openAssign} setOpen={setOpenAssign}>
+        <div className="w-full">
+          <Form title="Assign QA COORDINATOR">
+            <AssignWithoutDepart role={roles.QA_MANAGER} handleSubmit={assignStaff} users={userAssign} setOpen={()=> setOpenAssign(!openAssign)} />
+          </Form>
         </div>
       </Modal>
     </div>

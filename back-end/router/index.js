@@ -7,7 +7,6 @@ const testRouter = require("./test.router");
 const subRoute = require("./subRoute.router");
 const academicRouter = require("./academic.router");
 const rootRouter = require("express").Router();
-const authenticateRouter = require('./authenticate.router');
 const ideaRouter = require('./ideas.router');
 
 rootRouter.use(`/auth`, authenticateRouter);
