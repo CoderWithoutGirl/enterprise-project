@@ -60,6 +60,23 @@ export const assignStaff = (formData, id, token) =>
     }
   );
 
+export const assignStaffToManager = (formData, id, token) =>
+  apiInstance.put(
+    `users/assign/${id}`,
+    { ...formData },
+    {
+      headers: { Authorization: `Bearer ${token}` },
+    }
+  );
+
+export const getUserWithoutDepartment = (token) =>
+  apiInstance.get(
+    `users/getdepartment`,
+    {
+      headers: { Authorization: `Bearer ${token}` },
+    }
+  );
+
 export const uploadExcelCreateUser = (formData, token) =>
   apiInstance.post("/users/uploadexcel", formData, {
     headers: {

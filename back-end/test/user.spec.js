@@ -3,7 +3,13 @@ dotenv.config();
 const db = require("../persistance/db");
 const mongoose = require("mongoose");
 const User = require("../model/user");
-const { getAllUser, getUserByUsername, getUserById} = require("../service/user.service")
+const { 
+    getAllUser, 
+    getUserByUsername, 
+    getUserById,
+    findStaffWithoutDepartment,
+    assignStaffToManager
+} = require("../service/user.service")
 
 beforeAll(async () => {
     db.connect("mongodb://localhost:27017/test-enterprise-project");
@@ -40,6 +46,42 @@ beforeAll(async () => {
         role: process.env.STAFF,
       });
       await userTest3.save();
+      const userTest4 = await new User({
+        username: "nghia@gmail.com",
+        password: "abc123",
+        fullname: "Mai Xuan Nghia",
+        email: "nghia@gmail.com",
+        dateOfBirth: new Date(),
+        age: 21,
+        department: '',
+        gender: "male",
+        role: process.env.QAMANAGER,
+      });
+      await userTest4.save();
+      const userTest5 = await new User({
+        username: "khoa@gmail.com",
+        password: "abc123",
+        fullname: "Huynh Tan Khoa",
+        email: "khoa@gmail.com",
+        dateOfBirth: new Date(),
+        age: 21,
+        department: '',
+        gender: "male",
+        role: process.env.STAFF,
+      });
+      await userTest5.save();
+      const userTest6 = await new User({
+        username: "tri@gmail.com",
+        password: "abc123",
+        fullname: "Nguyen Minh Tri",
+        email: "tri@gmail.com",
+        dateOfBirth: new Date(),
+        age: 21,
+        department: '',
+        gender: "male",
+        role: process.env.STAFF,
+      });
+      await userTest6.save();
 })
 
 afterAll(async () => {
@@ -84,3 +126,10 @@ describe("GET /users/:id", () => {
     })
 });
 
+
+describe("GET /users/getdepartment", () => {
+    it("Test should return user account without department", async() =>{
+        const userList = await findStaffWithoutDepartment();
+        expect(userList).toBeTruthy();
+    })
+});
