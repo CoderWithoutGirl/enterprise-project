@@ -25,7 +25,7 @@ export const register = (formData) =>
   apiInstance.post("/auth/register", { ...formData });
 
 export const refreshToken = (refreshToken) =>
-  apiInstance.post("/auth/refresh-token", { refreshToken });
+  apiInstance.post("/auth/refresh-token", { refreshToken: refreshToken });
 
 export const logout = (refreshToken) =>
   apiInstance.post("/auth/logout", { ...refreshToken });
@@ -164,7 +164,10 @@ export const deleteCategory = (token, id) =>
   });
 
 //Idea feature API endpoint
-export const getAllIdeaWithFilter = (filter, page = 1) => apiInstance.get(`/ideas?filter=${filter}&page=${page}`)
+export const getAllIdeaWithFilter = (filter, page = 1, token) =>
+  apiInstance.get(`/ideas?filter=${filter}&page=${page}`, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
 export const createIdea = (formData, token) =>
   apiInstance.post(
     "/ideas/create",
@@ -177,6 +180,18 @@ export const uploadSupportDocument = (formData, token) =>
   });
 export const uploadEditorContent = (formData, token) =>
   apiInstance.post("/ideas/document-create", formData, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+export const getSingleIdea = (id, token) =>
+  apiInstance.get(`/ideas/${id}`, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+export const commentToIdea = (id, data, token) =>
+  apiInstance.post(`/ideas/${id}/comment`,{...data}, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+export const reactToIdea = (id, data, token) =>
+  apiInstance.post(`/ideas/${id}/reaction`,{...data}, {
     headers: { Authorization: `Bearer ${token}` },
   });
 

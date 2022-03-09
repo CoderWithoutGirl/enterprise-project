@@ -29,6 +29,7 @@ const authenticateControler = {
         }
     },
     refeshToken: async (req, res) => {
+        console.log(req.body.refeshToken);
         const { refreshToken } = req.body;
         try {
             const responseData = await refreshJwtToken(refreshToken);

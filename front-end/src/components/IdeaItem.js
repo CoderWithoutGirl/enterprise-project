@@ -2,6 +2,7 @@ import {
   ChevronLeftIcon,
   ChatAltIcon,
 } from "@heroicons/react/solid";
+import { useNavigate } from "react-router-dom";
 
 const IdeaItem = ({
   index,
@@ -10,13 +11,21 @@ const IdeaItem = ({
   commentCount,
   category,
   like,
+  id
 }) => {
   function numberWithCommas(x) {
     return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
   }
+
+  const navigate = useNavigate();
+
+  const handleNavigate = (e) => {
+    navigate(`/post/${id}`)
+  }
+
   return (
     <li key={index} className="mb-5">
-      <div className="flex justify-between items-center bg-gray-200 py-6 px-4 rounded-xl">
+      <div onClick={handleNavigate} className="cursor-pointer flex justify-between items-center bg-gray-200 py-6 px-4 rounded-xl">
         <div className="flex gap-3 items-center">
           <div className="bg-gray-700  rounded-full w-20 h-20 flex items-center justify-center">
             <span className="text-white font-black text-3xl">

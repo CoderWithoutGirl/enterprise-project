@@ -91,12 +91,12 @@ const Table = ({
                 className="w-[80px] sm:w-1/5 rounded-md mt-1 border-gray-300"
               />
               <div className="w-fit flex gap-3 justify-around items-center">
-                <Button
+               {assignButtonHandler && <Button
                   icon={PlusCircleIcon}
                   title="Assign"
                   type="secondary"
                   onClick={assignButtonHandler}
-                />
+                />}
                 {importButtonHandler && (
                   <Button
                     icon={UploadIcon}
