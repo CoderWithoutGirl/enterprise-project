@@ -165,3 +165,14 @@ export const uploadEditorContent = (formData, token) =>
   });
 
 export const getAllSubRoute = () => apiInstance.get("/sub-route");
+
+//academy
+export const createAcademic = (formData, token) =>
+  apiInstance.post("/academic/", formData, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+
+export const getAllAcademic = (token) =>
+  apiInstance.get("/academic/", {
+    headers: { Authorization: `Bearer ${token}` },
+  });
