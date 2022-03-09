@@ -10,5 +10,15 @@ academicRouter.use([
 
 academicRouter.post("/", academicController.create);
 academicRouter.get("/", academicController.getAll);
+academicRouter.put(
+  "/:id",
+  authorize(process.env.ADMIN),
+  academicController.update
+);
+academicRouter.get(
+  "/:id",
+  authorize(process.env.ADMIN),
+  academicController.getById
+);
 
 module.exports = academicRouter;
