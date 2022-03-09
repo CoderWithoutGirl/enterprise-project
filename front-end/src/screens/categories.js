@@ -15,9 +15,12 @@ import {
   updateCategory,
   tokenRequestInterceptor,
   findCategoryByID,
+  deleteCategory,
 } from "../apiServices";
-import { PencilAltIcon, BackspaceIcon, XCircleIcon,
-  PlusCircleIcon } from "@heroicons/react/solid";
+import {
+  PencilAltIcon, BackspaceIcon, XCircleIcon,
+  PlusCircleIcon
+} from "@heroicons/react/solid";
 
 import { toast } from "react-toastify";
 import ErrorMessageCustom from "../components/errorMessage";
@@ -42,7 +45,9 @@ function Categories({ getNewTokenRequest, token }) {
   const [categories, setCategories] = useState([]);
   const [open, setOpen] = useState(false);
   const [editOpen, setEditOpen] = useState(false);
+  const [deleteOpen, setDeleteOpen] = useState(false);
   const [editCategory, setEditCategory] = useState({});
+  const [categoryDelete, setCategoryDelete] = useState({});
 
   const fetchData = useCallback(async () => {
     const loadAllDataOfCategory = async () => {
@@ -111,6 +116,7 @@ function Categories({ getNewTokenRequest, token }) {
     }
   };
 
+  //Update
   const update = async (e) => {
     e.preventDefault();
     const updateCate = async () => {
@@ -136,14 +142,51 @@ function Categories({ getNewTokenRequest, token }) {
     }
   };
 
-  const editHandler = (e, _id) => {
+  //Delete 
+  const deleteCat = async (event) => {
+    event.preventDefault();
+    const deleteCate = async () => {
+      const { data, status } = await deleteCategory(
+        token,
+        categoryDelete._id
+
+      )
+      return { data, status };
+    }
+    const { status, data } = await tokenRequestInterceptor(
+      deleteCate,
+      getNewTokenRequest
+    );
+    if (status === 200) {
+      toast.success(data.message);
+      fetchData();
+      setDeleteOpen((prev) => !prev);
+    }
+    if (status === 400) {
+      toast.error(data.message)
+    }
+  }
+
+
+  const handleDelete = async (e, item) => {
+    e.preventDefault();
+    //check item co ton tai idea ko
+    setDeleteOpen((prev) => !prev);
+
+    setCategoryDelete(item);
+  }
+
+
+  const editHandle = (e, _id) => {
     e.preventDefault();
     console.log(_id);
     const getSingleCategory = async () => {
       const loadAllDataOfCategory = async () => {
         const { data, status } = await findCategoryByID(token, _id);
+
         return { data, status };
       };
+      //Đảm bảo token hết hạn cx ko bị logout
       const { status, data } = await tokenRequestInterceptor(
         loadAllDataOfCategory,
         getNewTokenRequest
@@ -161,26 +204,27 @@ function Categories({ getNewTokenRequest, token }) {
     setEditCategory((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   };
 
+  //Search
   const handleSearch = async (keyword) => {
-      const loadAllDataOfCategory = async () => {
-        const { data, status } = await searchCategoryByName(keyword, token);
-        return { data, status };
-      };
-      const { status, data } = await tokenRequestInterceptor(
-        loadAllDataOfCategory,
-        getNewTokenRequest
-      );
-      if (status === 200) {
-        setCategories((prev) => data);
-      }
+    const loadAllDataOfCategory = async () => {
+      const { data, status } = await searchCategoryByName(keyword, token);
+      return { data, status };
+    };
+    const { status, data } = await tokenRequestInterceptor(
+      loadAllDataOfCategory,
+      getNewTokenRequest
+    );
+    if (status === 200) {
+      setCategories((prev) => data);
+    }
   };
+
 
   const renderTableHead = (item, index) => (
     <th key={index} class="p-2 whitespace-nowrap">
       <div
-        className={`font-semibold ${
-          item.toLowerCase() === "actions" ? "text-center" : "text-left"
-        }`}
+        className={`font-semibold ${item.toLowerCase() === "actions" ? "text-center" : "text-left"
+          }`}
       >
         {item}
       </div>
@@ -210,9 +254,9 @@ function Categories({ getNewTokenRequest, token }) {
             icon={PencilAltIcon}
             type="primary"
             title="Edit"
-            onClick={(e) => editHandler(e, item._id)}
+            onClick={(e) => editHandle(e, item._id)}
           />
-          <Button icon={BackspaceIcon} type="danger" title="Delete" />
+          <Button icon={BackspaceIcon} type="danger" title="Delete" onClick={async (e) => handleDelete(e, item)} />
         </div>
       </td>
     </tr>
@@ -222,7 +266,7 @@ function Categories({ getNewTokenRequest, token }) {
     <>
       <div className="w-full">
         <Table
-          limit={10}
+          limit={5}
           tableHead={customerTableHead}
           tableData={categories}
           renderData={renderTableBody}
@@ -231,30 +275,6 @@ function Categories({ getNewTokenRequest, token }) {
           createButtonHandler={() => setOpen(true)}
           search={handleSearch}
         />
-
-        <Modal open={editOpen} setOpen={setEditOpen}>
-          <div className="w-screen sm:max-w-lg">
-            <Form title="Update Category">
-              <InputField
-                type="text"
-                placeholder="Description"
-                name="description"
-                value={editCategory?.description}
-                onChange={onEditChange}
-              />
-              <div className="w-3/5 flex flex-wrap justify-between items-center">
-                <Button
-                  onClick={update}
-                  role="submit"
-                  icon={PencilAltIcon}
-                  type="primary"
-                  title="Update"
-                />
-                <Button icon={XCircleIcon} type="danger" title="Cancel" onClick={editHandler} />
-              </div>
-            </Form>
-          </div>
-        </Modal>
 
         <Modal open={open} setOpen={setOpen}>
           <div className="w-screen sm:max-w-lg">
@@ -296,6 +316,53 @@ function Categories({ getNewTokenRequest, token }) {
                   icon={PlusCircleIcon}
                 />
                 <Button icon={XCircleIcon} type="danger" title="Cancel" onClick={toggle} />
+              </div>
+            </Form>
+          </div>
+        </Modal>
+
+
+        <Modal open={editOpen} setOpen={setEditOpen}>
+          <div className="w-screen sm:max-w-lg">
+            <Form title="Update Category">
+              <InputField
+                type="text"
+                placeholder="Description"
+                name="description"
+                value={editCategory?.description}
+                onChange={onEditChange}
+              />
+              <div className="w-3/5 flex flex-wrap justify-between items-center">
+                <Button
+                  onClick={update}
+                  role="submit"
+                  icon={PencilAltIcon}
+                  type="primary"
+                  title="Update"
+                />
+                <Button icon={XCircleIcon} type="danger" title="Cancel" onClick={editHandle} />
+              </div>
+            </Form>
+          </div>
+        </Modal>
+
+
+        <Modal open={deleteOpen} setOpen={setDeleteOpen}>
+          <div className="w-screen sm:max-w-lg">
+            <Form title="Delete Category">
+              <div className="w-3/5 flex flex-wrap justify-between items-center">
+                <h4 style={{ color: "red", fontSize: "17px", paddingBottom: "10px" }}>
+                  Are you sure you want to delete ?
+                </h4>
+
+                <Button
+                  onClick={deleteCat}
+                  role="submit"
+                  icon={BackspaceIcon}
+                  type="danger"
+                  title="Delete"
+                />
+                <Button icon={XCircleIcon} type="primary" title="Cancel" onClick={handleDelete} />
               </div>
             </Form>
           </div>

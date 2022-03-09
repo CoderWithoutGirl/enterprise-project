@@ -4429,6 +4429,38 @@ fresh@0.5.2:
   resolved "https://registry.yarnpkg.com/fresh/-/fresh-0.5.2.tgz#3d8cadd90d976569fa835ab1f8e4b23a105605a7"
   integrity sha1-PYyt2Q2XZWn6g1qx+OSyOhBWBac=
 
+"front-end@file:.":
+  version "0.1.0"
+  dependencies:
+    "@ckeditor/ckeditor5-react" "^4.0.0"
+    "@headlessui/react" "^1.4.2"
+    "@heroicons/react" "^1.0.5"
+    "@hookform/error-message" "^2.0.0"
+    "@hookform/resolvers" "^2.8.5"
+    "@tailwindcss/forms" "^0.4.0"
+    "@testing-library/jest-dom" "^5.14.1"
+    "@testing-library/react" "^12.0.0"
+    "@testing-library/user-event" "^13.2.1"
+    axios "^0.24.0"
+    ckeditor5-custom-build "./ckeditor5/"
+    date-fns "^2.28.0"
+    flowbite "^1.3.4"
+    front-end "file:../../../../Library/Caches/Yarn/v6/npm-front-end-0.1.0-2fde1dca-a5b5-4c38-8342-a095abef1df2-1646640046050/node_modules/front-end"
+    react "^17.0.2"
+    react-date-range "^1.4.0"
+    react-dom "^17.0.2"
+    react-hook-form "^7.24.0"
+    react-redux "^7.2.6"
+    react-router-dom "^6.2.1"
+    react-scripts "5.0.0"
+    react-spreadsheet "^0.6.1"
+    react-toastify "^8.1.0"
+    redux "^4.1.2"
+    redux-persist "^6.0.0"
+    redux-saga "^1.1.3"
+    web-vitals "^2.1.0"
+    yup "^0.32.11"
+
 fs-extra@^10.0.0:
   version "10.0.1"
   resolved "https://registry.yarnpkg.com/fs-extra/-/fs-extra-10.0.1.tgz#27de43b4320e833f6867cc044bfce29fdf0ef3b8"

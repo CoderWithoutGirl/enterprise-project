@@ -60,6 +60,23 @@ export const assignStaff = (formData, id, token) =>
     }
   );
 
+export const assignStaffToManager = (formData, id, token) =>
+  apiInstance.put(
+    `users/assign/${id}`,
+    { ...formData },
+    {
+      headers: { Authorization: `Bearer ${token}` },
+    }
+  );
+
+export const getUserWithoutDepartment = (token) =>
+  apiInstance.get(
+    `users/getdepartment`,
+    {
+      headers: { Authorization: `Bearer ${token}` },
+    }
+  );
+
 export const uploadExcelCreateUser = (formData, token) =>
   apiInstance.post("/users/uploadexcel", formData, {
     headers: {
@@ -141,6 +158,11 @@ export const updateCategory = (formData, id, token) =>
     { headers: { Authorization: `Bearer ${token}` } }
   );
 
+export const deleteCategory = (token, id) =>
+  apiInstance.delete(`/categories/${id}`, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+
 //Idea feature API endpoint
 export const getAllIdeaWithFilter = (filter, page = 1) => apiInstance.get(`/ideas?filter=${filter}&page=${page}`)
 export const createIdea = (formData, token) =>
@@ -150,11 +172,9 @@ export const createIdea = (formData, token) =>
     { headers: { Authorization: `Bearer ${token}` } }
   );
 export const uploadSupportDocument = (formData, token) =>
-  apiInstance.post(
-    "/ideas/upload",
-    formData,
-    { headers: { Authorization: `Bearer ${token}` } }
-  );
+  apiInstance.post("/ideas/upload", formData, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
 export const uploadEditorContent = (formData, token) =>
   apiInstance.post("/ideas/document-create", formData, {
     headers: { Authorization: `Bearer ${token}` },
@@ -170,5 +190,15 @@ export const createAcademic = (formData, token) =>
 
 export const getAllAcademic = (token) =>
   apiInstance.get("/academic/", {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+
+export const getAcademicById = (token, id) =>
+  apiInstance.get(`/academic/${id}`, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+
+export const updateAcademic = (formData, id, token) =>
+  apiInstance.put(`/academic/${id}`, formData, {
     headers: { Authorization: `Bearer ${token}` },
   });

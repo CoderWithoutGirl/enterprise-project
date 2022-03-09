@@ -4,7 +4,16 @@ const passport = require("passport");
 const { uploadExcel } = require("../middleware/mutler");
 const { authorize } = require("../middleware/authorization");
 
+userRouter.put('/assign/:id',[passport.authenticate('jwt', {session: false}), authorize(process.env.ADMIN)], userController.assignStaffToManager);
 userRouter.put('/:id',[passport.authenticate('jwt', {session: false}), authorize(process.env.ADMIN)], userController.assignStaff);
+userRouter.get(
+  "/getdepartment",
+  [
+    passport.authenticate("jwt", { session: false }),
+    authorize([process.env.QAMANAGER, process.env.ADMIN]),
+  ],
+  userController.getUserWithoutDepartment
+);
 userRouter.get(
   "/",
   [
@@ -13,6 +22,7 @@ userRouter.get(
   ],
   userController.getAllUser
 );
+
 userRouter.get(
   "/:id",
   [
