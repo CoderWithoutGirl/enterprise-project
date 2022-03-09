@@ -14,6 +14,7 @@ import ErrorPage from "../screens/error";
 import { roles } from "../constants/role";
 import UserInDepartment from "../screens/userInDepartment/";
 import PostIdea from "../screens/postIdea";
+import IdeaDetail from "../screens/IdeaDetail";
 
 const AppRouter = () => {
   return (
@@ -32,6 +33,14 @@ const AppRouter = () => {
           element={
             <PrivateRoute>
               <HomePage />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/post/:id"
+          element={
+            <PrivateRoute>
+              <IdeaDetail />
             </PrivateRoute>
           }
         />

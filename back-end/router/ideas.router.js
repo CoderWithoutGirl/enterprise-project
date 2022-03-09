@@ -1,10 +1,22 @@
-const ideaRouter = require('express').Router();
+const ideaRouter = require('express').Router({mergeParams: true});
 const {uploadDocument} = require('../middleware/mutler')
-const {uploadSupportDocument, createIdeaWithDocument, createDocumentSupportedFromEditor} = require('../controller/idea.controller')
+const {
+  uploadSupportDocument,
+  createIdeaWithDocument,
+  createDocumentSupportedFromEditor,
+  getAllIdeas,
+  getSingleIdea,
+  commentToIdea,
+  reactionToIdea,
+} = require("../controller/idea.controller");
 const passport = require('passport');
 const {authorize} = require('../middleware/authorization')
 
 ideaRouter.use([passport.authenticate('jwt', {session: false}), authorize()])
+ideaRouter.get("/", getAllIdeas);
+ideaRouter.get("/:id", getSingleIdea);
+ideaRouter.post("/:id/comment", commentToIdea);
+ideaRouter.post("/:id/reaction", reactionToIdea);
 ideaRouter.post('/create', createIdeaWithDocument);
 ideaRouter.post('/document-create', uploadDocument.single("editor-content"), createDocumentSupportedFromEditor);
 ideaRouter.post(

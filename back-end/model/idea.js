@@ -1,26 +1,30 @@
 const mongoose = require('mongoose');
 
 const ReactionSchema = new mongoose.Schema({
-  userId: {type: mongoose.Types.ObjectId, ref: "Users"},
-  status: {type: String, enum: ["Like", "Dislike"]}
+  user: {type: mongoose.Types.ObjectId, ref: "Users"},
+  reactionType: {type: String, enum: ["Like", "Dislike"]}
 }, {
   timestamps: true
 })
-const CommentSchema = new mongoose.Schema({
-  userId: mongoose.Types.ObjectId,
-  content: {type: String, required: true},
-}, {
-  timestamps: true
-})
+const CommentSchema = new mongoose.Schema(
+  {
+    user: { type: mongoose.Types.ObjectId, ref: "Users" },
+    content: { type: String, required: true },
+  },
+  {
+    timestamps: true,
+  }
+);
 
 const IdeaSchema = new mongoose.Schema({
   title: { type: String, required: true },
   description: { type: String, required: true },
   category: { type: mongoose.Types.ObjectId, ref: "Category", required: true},
-  documentLink: {type: String, required: true},
-  userId: {type: mongoose.Types.ObjectId, ref: 'Users'},
-  reaction: [ReactionSchema],
-  comment: [CommentSchema]
+  documentLink: {type: String},
+  user: {type: mongoose.Types.ObjectId, ref: 'Users'},
+  reactions: [ReactionSchema],
+  comments: [CommentSchema],
+  isAnonymous: {type: Boolean, default: false}
 }, {timestamps: true});
 
 

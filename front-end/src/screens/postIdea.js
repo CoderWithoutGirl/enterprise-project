@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import {useForm} from 'react-hook-form';
 import {connect} from 'react-redux'
 import { CKEditor } from "@ckeditor/ckeditor5-react";
@@ -82,7 +82,7 @@ const PostIdea = ({ authenticateReducer, getNewTokenRequest }) => {
   };
 
   const createFile = async () => {
-    const blob = new Blob([editorData], {type: 'text/markdown'});
+    const blob = new Blob([editorData], {type: 'text/plain'});
     const file = new File([blob], `content.md`, {type: 'text/markdown'})
     let formData = new FormData();
     formData.append("editor-content", file);
@@ -90,6 +90,10 @@ const PostIdea = ({ authenticateReducer, getNewTokenRequest }) => {
     if(status === 201) {
       return data.documentLink;
     }
+  }
+
+  const capitalize = (string) => {
+    return string.charAt(0).toUpperCase() + string.slice(1);
   }
 
   const submitIdeaHandler = async (formData) => {
@@ -105,7 +109,14 @@ const PostIdea = ({ authenticateReducer, getNewTokenRequest }) => {
     if(editorData) {
       documentLink = await createFile();
     }
-    let ideaSubmitBody = { ...formData, documentLink };
+    let ideaSubmitBody = {
+      ...formData,
+      title: formData.title
+        .split(" ")
+        .map((word) => capitalize(word))
+        .join(" "),
+      documentLink,
+    };
     console.log(ideaSubmitBody);
     const uploadIdea = await createIdea(ideaSubmitBody, token);
     if (uploadIdea.status === 201) {
@@ -186,26 +197,25 @@ const PostIdea = ({ authenticateReducer, getNewTokenRequest }) => {
             )}
           </div>
         ) : (
-          <div className="ck-editor">
-            <CKEditor
-              editor={ClassicEditor}
-              data={editorData}
-              onReady={(editor) => {
-                editor.ui
-                  .getEditableElement()
-                  .parentElement.insertBefore(
-                    editor.ui.view.toolbar.element,
-                    editor.ui.getEditableElement()
-                  );
-              }}
-              onChange={(event, editor) => setEditorData((editor.getData()))}
-            />
-          </div>
+          <CKEditor
+            editor={ClassicEditor}
+            data={editorData}
+            onReady={(editor) => {
+              editor.ui
+                .getEditableElement()
+                .parentElement.insertBefore(
+                  editor.ui.view.toolbar.element,
+                  editor.ui.getEditableElement()
+                );
+            }}
+            onChange={(event, editor) => setEditorData(editor.getData())}
+            timestamp="ABCD"
+          />
         )}
         <div className="w-full flex justify-start items-center gap-2">
           <input
             type="checkbox"
-            defaultChecked={agree}
+            checked={agree}
             onChange={(e) => setAgree(e.target.checked)}
           />
           <span>
