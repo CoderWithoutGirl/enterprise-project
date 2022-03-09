@@ -15,6 +15,11 @@ const HomePage = () => {
     if (status === 200) {
       setIdeas(data.data);
       setPages(data.pages);
+      window.scrollTo({
+        top: 0,
+        left: 0,
+        behavior: 'smooth'
+      })
     }
   }, [filterOption, currPage]);
 
@@ -55,6 +60,7 @@ const HomePage = () => {
               [...Array(pages).keys()].map((page, index) => (
                 <button
                   key={index}
+                  onClick={() => setCurrPage(page+1)}
                   aria-current="page"
                   className={`z-10 bg-indigo-50 ${
                     currPage ===( page + 1) && "border-indigo-500 text-indigo-600"
