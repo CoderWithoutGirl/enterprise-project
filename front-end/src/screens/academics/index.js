@@ -4,6 +4,7 @@ import Button from "../../components/button";
 import Form from "../../components/form";
 import DateTimePicker from "../../components/DateTimePicker";
 import CreateAcademicYear from "../../components/CreateAcademicYear";
+import UpdateAcademicYear from "../../components/UpdateAcademicYear";
 import Table from "../../components/table";
 import { getNewToken } from "../../store/actions/authenticateAction";
 import Modal from "../../components/modal";
@@ -12,8 +13,10 @@ import {
   createAcademic,
   tokenRequestInterceptor,
   getAllAcademic,
+  getAcademicById,
+  updateAcademic,
 } from "../../apiServices/";
-import { PlusCircleIcon } from "@heroicons/react/solid";
+import { PlusCircleIcon, PencilAltIcon } from "@heroicons/react/solid";
 import InputField from "../../components/inputField";
 import ErrorMessageCustom from "../../components/errorMessage";
 
@@ -43,8 +46,10 @@ const errorInitial = {
 const AcademicPage = ({ getNewTokenRequest, token }) => {
   const [academic, setAcademic] = useState([]);
   const [openAcademy, setOpenAcademy] = useState(false);
+  const [openUpdateAcademy, setOpenUpdateAcademy] = useState(false);
   const [name, setName] = useState("");
   const [date, setDate] = useState(dateInitial);
+  const [editAcademicYearId, setEditAcademicYearId] = useState("");
   const [closureDate, setClosureDate] = useState(new Date());
   const [errors, setErrors] = useState(errorInitial);
 
@@ -126,11 +131,76 @@ const AcademicPage = ({ getNewTokenRequest, token }) => {
     }
   };
 
+  const handleUpdateSubmit = async () => {
+    if (validation()) {
+      const updateOfAcademic = async () => {
+        const { status, data } = await updateAcademic(
+          {
+            name: name,
+            startDate: date[0].startDate,
+            endDate: date[0].endDate,
+            closureDate: closureDate,
+          },
+          editAcademicYearId,
+          token
+        );
+        return { data, status };
+      };
+      const { status, data } = await tokenRequestInterceptor(
+        updateOfAcademic,
+        getNewTokenRequest
+      );
+      if (status === 200) {
+        toast.success("Create success");
+        setName("");
+        setDate(dateInitial);
+        setClosureDate(new Date());
+        setOpenUpdateAcademy(false);
+        setErrors(errorInitial);
+        loadAcademy();
+      } else {
+        toast.error(data.message);
+      }
+    }
+  };
+
   const dateFormatter = (day) => {
     const d = new Date(day);
     var datestring =
       d.getDate() + "-" + (d.getMonth() + 1) + "-" + d.getFullYear();
     return datestring;
+  };
+
+  const editHandler = (e, _id) => {
+    e.preventDefault();
+    setEditAcademicYearId(_id);
+    const getSingleAcademicYear = async () => {
+      const loadDataOfAcademicYear = async () => {
+        const { data, status } = await getAcademicById(token, _id);
+        return { data, status };
+      };
+      const { status, data } = await tokenRequestInterceptor(
+        loadDataOfAcademicYear,
+        getNewTokenRequest
+      );
+
+      if (status === 200) {
+        console.log(data);
+        setName(data.name);
+        setClosureDate(new Date(data.closureDate));
+
+        const date = [
+          {
+            startDate: new Date(data.startDate),
+            endDate: new Date(data.endDate),
+            key: "selection",
+          },
+        ];
+        setDate(date);
+      }
+    };
+    getSingleAcademicYear();
+    setOpenUpdateAcademy((prev) => !prev);
   };
 
   const renderTableHead = (item, index) => (
@@ -160,7 +230,14 @@ const AcademicPage = ({ getNewTokenRequest, token }) => {
         <div className="text-left">{dateFormatter(item.endDate)}</div>
       </td>
       <td className="p-2 whitespace-nowrap">
-        <div className="flex gap-3"></div>
+        <div className="text-left flex justify-center gap-3 w-fit">
+          <Button
+            icon={PencilAltIcon}
+            type="primary"
+            title="Edit"
+            onClick={(e) => editHandler(e, item._id)}
+          />
+        </div>
       </td>
     </tr>
   );
@@ -213,6 +290,42 @@ const AcademicPage = ({ getNewTokenRequest, token }) => {
             />
           </Form>
         </div>
+      </Modal>
+      <Modal open={openUpdateAcademy} setOpen={setOpenUpdateAcademy}>
+        <Form title="Edit Academy">
+          <label className="mr-auto text-xl text-900">Name</label>
+          <InputField
+            type="text"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+          />
+          {errors.name.length > 0 && (
+            <ErrorMessageCustom message={errors.name} />
+          )}
+          <label className="mr-auto text-xl text-900">Start-End Date</label>
+          <UpdateAcademicYear date={date} setDate={setDate} />
+          {errors.startDate.length > 0 && (
+            <ErrorMessageCustom message={errors.startDate} />
+          )}
+          {errors.endDate.length > 0 && (
+            <ErrorMessageCustom message={errors.endDate} />
+          )}
+          <label className="mr-auto text-xl text-900">Closure Date</label>
+          <DateTimePicker
+            value={closureDate.toLocaleDateString("en-CA")}
+            onChange={(e) => setClosureDate(new Date(e.target.value))}
+          />
+          {errors.closureDate.length > 0 && (
+            <ErrorMessageCustom message={errors.closureDate} />
+          )}
+          <Button
+            onClick={handleUpdateSubmit}
+            role="submit"
+            type="primary"
+            icon={PencilAltIcon}
+            title="Update"
+          />
+        </Form>
       </Modal>
     </div>
   );
