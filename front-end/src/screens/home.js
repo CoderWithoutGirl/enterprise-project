@@ -21,9 +21,12 @@ const HomePage = ({authenticateReducer, getNewTokenRequest}) => {
         currPage,
         token
       );
-      return {data, status}
-    }
-    const {data, status} = await tokenRequestInterceptor(getAllData, getNewTokenRequest)
+      return { data, status };
+    };
+    const { data, status } = await tokenRequestInterceptor(
+      getAllData,
+      getNewTokenRequest
+    );
     if (status === 200) {
       setIdeas(data.data);
       setPages(data.pages);
@@ -33,7 +36,7 @@ const HomePage = ({authenticateReducer, getNewTokenRequest}) => {
         behavior: "smooth",
       });
     }
-  }, [filterOption, currPage]);
+  }, [filterOption, currPage, getNewTokenRequest, token]);
 
   const nextPage = () => {
     setCurrPage(prev => prev + 1)

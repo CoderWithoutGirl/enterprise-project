@@ -1,6 +1,9 @@
 const IdeaModel = require("../model/idea");
+const UserModel = require("../model/user");
 const CategoryModel = require("../model/category");
 const mdpdf = require("mdpdf");
+const emailProcess = require("../processes/email.process");
+const {notificationUser, notificationQA}= require('../documents/index')
 
 const filterEnum = {
   ALPHABET: "ALPHABET",
@@ -138,17 +141,26 @@ const countAllIdeas = async (limit = 5) => {
 
 const commentToAnIdea = async (postId, content, userId) => {
   const ideaInDb = await IdeaModel.findById(postId);
+    const author = await UserModel.findById(ideaInDb.user);
   ideaInDb.comments.push({content, user: userId});
-  await ideaInDb.save();
+  emailProcess({
+    to: author.email,
+    subject: "New Comment In Your Post",
+    html: notificationUser(
+      "comment",
+      author.fullname,
+      process.env.BASE_IDEA_URL + ideaInDb._id.toString()
+    ),
+  });
 }
 
 const reactionToAnIdea = async (postId, reactionType, userId) => {
   const ideaInDb = await IdeaModel.findById(postId);
+  const author = await UserModel.findById(ideaInDb.user);
   const newReaction = { reactionType, user: userId };
   const indexFound = ideaInDb.reactions.findIndex(
     (reaction) => reaction.user.toString() === userId
   );
-  console.log(indexFound);
   if(indexFound >= 0) {
     ideaInDb.reactions.splice(indexFound, 1, newReaction);
   }
@@ -156,6 +168,15 @@ const reactionToAnIdea = async (postId, reactionType, userId) => {
     ideaInDb.reactions.push(newReaction);
   }
   await ideaInDb.save();
+  emailProcess({
+    to: author.email,
+    subject: "New Reaction In Your Post",
+    html: notificationUser(
+      "reaction",
+      author.fullname,
+      process.env.BASE_IDEA_URL + ideaInDb._id.toString()
+    ),
+  });
 }
 
 module.exports = {

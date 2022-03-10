@@ -1,4 +1,4 @@
-export default function ({ name, link }) {
+module.exports = function (name, link, username, password) {
   return `<!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional //EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
   <html xmlns="http://www.w3.org/1999/xhtml" xmlns:v="urn:schemas-microsoft-com:vml" xmlns:o="urn:schemas-microsoft-com:office:office">
   <head>
@@ -186,6 +186,8 @@ export default function ({ name, link }) {
   <p style="font-size: 14px; line-height: 140%;">&nbsp;</p>
   <p style="font-size: 14px; line-height: 140%;">Please accept our invitation to join our system via email from Enterprise App.</p>
   <p style="font-size: 14px; line-height: 140%;">To confirm your participation, please use the button below.</p>
+  <p style="font-size: 14px; line-height: 140%;">Username: <b>${username}</b></p>
+  <p style="font-size: 14px; line-height: 140%;">Password: <b>${password}</b></p>
     </div>
   
         </td>

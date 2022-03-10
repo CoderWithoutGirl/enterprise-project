@@ -1,5 +1,5 @@
-export default function ({ nameOfCategory, dateUpload, titleOfIdea }) {
-    return `<!DOCTYPE HTML
+module.exports = function(name, department, link ) {
+  return `<!DOCTYPE HTML
     PUBLIC "-//W3C//DTD XHTML 1.0 Transitional //EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:v="urn:schemas-microsoft-com:vml"
     xmlns:o="urn:schemas-microsoft-com:office:office">
@@ -400,7 +400,7 @@ export default function ({ nameOfCategory, dateUpload, titleOfIdea }) {
                                                                 style="color: #333333; line-height: 140%; text-align: left; word-wrap: break-word;">
                                                                 <p style="font-size: 14px; line-height: 140%;"><span
                                                                         style="font-family: 'Crimson Text', serif; font-size: 14px; line-height: 19.6px;"><strong><span
-                                                                                style="font-size: 22px; line-height: 30.8px;">Hello!</span></strong></span>
+                                                                                style="font-size: 22px; line-height: 30.8px;">Hello, ${name} - ${department}'s QA Coordinator!</span></strong></span>
                                                                 </p>
                                                                 <p style="font-size: 14px; line-height: 140%;">&nbsp;
                                                                 </p>
@@ -408,12 +408,6 @@ export default function ({ nameOfCategory, dateUpload, titleOfIdea }) {
                                                                     Staff has just uploaded a new
                                                                     idea</p>
                                                                 <section class="page-contain">
-
-                                                                    <a href="#" class="data-card">
-                                                                        <h3>${titleOfIdea}</h3>
-                                                                        <h4>${nameOfCategory}</h4>
-                                                                        <p class="dateCreate">${dateUpload}</p>
-                                                                    </a>
                                                                 </section>
                                                                 <p style="font-size: 14px; line-height: 140%;">To view
                                                                     detail, please use the button
@@ -703,5 +697,4 @@ export default function ({ nameOfCategory, dateUpload, titleOfIdea }) {
 
 </html>
 `;
-
-}
+};

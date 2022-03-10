@@ -31,17 +31,8 @@ services:
     build:
       dockerfile: Dockerfile
       context: ./back-end
-    environment:
-      - PORT=8080
-      - DB_URL=mongodb://mongo:27017/enterprise-project
-      - USER='user'
-      - ADMIN='admin'
-      - ENCRYPT_KEY='enterprise-web-development-v1-key'
-      - SECRET_KEY='enterprise-web-development-v1-jwt-secret-key'
-      - REDIS_HOST=redis
-      - REDIS_PORT=6379
-      - SMTP_USER=coderwithourgirl@gmail.com
-      - SMTP_PASS=Password@123
+    env_file:
+      - ./back-end/.env.production
     ports:
       - "8080:80"
     depends_on:
