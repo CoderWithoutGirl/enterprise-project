@@ -4,7 +4,7 @@ const CryptoJS = require('crypto-js');
 const UserSchema = new mongoose.Schema(
   {
     username: { type: String, required: true },
-    password: { type: String, required: true },
+    password: { type: String, required: true, default: "abc123@" },
     fullname: { type: String, required: true },
     email: {
       type: String,
@@ -14,13 +14,13 @@ const UserSchema = new mongoose.Schema(
         "Please fill a valid email address",
       ],
     },
-    dateOfBirth: { type: Date, required: true },
+    dateOfBirth: { type: Date, required: false },
     address: { type: String, required: false },
-    age: { type: Number, required: true },
+    age: { type: Number, required: false },
     department: { type: String, required: false },
     gender: {
       type: String,
-      required: true,
+      required: false,
       enum: ["Male", "Female", "Unkown"],
     },
     role: {

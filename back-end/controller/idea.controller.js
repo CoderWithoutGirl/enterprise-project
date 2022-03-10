@@ -8,6 +8,7 @@ const {
   commentToAnIdea,
   reactionToAnIdea,
 } = require("../service/idea.service");
+const {noticeQAForNewDocUpload} = require('../service/email.service')
 
 const getAllIdeas = async (req, res) => {
   const { filter, page } = req.query;
@@ -53,13 +54,16 @@ const createIdeaWithDocument = async (req, res) => {
 const uploadSupportDocument = async (req, res) => {
   const filename = req.file.filename;
   const documentLink = getFileUrl(filename);
+  await noticeQAForNewDocUpload(documentLink, req.user.id);
+
   res.status(201).json({ documentLink });
 };
 
 const createDocumentSupportedFromEditor = async (req, res) => {
-  const filename = req.file.filename;
+  const filename = req.file.filename;  
   const documentLink = await createDocumentFromMarkdown(filename);
-  console.log(documentLink);
+  await noticeQAForNewDocUpload(documentLink, req.user.id);
+
   res.status(201).json({ documentLink });
 };
 

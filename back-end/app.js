@@ -5,7 +5,7 @@ const cors = require("cors");
 const errorhandler = require("errorhandler");
 const helmet = require("helmet");
 const app = express();
-const { createClient } = require("redis");
+const path = require("path");
 
 const db = require("./persistance/db");
 const passport = require("passport");
@@ -15,7 +15,7 @@ const expressSession = require("express-session");
 const rootRouter = require("./router/index");
 
 global.__basedir = __dirname;
-app.use("/statics", express.static("statics"));
+app.use("/statics", express.static(path.join(__dirname, "statics")));
 
 // Apply application middleware
 app.use(passport.initialize());

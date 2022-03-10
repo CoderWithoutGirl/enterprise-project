@@ -87,7 +87,7 @@ const IdeaDetail = ({ authenticateReducer }) => {
 
     const interval = setInterval(() => {
       refreshReactionsAndCommentsList();
-    }, 5000)
+    }, 10000)
 
     return () => clearInterval(interval)
   }, []);

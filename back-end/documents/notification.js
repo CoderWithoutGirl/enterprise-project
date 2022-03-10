@@ -1,5 +1,5 @@
-export default function ({ name, link }) {
-    return `<!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional //EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+module.exports = function( type, name, link ) {
+  return `<!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional //EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
     <html xmlns="http://www.w3.org/1999/xhtml" xmlns:v="urn:schemas-microsoft-com:vml"
     xmlns:o="urn:schemas-microsoft-com:office:office">
     <head>
@@ -302,7 +302,7 @@ export default function ({ name, link }) {
                                                                         <span
                                                                             style="display: inline-block; background-color: rgb(192, 24, 24); border-radius: 50%; padding: 10px 15px; transform: translate(204px, -15px); color: #ffffff;">
 
-                                                                            3
+                                                                            1
                                                                         </span>
                                                                         <img align="center" border="0"
                                                                             src="../statics/images/coment.png"
@@ -326,7 +326,7 @@ export default function ({ name, link }) {
                                                     <td style="width:100%;text-align:center">
                                                         <h1
                                                             style="margin:0;color:#555;font-size:27px;font-family:Arial,Helvetica Neue,Helvetica,sans-serif;line-height:200%;text-align:center;direction:ltr;font-weight:700;letter-spacing:normal;margin-top:0;margin-bottom:0">
-                                                            New Commments Upload</h1>
+                                                            You got new ${type}</h1>
                                                     </td>
                                                 </tr>
                                             </table>
@@ -344,7 +344,7 @@ export default function ({ name, link }) {
                                                                 style="color: #333333; line-height: 140%; text-align: left; word-wrap: break-word;">
                                                                 <p style="font-size: 14px; line-height: 140%;"><span
                                                                         style="font-family: 'Crimson Text', serif; font-size: 14px; line-height: 19.6px;"><strong><span
-                                                                                style="font-size: 22px; line-height: 30.8px;">Hello!</span></strong></span>
+                                                                                style="font-size: 22px; line-height: 30.8px;">Hello, ${name}!</span></strong></span>
                                                                 </p>
                                                                 <p style="font-size: 14px; line-height: 140%;">&nbsp;
                                                                 </p>
@@ -405,8 +405,7 @@ export default function ({ name, link }) {
                                                                 <p style="font-size: 14px; line-height: 140%;"><span
                                                                         style="font-size: 22px; line-height: 30.8px;"><strong><span
                                                                                 style="line-height: 30.8px; font-family: 'Crimson Text', serif; font-size: 22px;">Thanks.</span></strong></span><br /><span
-                                                                        style="font-size: 18px; line-height: 25.2px; font-family: 'Crimson Text', serif;">Quốc
-                                                                        Đạt</span>
+                                                                        style="font-size: 18px; line-height: 25.2px; font-family: 'Crimson Text', serif;">Corder With Our Girl</span>
                                                                 </p>
                                                             </div>
 
@@ -681,4 +680,4 @@ export default function ({ name, link }) {
 
 </html>
     `;
-}
+};
