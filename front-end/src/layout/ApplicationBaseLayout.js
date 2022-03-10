@@ -5,7 +5,7 @@ const ApplicationBaseLayout = ({children}) => {
     return (
       <>
         <NavBar />
-        <main className='my-[10rem] mb-[20rem]'>{children}</main>
+        <main className='mt-[5rem] mb-[20rem]'>{children}</main>
         <Footer />
       </>
     );

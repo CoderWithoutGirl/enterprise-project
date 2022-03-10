@@ -2,10 +2,12 @@ import { useCallback, useEffect, useState } from "react";
 import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/solid";
 import IdeaItem from "../components/IdeaItem";
 import { filters } from "../constants/filter";
-import { getAllIdeaWithFilter } from "../apiServices/index";
+import { getAllIdeaWithFilter, tokenRequestInterceptor } from "../apiServices/index";
 import {connect} from 'react-redux'
+import { getNewToken } from "../store/actions/authenticateAction";
 
-const HomePage = ({authenticateReducer}) => {
+
+const HomePage = ({authenticateReducer, getNewTokenRequest}) => {
   const [pages, setPages] = useState(1);
   const [currPage, setCurrPage] = useState(1);
   const [ideas, setIdeas] = useState([]);
@@ -13,19 +15,23 @@ const HomePage = ({authenticateReducer}) => {
   const {token} = authenticateReducer;
 
   const getAllIdeas = useCallback(async () => {
-    const { data, status } = await getAllIdeaWithFilter(
-      filterOption,
-      currPage,
-      token
-    );
+    const getAllData = async () => {
+      const { data, status } = await getAllIdeaWithFilter(
+        filterOption,
+        currPage,
+        token
+      );
+      return {data, status}
+    }
+    const {data, status} = await tokenRequestInterceptor(getAllData, getNewTokenRequest)
     if (status === 200) {
       setIdeas(data.data);
       setPages(data.pages);
       window.scrollTo({
         top: 0,
         left: 0,
-        behavior: 'smooth'
-      })
+        behavior: "smooth",
+      });
     }
   }, [filterOption, currPage]);
 
@@ -41,13 +47,26 @@ const HomePage = ({authenticateReducer}) => {
     getAllIdeas();
   }, [getAllIdeas]);
 
+  const handleFilterChange = (e) => {
+    setFilterOption(e.target.value)
+  }
+
   document.title = "Home";
   return (
     <div className="container max-w-xl md:max-w-screen-lg mx-auto">
       <div className="mx-auto">
-        <h3 className="font-black text-gray-600 text-3xl">
-          Your next favorite thing
-        </h3>
+        <div className="w-full flex items-center justify-between mb-10">
+          <h3 className="font-black text-gray-600 text-3xl">
+            Your next favorite thing
+          </h3>
+          <select className="border-none" value={filterOption} onChange={handleFilterChange}>
+            <option value={filters.ALPHABET}>Alphabet</option>
+            <option value={filters.DATE_ASC}>Newest</option>
+            <option value={filters.DATE_DESC}>Oldest</option>
+            <option value={filters.LIKE}>Upvote</option>
+            <option value={filters.DISLIKE}>Downvote</option>
+          </select>
+        </div>
         <ul className="px-5 py-2">
           {ideas.map((item, index) => (
             <IdeaItem
@@ -55,13 +74,10 @@ const HomePage = ({authenticateReducer}) => {
               description={item.description}
               key={index}
               id={item._id}
+              date={item.createdAt}
               category={item.category.name}
               commentCount={item.comments.length}
-              like={
-                item.reactions.filter(
-                  (reaction) => reaction.actionType === "Like"
-                ).length
-              }
+              like={item.reactions.length}
             />
           ))}
         </ul>
@@ -116,4 +132,10 @@ const mapStateToProps = (state) => {
   };
 };
 
-export default connect(mapStateToProps)(HomePage);
+const mapDispatchToProps = (dispatch) => {
+  return {
+    getNewTokenRequest: () => dispatch(getNewToken()),
+  };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(HomePage);

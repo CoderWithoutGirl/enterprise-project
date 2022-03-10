@@ -21,21 +21,28 @@ const getAllIdeaWithFilter = async (filter = filterEnum.ALPHABET, page = 1, limi
     case filterEnum.LIKE:
       const allPostWithLike = await IdeaModel.find({})
         .populate("category", "name")
-      return (allIdeaInDB = allPostWithLike.sort(
-        (prevIdea, nextIdea) =>
-          nextIdea.reactions.filter((item) => item.actionType === "Like")
-            .length -
-          prevIdea.reactions.filter((item) => item.actionType === "Like").length
-      ).slice((page - 1)*limit, (page * limit) + 1));
+      return (allIdeaInDB = allPostWithLike
+        .sort(
+          (prevIdea, nextIdea) =>
+            nextIdea.reactions.filter((item) => item.reactionType === "Like")
+              .length -
+            prevIdea.reactions.filter((item) => item.reactionType === "Like")
+              .length
+        )
+        .slice((page - 1) * limit, page * limit));
     case filterEnum.DISLIKE:
         const allPostWithDislike = await IdeaModel.find({})
           .populate("category", "name")
-      return (allIdeaInDB = allPostWithDislike.sort(
-        (prevIdea, nextIdea) =>
-          nextIdea.reactions.filter((item) => item.actionType === "Dislike")
-            .length -
-          prevIdea.reactions.filter((item) => item.actionType === "Dislike").length
-      ).slice((page - 1)*limit, (page * limit) + 1));
+      return (allIdeaInDB = allPostWithDislike
+        .sort(
+          (prevIdea, nextIdea) =>
+            nextIdea.reactions.filter((item) => item.reactionType === "Dislike")
+              .length -
+            prevIdea.reactions.filter((item) => item.reactionType === "Dislike")
+              .length
+        )
+        .slice(
+          (page - 1) * limit, page * limit));
     case filterEnum.DATE_ASC:
       return (allIdeaInDB = await IdeaModel.find({})
         .populate("category", "name")
