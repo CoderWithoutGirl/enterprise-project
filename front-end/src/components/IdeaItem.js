@@ -3,6 +3,7 @@ import {
   ChatAltIcon,
 } from "@heroicons/react/solid";
 import { useNavigate } from "react-router-dom";
+import moment from 'moment';
 
 const IdeaItem = ({
   index,
@@ -11,7 +12,8 @@ const IdeaItem = ({
   commentCount,
   category,
   like,
-  id
+  id,
+  date
 }) => {
   function numberWithCommas(x) {
     return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
@@ -25,7 +27,10 @@ const IdeaItem = ({
 
   return (
     <li key={index} className="mb-5">
-      <div onClick={handleNavigate} className="cursor-pointer flex justify-between items-center bg-gray-200 py-6 px-4 rounded-xl">
+      <div
+        onClick={handleNavigate}
+        className="cursor-pointer flex justify-between items-center bg-gray-200 py-6 px-4 rounded-xl"
+      >
         <div className="flex gap-3 items-center">
           <div className="bg-gray-700  rounded-full w-20 h-20 flex items-center justify-center">
             <span className="text-white font-black text-3xl">
@@ -43,6 +48,9 @@ const IdeaItem = ({
                 <span className="font-bold">{commentCount}</span>
               </div>
               <span className="font-medium">{category}</span>
+              <span className="font-medium underline cursor-pointer">
+                {moment(new Date(date), "YYYYMMDD").fromNow()}
+              </span>
             </div>
           </div>
         </div>
