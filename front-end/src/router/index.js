@@ -15,6 +15,7 @@ import { roles } from "../constants/role";
 import UserInDepartment from "../screens/userInDepartment/";
 import PostIdea from "../screens/postIdea";
 import IdeaDetail from "../screens/IdeaDetail";
+import ItemInCategory from "../screens/itemInCategory";
 
 const AppRouter = () => {
   return (
@@ -81,6 +82,14 @@ const AppRouter = () => {
           element={
             <PrivateRoute>
               <Categories />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/categories/:category"
+          element={
+            <PrivateRoute>
+              <ItemInCategory />
             </PrivateRoute>
           }
         />

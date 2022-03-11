@@ -13,7 +13,6 @@ import Button from "../../components/button";
 import SelectOption from "../../components/SelectOption";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
-import Password from "../../components/password";
 import DateTimePicker from "../../components/DateTimePicker";
 import { ErrorMessage } from "@hookform/error-message";
 import ErrorMessageCustom from "../../components/errorMessage";
@@ -26,22 +25,21 @@ const registerFormValidationSchema = yup.object({
     .email("Username be a valid email")
     .max(255)
     .required("Username is required"),
-  password: yup
-    .string()
-    .required("No password provided.")
-    .min(8, "Password is too short - should be 8 chars minimum.")
-    .matches(/[a-zA-Z]/, "Password can only contain Latin letters."),
-  confirmPassword: yup
-    .string()
-    .oneOf([yup.ref("password"), null], "Passwords must match"),
-  age: yup
-    .number()
-    .required("Please supply your age")
-    .min(1, "You must be at least 1 years")
-    .max(100, "You must be at most 100 years"),
-  address: yup.string().required("Address must be filled").max(500),
+  // password: yup
+  //   .string()
+  //   .required("No password provided.")
+  //   .min(8, "Password is too short - should be 8 chars minimum.")
+  //   .matches(/[a-zA-Z]/, "Password can only contain Latin letters."),
+  // confirmPassword: yup
+  //   .string()
+  //   .oneOf([yup.ref("password"), null], "Passwords must match"),
+  // age: yup
+  //   .number()
+  //   .required("Please supply your age")
+  //   .min(1, "You must be at least 1 years")
+  //   .max(100, "You must be at most 100 years"),
+  // address: yup.string().required("Address must be filled").max(500),
   dateOfBirth: yup.date().required("Date of Birth is required"),
-  gender: yup.string().required("Gender must be filled"),
 });
 
 
@@ -58,10 +56,6 @@ const RegisterPage = ({ close, loadUser, token, getNewTokenRequest }) => {
     resolver: yupResolver(registerFormValidationSchema),
     defaultValues: {
       username: "",
-      password: "",
-      confirmPassword: "",
-      address: "",
-      age: 2,
       dateOfBirth: "",
       gender: "Male",
       fullname: "",
@@ -139,47 +133,6 @@ const RegisterPage = ({ close, loadUser, token, getNewTokenRequest }) => {
             errors={errors}
             render={({ message }) => <ErrorMessageCustom message={message} />}
           />
-          <Password placeholder="password" {...register("password")} />
-          <ErrorMessage
-            name="password"
-            errors={errors}
-            render={({ message }) => <ErrorMessageCustom message={message} />}
-          />
-
-          <Password
-            placeholder="Confirm Password"
-            {...register("confirmPassword")}
-          />
-          <ErrorMessage
-            name="confirmPassword"
-            errors={errors}
-            render={({ message }) => <ErrorMessageCustom message={message} />}
-          />
-
-          <InputField
-            type="text"
-            placeholder="Address"
-            {...register("address")}
-          />
-          <ErrorMessage
-            name="address"
-            errors={errors}
-            render={({ message }) => <ErrorMessageCustom message={message} />}
-          />
-
-          <InputField
-            type="number"
-            min="1"
-            max="100"
-            placeholder="Age"
-            {...register("age")}
-          />
-          <ErrorMessage
-            name="age"
-            errors={errors}
-            render={({ message }) => <ErrorMessageCustom message={message} />}
-          />
-
           <DateTimePicker
             placeholder="Date Of Birth"
             {...register("dateOfBirth")}
@@ -200,7 +153,6 @@ const RegisterPage = ({ close, loadUser, token, getNewTokenRequest }) => {
               { name: "Unknown" },
             ]}
           />
-
           <SelectOption
             {...register("department")}
             defaultValue={getValues("department")}

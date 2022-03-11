@@ -146,6 +146,11 @@ export const getCategory = (token) =>
     headers: { Authorization: `Bearer ${token}` },
   });
 
+export const getSingleCategory = (categoryName, token) =>
+  apiInstance.get(`/categories/${categoryName}`, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+
 export const findCategoryByID = (token, id) =>
   apiInstance.get(`/categories/${id}`, {
     headers: { Authorization: `Bearer ${token}` },
