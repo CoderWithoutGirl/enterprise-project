@@ -2,10 +2,13 @@ const IdeaModel = require("../model/idea");
 const UserModel = require("../model/user");
 const CategoryModel = require("../model/category");
 const mdpdf = require("mdpdf");
+const fs= require('fs')
 const emailProcess = require("../processes/email.process");
-const {notificationUser, notificationQA}= require('../documents/index')
+const {notificationUser, notificationQA}= require('../documents/index');
+const { uploadDocument } = require("../processes/cloudinary");
 
 const filterEnum = {
+  VIEW: 'VIEW',
   ALPHABET: "ALPHABET",
   LIKE: "LIKE",
   DISLIKE: "DISLIKE",
@@ -15,6 +18,12 @@ const filterEnum = {
 
 const getAllIdeaWithFilter = async (filter = filterEnum.ALPHABET, page = 1, limit = 5) => {
   switch (filter) {
+    case filterEnum.VIEW:
+      return (allIdeaInDB = await IdeaModel.find({})
+        .populate("category", "name")
+        .sort({ viewCount: -1 })
+        .skip((page - 1) * limit)
+        .limit(limit));
     case filterEnum.ALPHABET:
       return (allIdeaInDB = await IdeaModel.find({})
         .populate("category", "name")
@@ -49,23 +58,23 @@ const getAllIdeaWithFilter = async (filter = filterEnum.ALPHABET, page = 1, limi
     case filterEnum.DATE_ASC:
       return (allIdeaInDB = await IdeaModel.find({})
         .populate("category", "name")
-        .sort({ createdAt: 1 })
+        .sort({ createdAt: -1 })
         .skip((page - 1) * limit)
         .limit(limit));
     case filterEnum.DATE_DESC:
       return (allIdeaInDB = await IdeaModel.find({})
         .populate("category", "name")
         .sort({
-          createdAt: -1,
+          createdAt: 1,
         })
         .skip((page - 1) * limit)
         .limit(limit));
     default:
-      return (allIdeaInDB = await IdeaModel.find({})
-        .populate("category", "name")
-        .sort({ title: 1 })
-        .skip((page - 1) * limit)
-        .limit(limit));
+     return (allIdeaInDB = await IdeaModel.find({})
+       .populate("category", "name")
+       .sort({ viewCount: -1 })
+       .skip((page - 1) * limit)
+       .limit(limit));
   }
 };
 
@@ -91,6 +100,12 @@ const getIdeaById = async (id) => {
     });
 }
 
+const increaseView = async (id) => {
+   const increaseViewCount = await IdeaModel.findById(id);
+   increaseViewCount.viewCount = increaseViewCount.viewCount + 1;
+   await increaseViewCount.save();
+}
+
 const createIdea = async (
   title,
   description,
@@ -110,9 +125,15 @@ const createIdea = async (
   return newIdea;
 };
 
-const getFileUrl = (filename) => {
-  const documentLink = `/statics/documents/${filename}`;
-  return documentLink;
+const getFileUrl = async (filename) => {
+  try {
+    const documentLink = `/statics/documents/${filename}`;
+    const result = await uploadDocument(__basedir + documentLink, filename);
+    fs.unlinkSync(__basedir + documentLink);
+    return result.url;
+  } catch (error) {
+    console.log(error);
+  }
 };
 
 const createDocumentFromMarkdown = async (mdfile) => {
@@ -128,7 +149,8 @@ const createDocumentFromMarkdown = async (mdfile) => {
       },
     };
     await mdpdf.convert(options);
-    return destination;
+    fs.unlinkSync(__basedir + `/statics/documents/${mdfile}`);
+    return process.env.BASE_DOWNLOAD_FILE+ destination;
   } catch (error) {
     console.log(error);
   }
@@ -141,8 +163,9 @@ const countAllIdeas = async (limit = 5) => {
 
 const commentToAnIdea = async (postId, content, userId) => {
   const ideaInDb = await IdeaModel.findById(postId);
-    const author = await UserModel.findById(ideaInDb.user);
+  const author = await UserModel.findById(ideaInDb.user);
   ideaInDb.comments.push({content, user: userId});
+  await ideaInDb.save();
   emailProcess({
     to: author.email,
     subject: "New Comment In Your Post",
@@ -188,4 +211,5 @@ module.exports = {
   getIdeaById,
   commentToAnIdea,
   reactionToAnIdea,
+  increaseView,
 };

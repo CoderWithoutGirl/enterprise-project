@@ -5,6 +5,7 @@ import {
   UserIcon,
   UserGroupIcon,
   LogoutIcon,
+  CalendarIcon
 } from "@heroicons/react/solid";
 import { connect } from "react-redux";
 import { logout } from "../store/actions/authenticateAction";
@@ -72,6 +73,11 @@ const SideBar = ({
         ),
         name: item.name,
       })),
+    },
+    {
+      to: "/academic",
+      icon: () => <CalendarIcon className="text-gray-500 w-[30px] h-[30px]" />,
+      name: "Academic Years",
     },
   ]);
 

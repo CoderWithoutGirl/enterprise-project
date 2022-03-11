@@ -25,6 +25,8 @@ import ErrorMessageCustom from "../components/errorMessage";
 import {toast} from 'react-toastify'
 import TermAndCondition from '../components/submission';
 
+import Indicator from '../components/indicator'
+
 const ideaSubmitValidateSchema = yup.object().shape({
   title: yup.string().required("Title cannot be empty"),
   description: yup.string().required("Description cannot be empty"),
@@ -37,6 +39,7 @@ const PostIdea = ({ authenticateReducer, getNewTokenRequest }) => {
   const [agree, setAgree] = useState(false);
   const [termOpen, setTermOpen] = useState(false);
   const [editorData, setEditorData] = useState();
+  const [loading, setLoading] = useState(false);
   const {formState: {errors}, handleSubmit, register, getValues, setValue, reset} = useForm({
     resolver: yupResolver(ideaSubmitValidateSchema),
     mode: 'onChange',
@@ -47,6 +50,7 @@ const PostIdea = ({ authenticateReducer, getNewTokenRequest }) => {
     }
   })
   const { token } = authenticateReducer;
+
 
   const getAllCategory = useCallback(async () => {
     const loadAllDataOfCategory = async () => {
@@ -97,6 +101,7 @@ const PostIdea = ({ authenticateReducer, getNewTokenRequest }) => {
   }
 
   const submitIdeaHandler = async (formData) => {
+    setLoading(true);
     let documentLink;
     if(file) {
       const documentUpload = new FormData();
@@ -125,6 +130,7 @@ const PostIdea = ({ authenticateReducer, getNewTokenRequest }) => {
       setValue("category", categories[0].name);
       setFile(null);
       setEditorData("");
+      setLoading(false);
       setAgree(false);
     }
   }
@@ -134,112 +140,115 @@ const PostIdea = ({ authenticateReducer, getNewTokenRequest }) => {
   };
 
   return (
-    <div className="w-screen md:max-w-4xl mx-auto my-20">
-      <TermAndCondition open={termOpen} setOpen={setTermOpen} />
-      <Form title="Contribute Idea">
-        <div className="w-full flex justify-end">
-          <Button
-            type={switchUpload ? `primary` : `success`}
-            onClick={handleSwitch}
-            title={`${switchUpload ? "Editor" : "Upload Document"}`}
-            icon={SwitchHorizontalIcon}
-            disabled={file ? true : false}
-          />
-        </div>
-        <InputField
-          {...register("title")}
-          type="text"
-          placeholder="Idea Title"
-        />
-        <ErrorMessage
-          name="title"
-          errors={errors}
-          render={({ message }) => <ErrorMessageCustom message={message} />}
-        />
-        <div className="w-full h-fit flex-col items-start">
-          <label htmlFor="category-dropdown">Category:</label>
-          <div className="h-3"></div>
-          <SelectOption
-            id="category-dropdown"
-            {...register("category")}
-            defaultValue={getValues("category")}
-            listData={categories}
-          />
-        </div>
-        <TextArea
-          {...register("description")}
-          rows={5}
-          placeholder="Idea Description"
-        />
-        <ErrorMessage
-          name="description"
-          errors={errors}
-          render={({ message }) => <ErrorMessageCustom message={message} />}
-        />
-
-        {switchUpload ? (
-          <div className="w-full flex flex-col justify-start align-top">
-            <span className="text-lg">Upload Document:</span>
-            {file ? (
-              <div className="flex justify-start items-center bg-gray-400 w-fit p-2 rounded-md">
-                <DocumentIcon className="h-7 w-7 text-gray-200" />
-                <span className="text-lg font-bold ">{file.name}</span>
-                <XIcon
-                  className="h-5 w-5 text-white cursor-pointer"
-                  onClick={removeFile}
-                />
-              </div>
-            ) : (
-              <FileUpload
-                onChange={handleUpload}
-                accept=".doc,.docx,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
-              />
-            )}
+    <>
+      <Indicator open={loading} />
+      <div className="w-screen md:max-w-4xl mx-auto my-20">
+        <TermAndCondition open={termOpen} setOpen={setTermOpen} />
+        <Form title="Contribute Idea">
+          <div className="w-full flex justify-end">
+            <Button
+              type={switchUpload ? `primary` : `success`}
+              onClick={handleSwitch}
+              title={`${switchUpload ? "Editor" : "Upload Document"}`}
+              icon={SwitchHorizontalIcon}
+              disabled={file ? true : false}
+            />
           </div>
-        ) : (
-          <CKEditor
-            editor={ClassicEditor}
-            data={editorData}
-            onReady={(editor) => {
-              editor.ui
-                .getEditableElement()
-                .parentElement.insertBefore(
-                  editor.ui.view.toolbar.element,
-                  editor.ui.getEditableElement()
-                );
-            }}
-            onChange={(event, editor) => setEditorData(editor.getData())}
-            timestamp="ABCD"
+          <InputField
+            {...register("title")}
+            type="text"
+            placeholder="Idea Title"
           />
-        )}
-        <div className="w-full flex justify-start items-center gap-2">
-          <input
-            type="checkbox"
-            checked={agree}
-            onChange={(e) => setAgree(e.target.checked)}
+          <ErrorMessage
+            name="title"
+            errors={errors}
+            render={({ message }) => <ErrorMessageCustom message={message} />}
           />
-          <span>
-            By checking this checkbox, you had agreed with our{" "}
-            <span
-              onClick={() => setTermOpen(true)}
-              className="border-2 border-transparent cursor-pointer text-blue-500 py-1 hover:border-b-blue-500"
-            >
-              Terms & Conditions
+          <div className="w-full h-fit flex-col items-start">
+            <label htmlFor="category-dropdown">Category:</label>
+            <div className="h-3"></div>
+            <SelectOption
+              id="category-dropdown"
+              {...register("category")}
+              defaultValue={getValues("category")}
+              listData={categories}
+            />
+          </div>
+          <TextArea
+            {...register("description")}
+            rows={5}
+            placeholder="Idea Description"
+          />
+          <ErrorMessage
+            name="description"
+            errors={errors}
+            render={({ message }) => <ErrorMessageCustom message={message} />}
+          />
+
+          {switchUpload ? (
+            <div className="w-full flex flex-col justify-start align-top">
+              <span className="text-lg">Upload Document:</span>
+              {file ? (
+                <div className="flex justify-start items-center bg-gray-400 w-fit p-2 rounded-md">
+                  <DocumentIcon className="h-7 w-7 text-gray-200" />
+                  <span className="text-lg font-bold ">{file.name}</span>
+                  <XIcon
+                    className="h-5 w-5 text-white cursor-pointer"
+                    onClick={removeFile}
+                  />
+                </div>
+              ) : (
+                <FileUpload
+                  onChange={handleUpload}
+                  accept=".doc,.docx,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+                />
+              )}
+            </div>
+          ) : (
+            <CKEditor
+              editor={ClassicEditor}
+              data={editorData}
+              onReady={(editor) => {
+                editor.ui
+                  .getEditableElement()
+                  .parentElement.insertBefore(
+                    editor.ui.view.toolbar.element,
+                    editor.ui.getEditableElement()
+                  );
+              }}
+              onChange={(event, editor) => setEditorData(editor.getData())}
+              timestamp="ABCD"
+            />
+          )}
+          <div className="w-full flex justify-start items-center gap-2">
+            <input
+              type="checkbox"
+              checked={agree}
+              onChange={(e) => setAgree(e.target.checked)}
+            />
+            <span>
+              By checking this checkbox, you had agreed with our{" "}
+              <span
+                onClick={() => setTermOpen(true)}
+                className="border-2 border-transparent cursor-pointer text-blue-500 py-1 hover:border-b-blue-500"
+              >
+                Terms & Conditions
+              </span>
             </span>
-          </span>
-        </div>
-        <div className="flex p-1">
-          <Button
-            type="primary"
-            role="button"
-            title="Submit Idea"
-            onClick={handleSubmit(submitIdeaHandler)}
-            icon={DocumentAddIcon}
-            disabled={!agree}
-          />
-        </div>
-      </Form>
-    </div>
+          </div>
+          <div className="flex p-1">
+            <Button
+              type="primary"
+              role="button"
+              title="Submit Idea"
+              onClick={handleSubmit(submitIdeaHandler)}
+              icon={DocumentAddIcon}
+              disabled={!agree}
+            />
+          </div>
+        </Form>
+      </div>
+    </>
   );
 };
 

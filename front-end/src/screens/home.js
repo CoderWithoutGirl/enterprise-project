@@ -11,7 +11,7 @@ const HomePage = ({authenticateReducer, getNewTokenRequest}) => {
   const [pages, setPages] = useState(1);
   const [currPage, setCurrPage] = useState(1);
   const [ideas, setIdeas] = useState([]);
-  const [filterOption, setFilterOption] = useState(filters.ALPHABET);
+  const [filterOption, setFilterOption] = useState(filters.VIEW);
   const {token} = authenticateReducer;
 
   const getAllIdeas = useCallback(async () => {
@@ -63,6 +63,7 @@ const HomePage = ({authenticateReducer, getNewTokenRequest}) => {
             Your next favorite thing
           </h3>
           <select className="border-none" value={filterOption} onChange={handleFilterChange}>
+            <option value={filters.VIEW}>View</option>
             <option value={filters.ALPHABET}>Alphabet</option>
             <option value={filters.DATE_ASC}>Newest</option>
             <option value={filters.DATE_DESC}>Oldest</option>
@@ -81,6 +82,7 @@ const HomePage = ({authenticateReducer, getNewTokenRequest}) => {
               category={item.category.name}
               commentCount={item.comments.length}
               like={item.reactions.length}
+              view={item?.viewCount | 0}
             />
           ))}
         </ul>

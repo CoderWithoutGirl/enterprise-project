@@ -18,7 +18,7 @@ const ErrorPage = () => {
               <p>or you don't have permission to access this page.</p>
             </div>
             <div className="mb-20 md:mb-0">
-              <button onClick={() => navigate(-1)} className="text-lg font-light outline-none focus:outline-none transform transition-all hover:scale-110 text-blue-500 hover:text-blue-600">
+              <button onClick={() => navigate("/")} className="text-lg font-light outline-none focus:outline-none transform transition-all hover:scale-110 text-blue-500 hover:text-blue-600">
                 Go Back
               </button>
             </div>

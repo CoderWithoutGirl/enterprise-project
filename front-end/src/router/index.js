@@ -63,7 +63,7 @@ const AppRouter = () => {
         <Route
           path="/departments"
           element={
-            <PrivateRoute>
+            <PrivateRoute allowRoles={[roles.ADMIN]}>
               <Departments />
             </PrivateRoute>
           }
@@ -71,7 +71,7 @@ const AppRouter = () => {
         <Route
           path="/departments/:department"
           element={
-            <PrivateRoute>
+            <PrivateRoute allowRoles={[roles.ADMIN]}>
               <UserInDepartment />
             </PrivateRoute>
           }
@@ -87,7 +87,7 @@ const AppRouter = () => {
         <Route
           path="/academic"
           element={
-            <PrivateRoute>
+            <PrivateRoute allowRoles={[roles.ADMIN]}>
               <AcademicPage />
             </PrivateRoute>
           }
@@ -95,7 +95,7 @@ const AppRouter = () => {
         <Route
           path="/users"
           element={
-            <PrivateRoute allowRoles={[roles.QA_MANAGER, roles.ADMIN]}>
+            <PrivateRoute allowRoles={[roles.ADMIN]}>
               <UserPage />
             </PrivateRoute>
           }

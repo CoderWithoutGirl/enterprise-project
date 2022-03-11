@@ -13,7 +13,7 @@ const noticeQAForNewDocUpload = async (documentLink, userId) => {
     html: notificationQA(
       QAofDepartment.fullname,
       QAofDepartment.department,
-      process.env.BASE_DOWNLOAD_FILE + documentLink
+      documentLink
     ),
   });
 };

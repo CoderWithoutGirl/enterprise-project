@@ -13,7 +13,8 @@ const IdeaItem = ({
   category,
   like,
   id,
-  date
+  date,
+  view,
 }) => {
   function numberWithCommas(x) {
     return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
@@ -50,6 +51,9 @@ const IdeaItem = ({
               <span className="font-medium">{category}</span>
               <span className="font-medium underline cursor-pointer">
                 {moment(new Date(date), "YYYYMMDD").fromNow()}
+              </span>
+              <span className="font-medium cursor-pointer">
+                {view} Views
               </span>
             </div>
           </div>

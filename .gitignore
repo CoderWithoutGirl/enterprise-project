@@ -7,7 +7,7 @@ coverage/
 
 # production
 build/
-statics/document/*
+statics/documents/*
 
 .docker/
 # misc

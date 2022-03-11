@@ -194,6 +194,10 @@ export const reactToIdea = (id, data, token) =>
   apiInstance.post(`/ideas/${id}/reaction`,{...data}, {
     headers: { Authorization: `Bearer ${token}` },
   });
+export const increateView = (id, token) =>
+  apiInstance.get(`/ideas/${id}/view`, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
 
 export const getAllSubRoute = () => apiInstance.get("/sub-route");
 

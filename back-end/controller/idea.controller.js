@@ -7,6 +7,7 @@ const {
   getIdeaById,
   commentToAnIdea,
   reactionToAnIdea,
+  increaseView,
 } = require("../service/idea.service");
 const {noticeQAForNewDocUpload} = require('../service/email.service')
 
@@ -53,7 +54,7 @@ const createIdeaWithDocument = async (req, res) => {
 
 const uploadSupportDocument = async (req, res) => {
   const filename = req.file.filename;
-  const documentLink = getFileUrl(filename);
+  const documentLink = await getFileUrl(filename);
   await noticeQAForNewDocUpload(documentLink, req.user.id);
 
   res.status(201).json({ documentLink });
@@ -67,6 +68,11 @@ const createDocumentSupportedFromEditor = async (req, res) => {
   res.status(201).json({ documentLink });
 };
 
+const inscreaseViewOfIdea = async (req, res) => {
+  await increaseView(req.params.id)
+  res.sendStatus(200);
+}
+
 module.exports = {
   createIdeaWithDocument,
   createDocumentSupportedFromEditor,
@@ -74,5 +80,6 @@ module.exports = {
   getAllIdeas,
   getSingleIdea,
   commentToIdea,
-  reactionToIdea
+  reactionToIdea,
+  inscreaseViewOfIdea
 };

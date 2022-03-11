@@ -21,8 +21,6 @@ const emailProcess = async (job) => {
     ...job,
   });
 
-  console.log("Message sent: %s", info.messageId);
-
   return nodemailer.getTestMessageUrl(info);
 };
 

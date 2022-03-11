@@ -1,11 +1,12 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { connect } from "react-redux";
 import { useParams } from "react-router-dom";
-import { getSingleIdea, reactToIdea, commentToIdea } from "../apiServices";
+import { getSingleIdea, reactToIdea, commentToIdea, increateView } from "../apiServices";
 import {
   ChevronDoubleDownIcon,
   ChevronDoubleUpIcon,
-  PaperAirplaneIcon
+  PaperAirplaneIcon,
+  DownloadIcon
 } from "@heroicons/react/outline";
 
 import TextAria from "../components/text-area";
@@ -28,7 +29,7 @@ const IdeaDetail = ({ authenticateReducer }) => {
   const { id } = useParams();
 
 
-  const refreshReactionsAndCommentsList = async () => {
+  const refreshReactionsAndCommentsList = useCallback(async () => {
     const { data, status } = await getSingleIdea(id, token);
     if (status === 200) {
       setReactions(data.data.reactions);
@@ -37,8 +38,11 @@ const IdeaDetail = ({ authenticateReducer }) => {
         (item) => item.user.id === user.id
       );
       setYourReaction(filter[0]);
-
     }
+  }, [id, token, user.id]);
+
+  const inscreaseViewOfIdea = async () => {
+    await increateView(id, token)
   }
 
   const reaction = async (reactionType) => {
@@ -64,33 +68,37 @@ const IdeaDetail = ({ authenticateReducer }) => {
     }
   }
 
-  const getIdeaDetail = async () => {
+  const getIdeaDetail = useCallback(async () => {
     const { data, status } = await getSingleIdea(id, token);
     if (status === 200) {
       setIdeaDetail(data.data);
-      setComments(data.data.comments)
-      setReactions(data.data.reactions)
-     const filter = data.data.reactions?.filter(
-       (item) => item.user.id === user.id
-     );
-     setYourReaction(filter[0]);
+      setComments(data.data.comments);
+      setReactions(data.data.reactions);
+      const filter = data.data.reactions?.filter(
+        (item) => item.user.id === user.id
+      );
+      setYourReaction(filter[0]);
       window.scrollTo({
         top: 0,
         left: 0,
         behavior: "smooth",
       });
     }
-  };
+  }, [id, token, user.id]);
+  
+  useEffect(() => {
+    inscreaseViewOfIdea();
+  }, []);
 
   useEffect(() => {
     getIdeaDetail();
 
     const interval = setInterval(() => {
       refreshReactionsAndCommentsList();
-    }, 10000)
+    }, 10000);
 
-    return () => clearInterval(interval)
-  }, []);
+    return () => clearInterval(interval);
+  }, [getIdeaDetail, refreshReactionsAndCommentsList]);
 
   return (
     <>
@@ -136,9 +144,19 @@ const IdeaDetail = ({ authenticateReducer }) => {
             </div>
           </div>
         </div>
-        <p className="text-gray-800 text-sm mt-2 leading-normal md:leading-relaxed">
+        <h3 className="font-bold my-2 text-2xl">{ideaDetail.title}</h3>
+        <p className="text-gray-800 text-sm my-2 leading-normal md:leading-relaxed">
           {ideaDetail.description}
         </p>
+        {ideaDetail?.documentLink && (
+          <a
+            className="bg-blue-400 w-fit px-3 py-2 rounded-md my-2 text-white"
+            href={ideaDetail.documentLink}
+          >
+            {" "}
+            Download
+          </a>
+        )}
         <div className="flex gap-3 items-center mt-3">
           <div className="flex gap-1 items-center">
             <ChevronDoubleUpIcon
