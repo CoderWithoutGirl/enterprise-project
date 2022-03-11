@@ -165,7 +165,7 @@ module.exports = function (name, link, username, password) {
     <tr>
       <td class="v-text-align" style="padding-right: 0px;padding-left: 0px;" align="center">
         
-        <img align="center" border="0" src="../statics/images/image-4.png" alt="Wrong Email" title="Wrong Email" style="outline: none;text-decoration: none;-ms-interpolation-mode: bicubic;clear: both;display: inline-block !important;border: none;height: auto;float: none;width: 30%;max-width: 159px;" width="159" class="v-src-width v-src-max-width"/>
+        <img align="center" border="0" src="../statics/images/image-4.png" style="outline: none;text-decoration: none;-ms-interpolation-mode: bicubic;clear: both;display: inline-block !important;border: none;height: auto;float: none;width: 30%;max-width: 159px;" width="159" class="v-src-width v-src-max-width"/>
         
       </td>
     </tr>
@@ -203,7 +203,7 @@ module.exports = function (name, link, username, password) {
   <div class="v-text-align" align="left">
     <!--[if mso]><table width="100%" cellpadding="0" cellspacing="0" border="0" style="border-spacing: 0; border-collapse: collapse; mso-table-lspace:0pt; mso-table-rspace:0pt;font-family:arial,helvetica,sans-serif;"><tr><td class="v-text-align" style="font-family:arial,helvetica,sans-serif;" align="left"><v:roundrect xmlns:v="urn:schemas-microsoft-com:vml" xmlns:w="urn:schemas-microsoft-com:office:word" href="https://unlayer.com" style="height:47px; v-text-anchor:middle; width:456px;" arcsize="6.5%" strokecolor="#ced4d9" strokeweight="3px" fillcolor="#5cc740"><w:anchorlock/><center style="color:#474343;font-family:arial,helvetica,sans-serif;"><![endif]-->
       <a href="${link}" target="_blank" class="v-size-width" style="box-sizing: border-box;display: inline-block;font-family:arial,helvetica,sans-serif;text-decoration: none;-webkit-text-size-adjust: none;text-align: center;color: #474343; background-color: #5cc740; border-radius: 3px;-webkit-border-radius: 3px; -moz-border-radius: 3px; width:100%; max-width:100%; overflow-wrap: break-word; word-break: break-word; word-wrap:break-word; mso-border-alt: none;border-top-color: #ced4d9; border-top-style: solid; border-top-width: 3px; border-left-color: #ced4d9; border-left-style: solid; border-left-width: 3px; border-right-color: #ced4d9; border-right-style: solid; border-right-width: 3px; border-bottom-color: #ced4d9; border-bottom-style: solid; border-bottom-width: 3px;">
-        <span class="v-padding" style="display:block;padding:15px 40px;line-height:120%;"><strong><span style="font-size: 14px; line-height: 16.8px;">CLICK TO ACCEPT</span></strong></span>
+        <span class="v-padding" style="display:block;padding:15px 40px;line-height:120%;"><strong><span style="font-size: 14px; line-height: 16.8px;">LOGIN NOW</span></strong></span>
       </a>
     <!--[if mso]></center></v:roundrect></td></tr></table><![endif]-->
   </div>

@@ -4,8 +4,9 @@ const CategoryModel = require("../model/category");
 const mdpdf = require("mdpdf");
 const fs= require('fs')
 const emailProcess = require("../processes/email.process");
-const {notificationUser, notificationQA}= require('../documents/index');
+const {notificationUser}= require('../documents/index');
 const { uploadDocument } = require("../processes/cloudinary");
+const {sendNewEmail} = require('../queue/email.queue')
 
 const filterEnum = {
   VIEW: 'VIEW',
@@ -122,6 +123,8 @@ const createIdea = async (
     user: userId,
   });
   await newIdea.save();
+  categoryInDB.ideas.push(newIdea._id);
+  await categoryInDB.save();
   return newIdea;
 };
 

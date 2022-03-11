@@ -10,6 +10,7 @@ const categorySchema = new mongoose.Schema({
         type: String,
         maxlength: 200
     },
+    ideas: [{type: mongoose.Types.ObjectId, ref: 'Ideas'}]
 },
     { timestamps: true }
 );

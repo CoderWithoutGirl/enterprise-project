@@ -4,7 +4,11 @@ const CryptoJS = require('crypto-js');
 const UserSchema = new mongoose.Schema(
   {
     username: { type: String, required: true },
-    password: { type: String, required: true, default: "abc123@" },
+    password: {
+      type: String,
+      required: true,
+      default: process.env.DEFAULT_PASSWORD,
+    },
     fullname: { type: String, required: true },
     email: {
       type: String,
@@ -42,6 +46,7 @@ const UserSchema = new mongoose.Schema(
 UserSchema.pre("save", async function (next) {
   try {
     const user = this;
+    user.age = (new Date().getFullYear()) - (new Date(user.dateOfBirth).getFullYear())
     if (!user.isModified("password")) {
       next();
     }

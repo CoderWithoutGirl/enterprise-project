@@ -14,12 +14,13 @@ const emailProcess = async (job) => {
       rejectUnauthorized: false,
     },
   });
-  console.log(process.env.SMTP_USER)
 
   let info = await transporter.sendMail({
     from: "CoderWithOurGirl",
     ...job,
   });
+
+  console.log("Message sent: %s", info.messageId);
 
   return nodemailer.getTestMessageUrl(info);
 };

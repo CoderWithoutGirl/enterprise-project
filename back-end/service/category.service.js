@@ -1,5 +1,6 @@
 const Category = require("../model/category");
 const IdeaModel = require("../model/idea")
+const UserModel = require("../model/user")
 
 const createCategory = async (defaultCategory) => {
     const {name} = defaultCategory;
@@ -38,7 +39,10 @@ const findIdCategory = async (id) =>{
         throw new Error("Category does not exist");
     }
     return categoryDb;
+}
 
+const getAllIdeaWithCategoryName = async (name) => {
+    return await Category.findOne({name}).populate({path: 'ideas', populate: {path: 'user'}});
 }
 
 const updateCategory = async(id, description) =>{
@@ -66,10 +70,11 @@ const deleteCategory = async (id) =>{
     
 
 module.exports = {
-    createCategory, 
-    getCategory, 
-    getCategoryByName,
-    findIdCategory,
-    updateCategory,
-    deleteCategory,
+  createCategory,
+  getCategory,
+  getCategoryByName,
+  findIdCategory,
+  updateCategory,
+  deleteCategory,
+  getAllIdeaWithCategoryName,
 };
