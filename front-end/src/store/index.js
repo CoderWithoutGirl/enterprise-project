@@ -4,15 +4,17 @@ import { persistStore, persistReducer } from "redux-persist";
 import storage from "redux-persist/lib/storage";
 
 import authenticateReducer from "./reducers/authenticateReducer";
+import subRouterReducer from './reducers/subRouteReducer';
 
 const rootReducer = combineReducers({
-  authenticateReducer
+  authenticateReducer,
+  subRouterReducer
 });
 
 const persistsConfig = {
   key: "root",
   storage,
-  whitelist: ["authenticateReducer"],
+  whitelist: ["authenticateReducer", "subRouterReducer"],
 };
 
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;

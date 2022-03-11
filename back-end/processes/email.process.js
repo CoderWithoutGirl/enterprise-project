@@ -1,7 +1,6 @@
 const nodemailer = require("nodemailer");
 
 const emailProcess = async (job) => {
-  console.log(job)
   let transporter = nodemailer.createTransport({
     service: "Gmail",
     host: "smtp.gmail.com",
@@ -16,11 +15,9 @@ const emailProcess = async (job) => {
     },
   });
 
-  console.log(job.data)
-
   let info = await transporter.sendMail({
     from: "CoderWithOurGirl",
-    ...job.data,
+    ...job,
   });
 
   console.log("Message sent: %s", info.messageId);

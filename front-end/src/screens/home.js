@@ -1,194 +1,146 @@
-const HomePage = () => {
-    return (
-      <div className="container">
-        <div className="relative pt-[120px] lg:pt-[150px] pb-[110px] bg-white">
-          <div className="container">
-            <div className="flex flex-wrap">
-              <div className="w-full lg:w-5/12 px-4">
-                <div className="hero-content">
-                  <h1
-                    className="
-                  text-dark
-                  font-bold
-                  text-4xl
-                  sm:text-[42px]
-                  lg:text-[40px]
-                  xl:text-[42px]
-                  leading-snug
-                  mb-3
-                "
-                  >
-                    Kickstart <br />
-                    Startup Website <br />
-                    with TailGrids.
-                  </h1>
-                  <p className="text-base mb-8 text-body-color max-w-[480px]">
-                    With TailGrids, business and students thrive together.
-                    Business can perfectly match their staffing to changing
-                    demand throughout the dayed.
-                  </p>
-                  <ul className="flex flex-wrap items-center">
-                    <li>
-                      <a
-                        href="https://github.com"
-                        className="
-                      py-4
-                      px-6
-                      sm:px-10
-                      lg:px-8
-                      xl:px-10
-                      inline-flex
-                      items-center
-                      justify-center
-                      text-center text-white text-base
-                      bg-primary
-                      hover:bg-opacity-90
-                      font-normal
-                      rounded-lg
-                    "
-                      >
-                        Get Started
-                      </a>
-                    </li>
-                    <li>
-                      <button
-                        className="
-                      py-4
-                      px-6
-                      sm:px-10
-                      lg:px-8
-                      xl:px-10
-                      inline-flex
-                      items-center
-                      justify-center
-                      text-center text-base
-                      font-normal
-                      text-body-color
-                      hover:text-primary
-                    "
-                      >
-                        <span className="mr-2">
-                          <svg
-                            width="22"
-                            height="22"
-                            viewBox="0 0 22 22"
-                            fill="none"
-                            xmlns="http://www.w3.org/2000/svg"
-                          >
-                            <circle cx="11" cy="11" r="11" fill="#3056D3" />
-                            <rect
-                              x="6.90906"
-                              y="13.3636"
-                              width="8.18182"
-                              height="1.63636"
-                              fill="white"
-                            />
-                            <rect
-                              x="10.1818"
-                              y="6"
-                              width="1.63636"
-                              height="4.09091"
-                              fill="white"
-                            />
-                            <path
-                              d="M11 12.5454L13.8343 9.47726H8.16576L11 12.5454Z"
-                              fill="white"
-                            />
-                          </svg>
-                        </span>
-                        Download App
-                      </button>
-                    </li>
-                  </ul>
-                  <div className="clients pt-16">
-                    <h6
-                      className="
-                    font-normal
-                    text-xs
-                    flex
-                    items-center
-                    text-body-color
-                    mb-2
-                  "
-                    >
-                      Some Of Our Clients
-                      <span className="w-8 h-[1px] bg-body-color inline-block ml-2"></span>
-                    </h6>
-                    <div className="flex items-center">
-                      <div className="w-full py-3 mr-4">
-                        <img
-                          src="https://cdn.tailgrids.com/1.0/assets/images/brands/ayroui.svg"
-                          alt="ayroui"
-                        />
-                      </div>
-                      <div className="w-full py-3 mr-4">
-                        <img
-                          src="https://cdn.tailgrids.com/1.0/assets/images/brands/graygrids.svg"
-                          alt="graygrids"
-                        />
-                      </div>
-                      <div className="w-full py-3 mr-4">
-                        <img
-                          src="https://cdn.tailgrids.com/1.0/assets/images/brands/uideck.svg"
-                          alt="uideck"
-                        />
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div className="hidden lg:block lg:w-1/12"></div>
-              <div className="w-full lg:w-6/12 px-4">
-                <div className="lg:text-right lg:ml-auto">
-                  <div className="relative inline-block z-10 pt-11 lg:pt-0">
-                    <img
-                      src="https://cdn.tailgrids.com/1.0/assets/images/hero/hero-image-01.png"
-                      alt="hero"
-                      className="max-w-full lg:ml-auto"
-                    />
-                    <span className="absolute -left-8 -bottom-8 z-[-1]">
-                      <svg
-                        width="93"
-                        height="93"
-                        viewBox="0 0 93 93"
-                        fill="none"
-                        xmlns="http://www.w3.org/2000/svg"
-                      >
-                        <circle cx="2.5" cy="2.5" r="2.5" fill="#3056D3" />
-                        <circle cx="2.5" cy="24.5" r="2.5" fill="#3056D3" />
-                        <circle cx="2.5" cy="46.5" r="2.5" fill="#3056D3" />
-                        <circle cx="2.5" cy="68.5" r="2.5" fill="#3056D3" />
-                        <circle cx="2.5" cy="90.5" r="2.5" fill="#3056D3" />
-                        <circle cx="24.5" cy="2.5" r="2.5" fill="#3056D3" />
-                        <circle cx="24.5" cy="24.5" r="2.5" fill="#3056D3" />
-                        <circle cx="24.5" cy="46.5" r="2.5" fill="#3056D3" />
-                        <circle cx="24.5" cy="68.5" r="2.5" fill="#3056D3" />
-                        <circle cx="24.5" cy="90.5" r="2.5" fill="#3056D3" />
-                        <circle cx="46.5" cy="2.5" r="2.5" fill="#3056D3" />
-                        <circle cx="46.5" cy="24.5" r="2.5" fill="#3056D3" />
-                        <circle cx="46.5" cy="46.5" r="2.5" fill="#3056D3" />
-                        <circle cx="46.5" cy="68.5" r="2.5" fill="#3056D3" />
-                        <circle cx="46.5" cy="90.5" r="2.5" fill="#3056D3" />
-                        <circle cx="68.5" cy="2.5" r="2.5" fill="#3056D3" />
-                        <circle cx="68.5" cy="24.5" r="2.5" fill="#3056D3" />
-                        <circle cx="68.5" cy="46.5" r="2.5" fill="#3056D3" />
-                        <circle cx="68.5" cy="68.5" r="2.5" fill="#3056D3" />
-                        <circle cx="68.5" cy="90.5" r="2.5" fill="#3056D3" />
-                        <circle cx="90.5" cy="2.5" r="2.5" fill="#3056D3" />
-                        <circle cx="90.5" cy="24.5" r="2.5" fill="#3056D3" />
-                        <circle cx="90.5" cy="46.5" r="2.5" fill="#3056D3" />
-                        <circle cx="90.5" cy="68.5" r="2.5" fill="#3056D3" />
-                        <circle cx="90.5" cy="90.5" r="2.5" fill="#3056D3" />
-                      </svg>
-                    </span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
+import { useCallback, useEffect, useState } from "react";
+import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/solid";
+import IdeaItem from "../components/IdeaItem";
+import { filters } from "../constants/filter";
+import { getAllIdeaWithFilter, tokenRequestInterceptor } from "../apiServices/index";
+import {connect} from 'react-redux'
+import { getNewToken } from "../store/actions/authenticateAction";
+
+
+const HomePage = ({authenticateReducer, getNewTokenRequest}) => {
+  const [pages, setPages] = useState(1);
+  const [currPage, setCurrPage] = useState(1);
+  const [ideas, setIdeas] = useState([]);
+  const [filterOption, setFilterOption] = useState(filters.VIEW);
+  const {token} = authenticateReducer;
+
+  const getAllIdeas = useCallback(async () => {
+    const getAllData = async () => {
+      const { data, status } = await getAllIdeaWithFilter(
+        filterOption,
+        currPage,
+        token
+      );
+      return { data, status };
+    };
+    const { data, status } = await tokenRequestInterceptor(
+      getAllData,
+      getNewTokenRequest
+    );
+    if (status === 200) {
+      setIdeas(data.data);
+      setPages(data.pages);
+      window.scrollTo({
+        top: 0,
+        left: 0,
+        behavior: "smooth",
+      });
+    }
+  }, [filterOption, currPage, getNewTokenRequest, token]);
+
+  const nextPage = () => {
+    setCurrPage(prev => prev + 1)
+  }
+
+  const prevPage = () => {
+    setCurrPage(prev => prev - 1)
+  }
+
+  useEffect(() => {
+    getAllIdeas();
+  }, [getAllIdeas]);
+
+  const handleFilterChange = (e) => {
+    setFilterOption(e.target.value)
+  }
+
+  document.title = "Home";
+  return (
+    <div className="container max-w-xl md:max-w-screen-lg mx-auto">
+      <div className="mx-auto">
+        <div className="w-full flex items-center justify-between mb-10">
+          <h3 className="font-black text-gray-600 text-3xl">
+            Your next favorite thing
+          </h3>
+          <select className="border-none" value={filterOption} onChange={handleFilterChange}>
+            <option value={filters.VIEW}>View</option>
+            <option value={filters.ALPHABET}>Alphabet</option>
+            <option value={filters.DATE_ASC}>Newest</option>
+            <option value={filters.DATE_DESC}>Oldest</option>
+            <option value={filters.LIKE}>Upvote</option>
+            <option value={filters.DISLIKE}>Downvote</option>
+          </select>
+        </div>
+        <ul className="px-5 py-2">
+          {ideas.map((item, index) => (
+            <IdeaItem
+              title={item.title}
+              description={item.description}
+              key={index}
+              id={item._id}
+              date={item.createdAt}
+              category={item.category.name}
+              commentCount={item.comments.length}
+              like={item.reactions.length}
+              view={item?.viewCount | 0}
+            />
+          ))}
+        </ul>
+        <div className="w-full overflow-x-auto flex justify-center p-5">
+          <nav
+            className="relative z-0 inline-flex rounded-md shadow-sm -space-x-px"
+            aria-label="Pagination"
+          >
+            <button
+              onClick={prevPage}
+              disabled={currPage === 1}
+              className={`${
+                currPage === 1 ? "cursor-not-allowed" : "cursor-pointer"
+              } relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50`}
+            >
+              <span className="sr-only">Previous</span>
+              <ChevronLeftIcon className="h-5 w-5" aria-hidden="true" />
+            </button>
+            {pages >= 1 &&
+              [...Array(pages).keys()].map((page, index) => (
+                <button
+                  key={index}
+                  onClick={() => setCurrPage(page + 1)}
+                  aria-current="page"
+                  className={`z-10 bg-indigo-50 ${
+                    currPage === page + 1 && "border-indigo-500 text-indigo-600"
+                  } inline-flex items-center px-4 py-2 border-2 text-sm font-medium`}
+                >
+                  {page + 1}
+                </button>
+              ))}
+            <button
+              onClick={nextPage}
+              disabled={currPage === pages}
+              className={`${
+                currPage === pages ? "cursor-not-allowed" : "cursor-pointer"
+              } relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50`}
+            >
+              <span className="sr-only">Next</span>
+              <ChevronRightIcon className="h-5 w-5" aria-hidden="true" />
+            </button>
+          </nav>
         </div>
       </div>
-    );
-}
+    </div>
+  );
+};
 
-export default HomePage;
+const mapStateToProps = (state) => {
+  return {
+    authenticateReducer: state.authenticateReducer,
+  };
+};
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    getNewTokenRequest: () => dispatch(getNewToken()),
+  };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(HomePage);

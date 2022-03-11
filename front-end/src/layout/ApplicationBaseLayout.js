@@ -3,11 +3,11 @@ import Footer from '../components/footer'
 
 const ApplicationBaseLayout = ({children}) => {
     return (
-        <>
-            <NavBar />
-            {children}
-            <Footer />
-        </>
-    )
+      <>
+        <NavBar />
+        <main className='mt-[5rem] mb-[20rem]'>{children}</main>
+        <Footer />
+      </>
+    );
 }
 export default ApplicationBaseLayout;

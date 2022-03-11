@@ -5,7 +5,8 @@ const cors = require("cors");
 const errorhandler = require("errorhandler");
 const helmet = require("helmet");
 const app = express();
-const { createClient } = require("redis");
+const path = require("path");
+//const { createClient } = require("redis");
 
 const db = require("./persistance/db");
 const passport = require("passport");
@@ -28,6 +29,9 @@ const rootRouter = require("./router/index");
 //   const value = await client.get("key");
 // })();
 
+global.__basedir = __dirname;
+app.use("/statics", express.static(path.join(__dirname, "statics")));
+
 // Apply application middleware
 app.use(passport.initialize());
 app.use(
@@ -47,6 +51,7 @@ app.use(helmet());
 app.use(morgan("dev"));
 app.use(errorhandler());
 app.use(express.json({ urlEncoded: true }));
+app.use(express.urlencoded({ extended: false }));
 app.use(passport.session());
 
 db.connect(process.env.DB_URL);

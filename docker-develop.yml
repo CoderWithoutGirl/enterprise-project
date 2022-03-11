@@ -1,0 +1,40 @@
+version: "3.3"
+
+services:
+  mongo:
+    container_name: mongo
+    image: mongo:latest
+    volumes:
+      - .docker/data/db:/data/db
+    ports:
+      - 27017:27017
+  redis:
+    image: redis:latest
+    container_name: redis
+    environment:
+      - ALLOW_EMPTY_PASSWORD=yes
+    volumes:
+    - .docker/data/redis:/data
+    ports:
+      - 6379:6379
+  redis-commander:
+    container_name: redis-commander
+    image: rediscommander/redis-commander
+    restart: always
+    environment:
+      - REDIS_HOSTS=local:redis:6379
+    ports:
+      - "8081:8081"
+  server:
+    container_name: server
+    restart: always
+    build:
+      dockerfile: Dockerfile
+      context: ./back-end
+    env_file:
+      - ./back-end/.env.production
+    ports:
+      - "8080:80"
+    depends_on:
+      - mongo
+      - redis

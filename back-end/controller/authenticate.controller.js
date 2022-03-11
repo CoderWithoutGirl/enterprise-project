@@ -16,6 +16,7 @@ const authenticateControler = {
     },
     register: async (req, res) => {
         const registerAccount = req.body;
+        console.log(registerAccount);
         try {
             const createAccount = await register(registerAccount);
             res.status(201).json({
@@ -28,6 +29,7 @@ const authenticateControler = {
         }
     },
     refeshToken: async (req, res) => {
+        console.log(req.body.refeshToken);
         const { refreshToken } = req.body;
         try {
             const responseData = await refreshJwtToken(refreshToken);
@@ -40,8 +42,8 @@ const authenticateControler = {
     logout: async (req, res) => {
         const { refreshToken } = req.body;
         try {
-            await revokeToken(refreshToken, req.ip);
-            res.status(200).json({ message: "lougout success", status: 400 });
+            await revokeToken(refreshToken);
+            res.status(200).json({ message: "lougout success", status: 200 });
         } catch (error) {
             res
                 .status(400)

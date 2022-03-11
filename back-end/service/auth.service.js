@@ -2,6 +2,8 @@ const Jwt = require("jsonwebtoken");
 const User = require("../model/user");
 const RefreshToken = require("../model/refresh-token.model");
 const crypto = require("crypto");
+const emailProcess = require("../processes/email.process");
+const { inviteUser } = require("../documents/index");
 
 const randomTokenString = () => {
   return crypto.randomBytes(40).toString("hex");
@@ -15,7 +17,7 @@ const signToken = (payload) => {
     },
     process.env.SECRET_KEY,
     {
-      expiresIn: "300s",
+      expiresIn: "11520s",
     }
   );
 };
@@ -32,7 +34,6 @@ const generateRefreshToken = async (user, ipAddress) => {
 };
 
 const getRefreshToken = async (token) => {
-  console.log(token);
   const refreshTokenInDb = await RefreshToken.findOne({ token }).populate(
     "user"
   );
@@ -43,13 +44,9 @@ const getRefreshToken = async (token) => {
   }
 };
 
-
 //TODO: CHange Revoke token function
-const revokeToken = async (token, ipAddress) => {
-  const refreshTokenInDb = await getRefreshToken(token);
-  refreshTokenInDb.revoked = Date.now();
-  refreshTokenInDb.revokedByIp = ipAddress;
-  await refreshTokenInDb.save();
+const revokeToken = async (token) => {
+  await RefreshToken.findOneAndDelete({token})
 };
 
 const refreshJwtToken = async (token) => {
@@ -60,21 +57,54 @@ const refreshJwtToken = async (token) => {
 
   // return basic details and tokens
   return {
-    jwtToken,
+    token: jwtToken,
   };
 };
 
 const register = async (registerAccount) => {
-  const { username } = registerAccount;
+  const { username, password, confirmPassword } = registerAccount;
   const checkAccountExistedInDb = await User.findOne({ username });
   if (checkAccountExistedInDb) {
     throw new Error("Account already exists");
-    return;
-  } else {
-    const createAccount = new User({ ...registerAccount });
-    await createAccount.save();
-    return createAccount;
+  } 
+  else {
+    try {
+      const createAccount = new User({
+        ...registerAccount,
+        email: username,
+        role: process.env.STAFF,
+      });
+      await createAccount.save();
+      emailProcess({
+        to: username,
+        subject: "Congratulations, Your account is here!",
+        html: inviteUser(
+          createAccount.fullname,
+          process.env.LOGIN_PAGE,
+          username,
+          process.env.DEFAULT_PASSWORD
+        ),
+      });
+      return createAccount;
+    } catch (error) {
+      if (error.name === "ValidationError") {
+        let errors = {};
+
+        Object.keys(error.errors).forEach((key) => {
+          errors[key] = error.errors[key].message;
+        });
+        console.log(errors);
+
+        throw new Error(errors);
+      }
+    }
   }
 };
 
-module.exports = { register, signToken, generateRefreshToken, refreshJwtToken, revokeToken };
+module.exports = {
+  register,
+  signToken,
+  generateRefreshToken,
+  refreshJwtToken,
+  revokeToken,
+};

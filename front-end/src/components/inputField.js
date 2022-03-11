@@ -1,23 +1,24 @@
-const InputField = () => {
-    return (
-        <>
-        <label htmlFor="price" className="block text-sm font-medium text-gray-700">
-        Price
-      </label>
-      <div className="mt-1 relative rounded-md shadow-sm">
-        <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-          <span className="text-gray-500 sm:text-sm">$</span>
-        </div>
-        <input
-          type="text"
-          name="price"
-          id="price"
-          className="focus:ring-indigo-500 focus:border-indigo-500 block w-full pl-7 pr-12 sm:text-sm border-gray-300 rounded-md"
-          placeholder="0.00"
-        />
-        </div>
-        </>
-    )
+import PropsType from "prop-types";
+import { forwardRef } from "react";
+
+const InputField = forwardRef(({type, placeholder,disabled, ...rest}, ref) => {
+  return (
+    <input
+      type={type}
+      ref={ref}
+      placeholder={placeholder}
+      className={`${
+        disabled ? "bg-gray-300 border-none" : "bg-inherit border-1"
+      }  rounded-lg w-full h-12 px-4`}
+      {...rest}
+      disabled={disabled || false}
+    />
+  );
+})
+
+InputField.propsType = {
+  type: PropsType.oneOf(["text", "password", "email", "number"]),
+  placeholder: PropsType.string
 }
 
 export default InputField;
