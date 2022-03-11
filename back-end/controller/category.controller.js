@@ -1,4 +1,4 @@
-const {createCategory,getCategory,  getCategoryByName, findIdCategory, updateCategory, deleteCategory} = require('../service/category.service');
+const {createCategory,getCategory,getAllIdeaWithCategoryName,  getCategoryByName, findIdCategory, updateCategory, deleteCategory} = require('../service/category.service');
 
 const categoryController = {
     createCategory: async (req,res) => {
@@ -31,6 +31,11 @@ const categoryController = {
             const results = await getCategory();
             res.status(200).json(results)
         }
+    },
+    getAllIdeaInCategory: async (req, res) => {
+        const {name} = req.params;
+        const data = await getAllIdeaWithCategoryName(name);
+        res.status(200).json({data})
     },
 
     getOneCategoryById: async (req, res) =>{

@@ -5,13 +5,14 @@ import {
   UserIcon,
   UserGroupIcon,
   LogoutIcon,
-  CalendarIcon
+  CalendarIcon,
+  DuplicateIcon
 } from "@heroicons/react/solid";
 import { connect } from "react-redux";
 import { logout } from "../store/actions/authenticateAction";
 import { subRouterUpdate } from "../store/actions/subRouterAction";
 import { useEffect, useState } from "react";
-import {ChevronDoubleDownIcon} from '@heroicons/react/solid'
+import {ChevronDownIcon} from '@heroicons/react/solid'
 
 const SideBar = ({
   authenticateReducer,
@@ -24,62 +25,19 @@ const SideBar = ({
   const { token } = authenticateReducer;
   const { departmentRouters, categoryRouters } = subRouterReducer;
   
-  const [toggleRoute, setToggleRoute]  = useState({
-    name: '',
-    value: false
-  });
+  const [departmentToggle, setDepartmentToggle] = useState(false);
 
-  const toggleRouterHandler = (e, subRoute) => {
-    e.preventDefault();
-    setToggleRoute(prev => ({
-      name: subRoute,
-      value: !prev.value
-    }))
+  const [categoryToggle, setCategoryToggle] = useState(false);
+
+  const handleDepToggle = (e) => {
+    setDepartmentToggle(prev => !prev)
+    setCategoryToggle(false);
   }
 
-  const [dashBoardRoute, setDashBoardRoute] = useState([
-    {
-      to: "/",
-      icon: () => <ChartPieIcon className="text-gray-500 w-[30px] h-[30px]" />,
-      name: "Dashboard",
-    },
-    {
-      to: "/users",
-      icon: () => <UserIcon className="text-gray-500 w-[30px] h-[30px]" />,
-      name: "Users",
-    },
-    {
-      to: "/departments",
-      icon: () => <UserGroupIcon className="text-gray-500 w-[30px] h-[30px]" />,
-      name: "Departments",
-      subRouters: departmentRouters.map((item, index) => ({
-        to: `/departments/${item.name}`,
-        icon: () => (
-          <UserGroupIcon className="text-gray-500 sm:inline-block hidden w-[30px] h-[30px]" />
-        ),
-        name: item.name,
-      })),
-    },
-    {
-      to: "/categories",
-      icon: () => (
-        <DocumentDuplicateIcon className="text-gray-500 w-[30px] h-[30px]" />
-      ),
-      name: "Categories",
-      subRouters: categoryRouters.map((item, index) => ({
-        to: `/categories/${item.name}`,
-        icon: () => (
-          <UserGroupIcon className="text-gray-500 sm:inline-block hidden w-[30px] h-[30px]" />
-        ),
-        name: item.name,
-      })),
-    },
-    {
-      to: "/academic",
-      icon: () => <CalendarIcon className="text-gray-500 w-[30px] h-[30px]" />,
-      name: "Academic Years",
-    },
-  ]);
+  const handleCateToggle = (e) => {
+    setCategoryToggle(prev => !prev)
+    setDepartmentToggle(false);
+  }
 
   const handleLogout = (e) => {
     e.preventDefault();
@@ -112,71 +70,126 @@ const SideBar = ({
               </p>
             </div>
           </div>
-          {dashBoardRoute.map(({ to, icon: Icon, name, subRouters }, index) => (
-            <li key={index}>
-              <Link
-                to={to}
-                className={`flex items-center p-2 text-base justify-between font-normal ${
-                  location.pathname === to
-                    ? "bg-gray-700 dark:bg-gray-900"
-                    : "bg-inherit"
-                } text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700`}
-              >
-                <div className="flex">
-                  <Icon />
-                  <span className="hidden sm:inline-block ml-3">{name}</span>
-                </div>
-                {subRouters && (
-                  <button
-                    className="hover:bg-gray-500"
-                    onClick={(e) => toggleRouterHandler(e, name.toLowerCase())}
-                  >
-                    <ChevronDoubleDownIcon
-                      width={30}
-                      height={30}
-                      className="text-gray-500"
-                    />
-                  </button>
-                )}
-              </Link>
-
-              {subRouters && (
-                <ul
-                  className={`${
-                    (toggleRoute.name === name.toLowerCase()) &
-                    toggleRoute.value
-                      ? null
-                      : "hidden"
-                  } sm:ml-4 space-y-2`}
+          <li>
+            <Link
+              to="/"
+              className={`flex items-center p-2 text-base justify-between font-normal ${
+                location.pathname === "/"
+                  ? "bg-gray-700 dark:bg-gray-900"
+                  : "bg-inherit"
+              } text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700`}
+            >
+              <div className="flex items-center">
+                <ChartPieIcon className="text-gray-500 w-7 h-7" />
+                <span className="hidden sm:inline-block ml-3">Home</span>
+              </div>
+            </Link>
+          </li>
+          <li>
+            <Link
+              to="/users"
+              className={`flex items-center p-2 text-base justify-between font-normal ${
+                location.pathname === "/users"
+                  ? "bg-gray-700 dark:bg-gray-900"
+                  : "bg-inherit"
+              } text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700`}
+            >
+              <div className="flex items-center">
+                <UserIcon className="text-gray-500 w-7 h-7" />
+                <span className="hidden sm:inline-block ml-3">Users</span>
+              </div>
+            </Link>
+          </li>
+          <li>
+            <Link
+              to="/departments"
+              className={`flex items-center p-2 text-base justify-between font-normal ${
+                location.pathname === "/departments"
+                  ? "bg-gray-700 dark:bg-gray-900"
+                  : "bg-inherit"
+              } text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700`}
+            >
+              <div className="flex items-center">
+                <UserGroupIcon className="text-gray-500 w-7 h-7" />
+                <span className="hidden sm:inline-block ml-3">Departments</span>
+              </div>
+              <ChevronDownIcon onClick={handleDepToggle} className="text-gray-500 w-10 h-10" />
+            </Link>
+          </li>
+          <ul className={`${departmentToggle ? null : "hidden"} sm:ml-4 space-y-2`}>
+            {departmentRouters?.map((item, index) => (
+              <li key={index}>
+                <Link
+                  to={`/departments/${item.name}`}
+                  className={`flex items-center p-2 text-base font-normal ${
+                    location.pathname === `/departments/${item.name}`
+                      ? "bg-gray-700 dark:bg-gray-900"
+                      : "bg-inherit"
+                  } text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700`}
                 >
-                  {subRouters?.map(({ name, icon: Icon, to }, index) => (
-                    <li key={index}>
-                      <Link
-                        to={to}
-                        className={`flex items-center p-2 text-base font-normal ${
-                          location.pathname === to
-                            ? "bg-gray-700 dark:bg-gray-900"
-                            : "bg-inherit"
-                        } text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700`}
-                      >
-                        <Icon />
-                        <span className="sm:ml-3">
-                          {name}
-                        </span>
-                      </Link>
-                    </li>
-                  ))}
-                </ul>
-              )}
-            </li>
-          ))}
+                  <UserGroupIcon className="text-gray-500 w-7 h-7" />
+                  <span className="sm:ml-3">{item.name}</span>
+                </Link>
+              </li>
+            ))}
+          </ul>
+          <li>
+            <Link
+              to="/categories"
+              className={`flex items-center p-2 text-base justify-between font-normal ${
+                location.pathname === "/categories"
+                  ? "bg-gray-700 dark:bg-gray-900"
+                  : "bg-inherit"
+              } text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700`}
+            >
+              <div className="flex items-center">
+                <DocumentDuplicateIcon className="text-gray-500 w-7 h-7" />
+                <span className="hidden sm:inline-block ml-3">Categories</span>
+              </div>
+              <ChevronDownIcon onClick={handleCateToggle} className="text-gray-500 w-10 h-10" />
+            </Link>
+          </li>
+          <ul className={`${categoryToggle ? null : "hidden"} sm:ml-4 space-y-2`}>
+            {categoryRouters?.map((item, index) => (
+              <li key={index}>
+                <Link
+                  to={`/categories/${item.name}`}
+                  className={`flex items-center p-2 text-base font-normal ${
+                    location.pathname === `/departments/${item.name}`
+                      ? "bg-gray-700 dark:bg-gray-900"
+                      : "bg-inherit"
+                  } text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700`}
+                >
+                  <DuplicateIcon className="text-gray-500 w-7 h-7" />
+                  <span className="sm:ml-3">{item.name}</span>
+                </Link>
+              </li>
+            ))}
+          </ul>
+          <li>
+            <Link
+              to="/academic"
+              className={`flex items-center p-2 text-base justify-between font-normal ${
+                location.pathname === "/academic"
+                  ? "bg-gray-700 dark:bg-gray-900"
+                  : "bg-inherit"
+              } text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700`}
+            >
+              <div className="flex items-center">
+                <CalendarIcon className="text-gray-500 w-7 h-7" />
+                <span className="hidden sm:inline-block ml-3">
+                  Academic Years
+                </span>
+              </div>
+            </Link>
+          </li>
           <li>
             <Link
               to="/"
               onClick={handleLogout}
               className="flex items-center p-2 text-base font-normal text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700"
             >
-              <LogoutIcon className="text-gray-500 w-[30px] h-[30px]" />
+              <LogoutIcon className="text-gray-500 w-7 h-7" />
               <span className="hidden sm:inline-block ml-3">Logout</span>
             </Link>
           </li>

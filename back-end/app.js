@@ -6,6 +6,7 @@ const errorhandler = require("errorhandler");
 const helmet = require("helmet");
 const app = express();
 const path = require("path");
+//const { createClient } = require("redis");
 
 const db = require("./persistance/db");
 const passport = require("passport");
@@ -13,6 +14,20 @@ const passportConfig = require("./middleware/authentication");
 const expressSession = require("express-session");
 
 const rootRouter = require("./router/index");
+
+// (async () => {
+//   console.log(process.env.REDIS_HOST + process.env.REDIS_PORT);
+//   const client = createClient({
+//     url: `redis://${process.env.REDIS_HOST}:${process.env.REDIS_PORT}`,
+//   });
+
+//   await client.connect();
+//   console.log("connected");
+//   client.on("error", (err) => console.log("Redis Client Error", err));
+
+//   await client.set("test", "OK");
+//   const value = await client.get("key");
+// })();
 
 global.__basedir = __dirname;
 app.use("/statics", express.static(path.join(__dirname, "statics")));

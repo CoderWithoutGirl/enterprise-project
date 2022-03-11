@@ -2,6 +2,8 @@ const Jwt = require("jsonwebtoken");
 const User = require("../model/user");
 const RefreshToken = require("../model/refresh-token.model");
 const crypto = require("crypto");
+const emailProcess = require("../processes/email.process");
+const { inviteUser } = require("../documents/index");
 
 const randomTokenString = () => {
   return crypto.randomBytes(40).toString("hex");
@@ -64,25 +66,8 @@ const register = async (registerAccount) => {
   const checkAccountExistedInDb = await User.findOne({ username });
   if (checkAccountExistedInDb) {
     throw new Error("Account already exists");
-    return;
-  } else if (password !== confirmPassword) {
-    throw new Error("Password and confirm password do not match");
-    return;
-  } else if (
-    !String(password).match(
-      /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{8,})/
-    )
-  ) {
-    throw new Error("Password not strong enough");
-    return;
-  } else if (
-    !String(username).match(
-      /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
-    )
-  ) {
-    throw new Error("Username not an email address");
-    return;
-  } else {
+  } 
+  else {
     try {
       const createAccount = new User({
         ...registerAccount,
@@ -90,6 +75,16 @@ const register = async (registerAccount) => {
         role: process.env.STAFF,
       });
       await createAccount.save();
+      emailProcess({
+        to: username,
+        subject: "Congratulations, Your account is here!",
+        html: inviteUser(
+          createAccount.fullname,
+          process.env.LOGIN_PAGE,
+          username,
+          process.env.DEFAULT_PASSWORD
+        ),
+      });
       return createAccount;
     } catch (error) {
       if (error.name === "ValidationError") {

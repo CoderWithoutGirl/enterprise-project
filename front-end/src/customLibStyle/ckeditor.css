@@ -9,7 +9,7 @@
 }
 
 .ck.ck-toolbar {
-    z-index: 100;
+    z-index: 1;
  border: 0;
     border-radius: 0;
     box-shadow: 0 0 5px hsla( 0,0%,0%,.2 );
