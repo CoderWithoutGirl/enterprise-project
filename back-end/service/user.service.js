@@ -2,6 +2,7 @@ const User = require("../model/user");
 const fs = require("fs");
 const xlsx = require("node-xlsx");
 const { register } = require("./auth.service");
+const CryptoJS = require("crypto-js");
 
 const getAllUser = async () => {
   const qaManager = await User.findOne({ role: process.env.QAMANAGER }).sort([
@@ -32,54 +33,98 @@ const getUserByDepartment = async (department) => {
     role: process.env.QACOORDINATOR,
   });
   if (qaCoordinatorOfDepartment) {
-    return [qaCoordinatorOfDepartment, ...listUserInDb]
-  }
-  else {
+    return [qaCoordinatorOfDepartment, ...listUserInDb];
+  } else {
     return listUserInDb;
   }
-}
+};
 
 const getUserById = async (id) => {
   return await User.findById(id);
+};
+
+const updateUser = async (id, updateAccount) => {
+  console.log("putt" + updateAccount);
+  const {
+    password,
+    confirmPassword,
+    fullname,
+    dateOfBirth,
+    address,
+    age,
+    gender,
+  } = updateAccount;
+  if (password !== confirmPassword) {
+    throw new Error("Password and confirm password is not match");
+  } else {
+    try {
+      var encryptedPassword = CryptoJS.AES.encrypt(
+        password,
+        process.env.ENCRYPT_KEY
+      ).toString();
+
+      await User.findByIdAndUpdate(id, {
+        fullname: fullname,
+        password: encryptedPassword,
+        dateOfBirth: dateOfBirth,
+        address: address,
+        age: age,
+        gender: gender,
+      });
+    } catch (error) {
+      if (error.name === "ValidationError") {
+        let errors = {};
+
+        Object.keys(error.errors).forEach((key) => {
+          errors[key] = error.errors[key].message;
+        });
+        console.log(errors);
+
+        throw new Error(errors);
+      }
+    }
+  }
 };
 
 const assignStaff = async (role, department, id) => {
   const userInDb = await User.findById(id);
   const allUserInDep = await User.find({ department: department });
   if (userInDb.role === role) {
-    throw new Error('this user is already a QA coordinator')
-  }
-  else if (allUserInDep.filter(user => user.role === role).length > 0) {
-    await User.findOneAndUpdate({ department: department, role: role }, { role: process.env.STAFF });
+    throw new Error("this user is already a QA coordinator");
+  } else if (allUserInDep.filter((user) => user.role === role).length > 0) {
+    await User.findOneAndUpdate(
+      { department: department, role: role },
+      { role: process.env.STAFF }
+    );
+    await User.findByIdAndUpdate(id, { role: role });
+  } else {
     await User.findByIdAndUpdate(id, { role: role });
   }
-  else {
-    await User.findByIdAndUpdate(id, { role: role });
-  }
-}
+};
 
 const assignStaffToManager = async (role, department, id) => {
   const accountInDB = await User.findByIdAndUpdate(id);
-  const allAccountInDep = await User.find({ role: role})
+  const allAccountInDep = await User.find({ role: role });
   if (accountInDB.role === role) {
-    throw new Error('This user is already a QA Manager')
-  }
-  else if (allAccountInDep.filter(user => user.role === role).length > 0) {
-    await User.findOneAndUpdate({ department: "", role: role }, { role: process.env.STAFF });
+    throw new Error("This user is already a QA Manager");
+  } else if (allAccountInDep.filter((user) => user.role === role).length > 0) {
+    await User.findOneAndUpdate(
+      { department: "", role: role },
+      { role: process.env.STAFF }
+    );
+    await User.findByIdAndUpdate(id, { role: role });
+  } else {
     await User.findByIdAndUpdate(id, { role: role });
   }
-  else {
-    await User.findByIdAndUpdate(id, { role: role });
-  }
-}
+};
 
 const findStaffWithoutDepartment = async () => {
   const listUserInDb = await User.find({
     department: "",
     role: [process.env.STAFF, process.env.QAMANAGER],
-  })
+  });
   return listUserInDb;
-}
+};
 
 const excelDataExtractor = async (filename) => {
   const obj = xlsx.parse(__basedir + `/statics/excels/${filename}`);
@@ -150,5 +195,6 @@ module.exports = {
   assignStaff,
   getUserByDepartment,
   findStaffWithoutDepartment,
-  assignStaffToManager
+  assignStaffToManager,
+  updateUser,
 };

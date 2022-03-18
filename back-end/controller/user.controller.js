@@ -8,18 +8,18 @@ const {
   getUserByDepartment,
   assignStaff,
   findStaffWithoutDepartment,
-  assignStaffToManager
+  assignStaffToManager,
+  updateUser,
 } = require("../service/user.service.js");
 
 const userController = {
   getAllUser: async (req, res) => {
-    const {username, department} = req.query;
+    const { username, department } = req.query;
     if (username) {
       const result = await getUserByUsername(username);
       res.status(200).json(result);
       return;
-    }
-    else if(department) {
+    } else if (department) {
       console.log(department);
       const result = await getUserByDepartment(department);
       res.status(200).json(result);
@@ -44,17 +44,19 @@ const userController = {
       res.status(400).json({ message: error.message, status: 400 });
     }
   },
-  assignStaffToManager: async(req, res) => {
+  assignStaffToManager: async (req, res) => {
     const { role, department } = req.body;
     const { id } = req.params;
     try {
       await assignStaffToManager(role, department, id);
-      res.status(200).json({ message: "Assign Staff Account To QA Manager Successfully." });
+      res
+        .status(200)
+        .json({ message: "Assign Staff Account To QA Manager Successfully." });
     } catch (error) {
       res.status(400).json({ message: error.message, status: 400 });
     }
   },
-  getUserWithoutDepartment: async(req, res) =>{
+  getUserWithoutDepartment: async (req, res) => {
     try {
       const result = await findStaffWithoutDepartment();
       res.status(200).json(result);
@@ -84,6 +86,15 @@ const userController = {
     try {
       const { filename } = req.params;
       await deleteExcel(filename);
+      res.status(200).json({ status: 200 });
+    } catch (err) {
+      console.log(err);
+    }
+  },
+  update: async (req, res) => {
+    try {
+      const { id } = req.params;
+      await updateUser(id, req.body);
       res.status(200).json({ status: 200 });
     } catch (err) {
       console.log(err);
