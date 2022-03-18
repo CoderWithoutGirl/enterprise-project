@@ -36,6 +36,11 @@ export const getAllUser = (token) =>
     headers: { Authorization: `Bearer ${token}` },
   });
 
+export const deleteUser = (token, id) =>
+  apiInstance.delete(`/users/${id}`, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+
 export const getSingleUser = (token, id) =>
   apiInstance.get(`/users/${id}`, {
     headers: { Authorization: `Bearer ${token}` },

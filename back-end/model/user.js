@@ -39,6 +39,7 @@ const UserSchema = new mongoose.Schema(
       default: process.env.STAFF,
     },
     avatar: String,
+    deleted: { type: Boolean, required: false, default: false },
   },
   { timestamps: true }
 );

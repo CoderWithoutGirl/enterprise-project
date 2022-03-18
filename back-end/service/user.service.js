@@ -5,18 +5,23 @@ const { register } = require("./auth.service");
 const CryptoJS = require("crypto-js");
 
 const getAllUser = async () => {
-  const qaManager = await User.findOne({ role: process.env.QAMANAGER }).sort([
-    ["createdAt", "asc"],
-  ]);
-  const userDb = await User.find({ role: process.env.STAFF }).sort([
-    ["createdAt", "asc"],
-  ]);
+  const qaManager = await User.findOne({ role: process.env.QAMANAGER })
+    .sort([["createdAt", "asc"]])
+    .where("deleted")
+    .ne(true);
+  const userDb = await User.find({ role: process.env.STAFF })
+    .sort([["createdAt", "asc"]])
+    .where("deleted")
+    .ne(true);
 
   return [qaManager, ...userDb];
 };
 
 const getUserByUsername = async (username) => {
-  const listUserInDb = await User.find().sort([["createdAt", "asc"]]);
+  const listUserInDb = await User.find()
+    .sort([["createdAt", "asc"]])
+    .where("deleted")
+    .ne(true);
   const dataFiltering = listUserInDb.filter((item) =>
     item.username.includes(username)
   );
@@ -84,6 +89,10 @@ const updateUser = async (id, updateAccount) => {
       }
     }
   }
+};
+
+const deleteUser = async (id) => {
+  await User.findByIdAndUpdate(id, { deleted: true });
 };
 
 const assignStaff = async (role, department, id) => {
@@ -197,4 +206,5 @@ module.exports = {
   findStaffWithoutDepartment,
   assignStaffToManager,
   updateUser,
+  deleteUser,
 };

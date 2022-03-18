@@ -10,6 +10,7 @@ const {
   findStaffWithoutDepartment,
   assignStaffToManager,
   updateUser,
+  deleteUser,
 } = require("../service/user.service.js");
 
 const userController = {
@@ -95,6 +96,15 @@ const userController = {
     try {
       const { id } = req.params;
       await updateUser(id, req.body);
+      res.status(200).json({ status: 200 });
+    } catch (err) {
+      console.log(err);
+    }
+  },
+  delete: async (req, res) => {
+    try {
+      const { id } = req.params;
+      await deleteUser(id);
       res.status(200).json({ status: 200 });
     } catch (err) {
       console.log(err);

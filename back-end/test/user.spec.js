@@ -10,6 +10,7 @@ const {
   findStaffWithoutDepartment,
   assignStaffToManager,
   updateUser,
+  deleteUser,
 } = require("../service/user.service");
 
 beforeAll(async () => {
@@ -141,6 +142,17 @@ describe("PUT /users/update/:id", () => {
         fullname: "Administrator",
         gender: "Unknown",
       });
+    } catch (err) {
+      expect(err).toBeFalsy();
+    }
+  });
+});
+
+describe("DELETE /users/", () => {
+  it("Test should delete account ", async () => {
+    const userAdmin = await getUserByUsername("user@gmail.com");
+    try {
+      await deleteUser(userAdmin);
     } catch (err) {
       expect(err).toBeFalsy();
     }

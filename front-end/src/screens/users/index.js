@@ -12,6 +12,7 @@ import {
   cancelUserExcel,
   getUserWithoutDepartment,
   assignStaffToManager,
+  deleteUser,
 } from "../../apiServices";
 import { getNewToken } from "../../store/actions/authenticateAction";
 import Modal from "../../components/modal";
@@ -110,6 +111,28 @@ const UserPage = ({ getNewTokenRequest, token }) => {
     };
     loadSingleUser();
     setOpenDetail((prev) => !prev);
+  };
+
+  const deleteHandler = (e, id) => {
+    e.preventDefault();
+    if (window.confirm("Are you sure you want to delete")) {
+      const deletedUser = async () => {
+        const deletedUser = async () => {
+          const { data, status } = await deleteUser(token, id);
+          return { data, status };
+        };
+        const { status, data } = await tokenRequestInterceptor(
+          deletedUser,
+          getNewTokenRequest
+        );
+
+        if (status === 200) {
+          toast.error("Deleted User Successfully");
+        }
+      };
+      deletedUser();
+    }
+    loadUser();
   };
 
   const uploadFile = (e) => {
@@ -253,7 +276,12 @@ const UserPage = ({ getNewTokenRequest, token }) => {
             title="Detail"
             onClick={(e) => detailHandler(e, item.id)}
           />
-          <Button icon={BackspaceIcon} type="danger" title="Delete" />
+          <Button
+            onClick={(e) => deleteHandler(e, item.id)}
+            icon={BackspaceIcon}
+            type="danger"
+            title="Delete"
+          />
         </div>
       </td>
     </tr>

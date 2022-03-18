@@ -28,6 +28,15 @@ userRouter.put(
   userController.update
 );
 
+userRouter.delete(
+  "/:id",
+  [
+    passport.authenticate("jwt", { session: false }),
+    authorize([process.env.ADMIN]),
+  ],
+  userController.delete
+);
+
 userRouter.get(
   "/getdepartment",
   [
