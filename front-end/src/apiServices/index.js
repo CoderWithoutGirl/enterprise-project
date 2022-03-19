@@ -128,6 +128,11 @@ export const updateDepartment = (formData, id, token) =>
     { headers: { Authorization: `Bearer ${token}` } }
   );
 
+export const deleteDepartment = (token, id) =>
+  apiInstance.delete(`/departments/${id}`, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+
 //Category
 export const createCategory = (formData, token) =>
   apiInstance.post(
@@ -192,11 +197,11 @@ export const getSingleIdea = (id, token) =>
     headers: { Authorization: `Bearer ${token}` },
   });
 export const commentToIdea = (id, data, token) =>
-  apiInstance.post(`/ideas/${id}/comment`,{...data}, {
+  apiInstance.post(`/ideas/${id}/comment`, { ...data }, {
     headers: { Authorization: `Bearer ${token}` },
   });
 export const reactToIdea = (id, data, token) =>
-  apiInstance.post(`/ideas/${id}/reaction`,{...data}, {
+  apiInstance.post(`/ideas/${id}/reaction`, { ...data }, {
     headers: { Authorization: `Bearer ${token}` },
   });
 export const increateView = (id, token) =>

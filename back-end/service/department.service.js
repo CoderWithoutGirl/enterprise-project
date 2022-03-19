@@ -1,4 +1,5 @@
 const Department = require("../model/department");
+const UserModel = require("../model/user")
 
 const createDepartment = async (defaultDepartment) => {
     const { name } = defaultDepartment;
@@ -18,7 +19,7 @@ const createDepartment = async (defaultDepartment) => {
 };
 
 const getAllDepartments = async () =>{
-    const departmentDB = await Department.find().sort([["createdAt", "asc"]]);
+    const departmentDB = await Department.find({isDelete:false}).sort([["createdAt", "asc"]]);
     return [...departmentDB];
 }
 
@@ -37,12 +38,17 @@ const findIdDepartment = async (id) =>{
 
 }
 
-const deleteDepartment = async (id) =>{
-    await Department.findByIdAndDelete(id);
-}
 
 const updateDepartment = async(id, description) =>{
     await Department.findByIdAndUpdate(id , {description: description});
+}
+
+const deleteDepartment = async (id) =>{
+
+    await Department.findByIdAndUpdate(id , {isDelete: true});
+    canDelete = true;
+    return canDelete;
+
 }
 
 module.exports = { 

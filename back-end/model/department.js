@@ -10,6 +10,11 @@ const departmentSchema = new mongoose.Schema({
         type: String,
         maxLength: 200
     },
+
+    isDelete: {
+        type: Boolean,
+        default: false
+    }
 },
     { timestamps: true }
 );

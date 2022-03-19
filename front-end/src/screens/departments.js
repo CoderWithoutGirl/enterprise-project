@@ -15,6 +15,8 @@ import {
   updateDepartment,
   findDepartmentByID,
   searchDepartByName,
+  deleteDepartment
+
 } from "../apiServices";
 import { toast } from "react-toastify";
 import { ErrorMessage } from "@hookform/error-message";
@@ -41,7 +43,10 @@ function Departments({ getNewTokenRequest, token, updateRouter }) {
   const [open, setOpen] = useState(false);
   const [editOpen, setEditOpen] = useState(false);
   const [editDepartment, setEditDepartment] = useState({});
-  
+  const [departmentDelete, setDepartmentDelete] = useState({});
+  const [deleteOpen, setDeleteOpen] = useState(false);
+
+
 
   const loadDepartment = useCallback(async () => {
     const loadAllDataOfDepartment = async () => {
@@ -115,6 +120,7 @@ function Departments({ getNewTokenRequest, token, updateRouter }) {
     }
   };
 
+  //Update
   const update = async (e) => {
     e.preventDefault();
     const updateDepart = async () => {
@@ -137,10 +143,40 @@ function Departments({ getNewTokenRequest, token, updateRouter }) {
       loadDepartment();
       setEditOpen((prev) => !prev);
     }
-    // else {
-    //     toast.error(data.message);
-    // }
   };
+
+  //Delete
+  const deleteDep = async (event) => {
+    event.preventDefault();
+    const deleteDepart = async () => {
+      const { data, status } = await deleteDepartment(
+        token,
+        departmentDelete._id,
+      )
+      return { data, status };
+    }
+    const { status, data } = await tokenRequestInterceptor(
+      deleteDepart,
+      getNewTokenRequest
+    );
+    if (status === 200) {
+      toast.success(data.message);
+      loadDepartment();
+      setDeleteOpen((prev) => !prev);
+    }
+    if (status === 400) {
+      toast.error(data.message)
+    }
+  }
+
+
+  const handleDelete = async (e, item) => {
+    e.preventDefault();
+
+    setDeleteOpen((prev) => !prev);
+
+    setDepartmentDelete(item);
+  }
 
   const editHandler = (e, _id) => {
     e.preventDefault();
@@ -200,7 +236,7 @@ function Departments({ getNewTokenRequest, token, updateRouter }) {
             title="Edit"
             onClick={(e) => editHandler(e, item._id)}
           />
-          <Button icon={BackspaceIcon} type="danger" title="Delete" />
+          <Button icon={BackspaceIcon} type="danger" title="Delete" onClick={async (e) => handleDelete(e, item)} />
         </div>
       </td>
     </tr>
@@ -281,7 +317,27 @@ function Departments({ getNewTokenRequest, token, updateRouter }) {
           </Form>
         </div>
       </Modal>
-     
+      <Modal open={deleteOpen} setOpen={setDeleteOpen}>
+        <div className="w-screen sm:max-w-lg">
+          <Form title="Delete Department">
+            <div className="w-3/5 flex flex-wrap justify-between items-center">
+              <h4 style={{ color: "red", fontSize: "17px", paddingBottom: "10px" }}>
+                Are you sure you want to delete ?
+              </h4>
+
+              <Button
+                onClick={deleteDep}
+                role="submit"
+                icon={BackspaceIcon}
+                type="danger"
+                title="Delete"
+              />
+              <Button icon={XCircleIcon} type="primary" title="Cancel" onClick={handleDelete} />
+            </div>
+          </Form>
+        </div>
+      </Modal>
+
     </div>
   );
 }
