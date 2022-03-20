@@ -1,12 +1,13 @@
 const IdeaModel = require("../model/idea");
 const UserModel = require("../model/user");
 const CategoryModel = require("../model/category");
+const DepartmentModel = require("../model/department");
 const mdpdf = require("mdpdf");
-const fs= require('fs')
+const fs = require('fs')
 const emailProcess = require("../processes/email.process");
-const {notificationUser}= require('../documents/index');
+const { notificationUser } = require('../documents/index');
 const { uploadDocument } = require("../processes/cloudinary");
-const {sendNewEmail} = require('../queue/email.queue')
+const { sendNewEmail } = require('../queue/email.queue')
 
 const filterEnum = {
   VIEW: 'VIEW',
@@ -44,8 +45,8 @@ const getAllIdeaWithFilter = async (filter = filterEnum.ALPHABET, page = 1, limi
         )
         .slice((page - 1) * limit, page * limit));
     case filterEnum.DISLIKE:
-        const allPostWithDislike = await IdeaModel.find({})
-          .populate("category", "name")
+      const allPostWithDislike = await IdeaModel.find({})
+        .populate("category", "name")
       return (allIdeaInDB = allPostWithDislike
         .sort(
           (prevIdea, nextIdea) =>
@@ -71,11 +72,11 @@ const getAllIdeaWithFilter = async (filter = filterEnum.ALPHABET, page = 1, limi
         .skip((page - 1) * limit)
         .limit(limit));
     default:
-     return (allIdeaInDB = await IdeaModel.find({})
-       .populate("category", "name")
-       .sort({ viewCount: -1 })
-       .skip((page - 1) * limit)
-       .limit(limit));
+      return (allIdeaInDB = await IdeaModel.find({})
+        .populate("category", "name")
+        .sort({ viewCount: -1 })
+        .skip((page - 1) * limit)
+        .limit(limit));
   }
 };
 
@@ -102,9 +103,9 @@ const getIdeaById = async (id) => {
 }
 
 const increaseView = async (id) => {
-   const increaseViewCount = await IdeaModel.findById(id);
-   increaseViewCount.viewCount = increaseViewCount.viewCount + 1;
-   await increaseViewCount.save();
+  const increaseViewCount = await IdeaModel.findById(id);
+  increaseViewCount.viewCount = increaseViewCount.viewCount + 1;
+  await increaseViewCount.save();
 }
 
 const createIdea = async (
@@ -112,15 +113,20 @@ const createIdea = async (
   description,
   documentLink = "",
   category,
-  userId
+  userId,
+
 ) => {
   const categoryInDB = await CategoryModel.findOne({ name: category });
+
+  const findUserIndDeaprtment = await UserModel.findById(userId.toString());
+
   const newIdea = new IdeaModel({
     title,
     description,
     documentLink,
     category: categoryInDB._id,
     user: userId,
+    department: findUserIndDeaprtment.department
   });
   await newIdea.save();
   categoryInDB.ideas.push(newIdea._id);
@@ -153,7 +159,7 @@ const createDocumentFromMarkdown = async (mdfile) => {
     };
     await mdpdf.convert(options);
     fs.unlinkSync(__basedir + `/statics/documents/${mdfile}`);
-    return process.env.BASE_DOWNLOAD_FILE+ destination;
+    return process.env.BASE_DOWNLOAD_FILE + destination;
   } catch (error) {
     console.log(error);
   }
@@ -167,7 +173,7 @@ const countAllIdeas = async (limit = 5) => {
 const commentToAnIdea = async (postId, content, userId) => {
   const ideaInDb = await IdeaModel.findById(postId);
   const author = await UserModel.findById(ideaInDb.user);
-  ideaInDb.comments.push({content, user: userId});
+  ideaInDb.comments.push({ content, user: userId });
   await ideaInDb.save();
   emailProcess({
     to: author.email,
@@ -187,7 +193,7 @@ const reactionToAnIdea = async (postId, reactionType, userId) => {
   const indexFound = ideaInDb.reactions.findIndex(
     (reaction) => reaction.user.toString() === userId
   );
-  if(indexFound >= 0) {
+  if (indexFound >= 0) {
     ideaInDb.reactions.splice(indexFound, 1, newReaction);
   }
   else {
@@ -205,6 +211,47 @@ const reactionToAnIdea = async (postId, reactionType, userId) => {
   });
 }
 
+const countIdeaInDepartment = async () => {
+  const result = await IdeaModel.aggregate([
+    {$group : {_id:"$department", count:{$sum:1}}}
+  ]);
+  return result;
+}
+
+const findPostIdea = async () =>{
+  let nameDepartments = []
+  const listAllUserInDepartment = await DepartmentModel.find({}).select({ "name": 1, "_id": 0})
+  let convert = JSON.stringify(listAllUserInDepartment)
+  convert = JSON.parse(convert)
+ 
+  convert.map(item => {
+    nameDepartments.push(Object.values(item)[0])
+  })
+  return nameDepartments;
+}
+
+const findUserIdInDerpartment = async (nameDepartments) =>{
+  const number = nameDepartments.map(async item =>{
+ 
+    const finduserInDepartment = await UserModel.find({"department": item}).select({"_id": 1})
+    let users = JSON.stringify(finduserInDepartment)
+    users = JSON.parse(users)
+    
+    const findIdeaPosted = await IdeaModel.find({"department": item}).select({ "user": 1, "_id": 0}).distinct('user')
+    let userPosted = JSON.stringify(findIdeaPosted)
+    userPosted = JSON.parse(userPosted)
+    let result = {
+      label: item,
+      posted: userPosted.length,
+      noPosted: users.length - userPosted.length
+    }
+    return result
+  })
+  
+  return Promise.all(number);
+  
+}
+
 module.exports = {
   getFileUrl,
   createIdea,
@@ -215,4 +262,7 @@ module.exports = {
   commentToAnIdea,
   reactionToAnIdea,
   increaseView,
+  countIdeaInDepartment,
+  findPostIdea,
+  findUserIdInDerpartment
 };

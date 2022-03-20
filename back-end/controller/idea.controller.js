@@ -8,6 +8,9 @@ const {
   commentToAnIdea,
   reactionToAnIdea,
   increaseView,
+  countIdeaInDepartment,
+  findPostIdea,
+  findUserIdInDerpartment
 } = require("../service/idea.service");
 const {noticeQAForNewDocUpload} = require('../service/email.service')
 
@@ -47,7 +50,7 @@ const createIdeaWithDocument = async (req, res) => {
     description,
     documentLink,
     category,
-    userId
+    userId,
   );
   res.status(201).json({ message: "Idea Created", data: createdIdea });
 };
@@ -73,6 +76,18 @@ const inscreaseViewOfIdea = async (req, res) => {
   res.sendStatus(200);
 }
 
+const countIdea = async (req, res) =>{
+  const result = await countIdeaInDepartment();
+  res.status(200).json(result);
+  console.log(result);
+}
+
+const findPost = async (req, res) =>{
+  const nameDepartment = await findPostIdea();
+  const result = await findUserIdInDerpartment(nameDepartment);
+  res.status(200).send(result); 
+}
+
 module.exports = {
   createIdeaWithDocument,
   createDocumentSupportedFromEditor,
@@ -81,5 +96,7 @@ module.exports = {
   getSingleIdea,
   commentToIdea,
   reactionToIdea,
-  inscreaseViewOfIdea
+  inscreaseViewOfIdea,
+  countIdea,
+  findPost
 };
