@@ -15,6 +15,7 @@ import { useEffect, useState } from "react";
 import { ChevronDownIcon } from "@heroicons/react/solid";
 import Modal from "./modal";
 import EditUserPage from "../screens/users/editUser";
+import Profile from "../screens/users/profile";
 
 const SideBar = ({
   authenticateReducer,
@@ -233,7 +234,8 @@ const SideBar = ({
         </div>
       </aside>
       <Modal open={open} setOpen={setOpen}>
-        <EditUserPage close={() => setOpen(!open)} userId={userId} />
+        <Profile close={() => setOpen(!open)} userId={userId} />
+        {/* <EditUserPage close={() => setOpen(!open)} userId={userId} /> */}
       </Modal>
     </>
   );

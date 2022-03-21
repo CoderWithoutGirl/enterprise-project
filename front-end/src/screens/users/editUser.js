@@ -229,7 +229,7 @@ const EditUserPage = ({ close, userId, token, getNewTokenRequest }) => {
             role="submit"
             type="primary"
             icon={PlusCircleIcon}
-            title="Create"
+            title="Update"
           />
         </Form>
       </div>
