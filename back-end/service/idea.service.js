@@ -212,6 +212,7 @@ const reactionToAnIdea = async (postId, reactionType, userId) => {
 }
 
 const countIdeaInDepartment = async () => {
+
   const result = await IdeaModel.aggregate([
     {$group : {_id:"$department", count:{$sum:1}}}
   ]);

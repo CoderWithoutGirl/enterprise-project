@@ -26,10 +26,10 @@ function FindPost({ authenticateReducer, getNewTokenRequest }) {
             getNewTokenRequest
         );
         if (status === 200) {
-            data.map(item => {
-                department.push(item.label);
-                data1.push(item.posted);
-                data2.push(item.noPosted);
+            data.map(async item => {
+                await department.push(item.label);
+                await data1.push(item.posted);
+                await data2.push(item.noPosted);
                 setCategories(department)
                 setSeries1(data1)
                 setSeries2(data2)

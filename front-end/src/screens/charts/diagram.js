@@ -27,9 +27,9 @@ function Diagram({ authenticateReducer, getNewTokenRequest }) {
             getNewTokenRequest
         );
         if (status === 200) {
-            data.map(item => {
-                department.push(item._id);
-                count.push(item.count);
+            data.map(async item => {
+                await department.push(item._id);
+                await count.push(item.count);
                 setCategories(department)
                 setData(count)
             })
@@ -61,18 +61,16 @@ function Diagram({ authenticateReducer, getNewTokenRequest }) {
                 height={350}
             />
 
-            <Chart
-                type="pie"
-                width={300}
-                height={300}
-                series={
-                    data
-                }
+            <ReactApexChart
+               type="pie" 
+               width={380}
                 options={{
                     labels: categories
                 }}
-            >
-            </Chart>
+                series={
+                   data
+                }
+            />
 
         </div>
     )
