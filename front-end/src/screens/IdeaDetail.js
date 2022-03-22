@@ -35,6 +35,7 @@ const IdeaDetail = ({ authenticateReducer, getNewTokenRequest }) => {
   const [yourReaction, setYourReaction] = useState(null);
   const { token, user } = authenticateReducer;
   const [disableLike, setDisableLike] = useState(false);
+  const [disableCmt, setDisableCmt] = useState(false);
 
   const { id } = useParams();
 
@@ -50,9 +51,12 @@ const IdeaDetail = ({ authenticateReducer, getNewTokenRequest }) => {
     if (status === 200) {
       const newestYear = data[data.length - 1];
       const closureDate = new Date(newestYear.closureDate);
-      console.log(closureDate);
+      const finalDate = new Date(newestYear.endDate);
       if (closureDate < Date.now()) {
         setDisableLike(true);
+      }
+      if (finalDate < Date.now()) {
+        setDisableCmt(true);
       }
     }
   }, [token, getNewTokenRequest]);
@@ -225,39 +229,45 @@ const IdeaDetail = ({ authenticateReducer, getNewTokenRequest }) => {
             </div>
           </div>
         ) : (
-          <h2 className="text-red-800 mt-5">
+          <h2 className="text-red-800 mt-5 ">
             Thumbs Up or Thumbs Down Is Close
           </h2>
         )}
       </div>
       <div className="container max-w-xl md:max-w-screen-lg mx-auto bg-white border shadow-sm rounded-lg mt-20">
-        <div className="w-full border flex px-2 py-4 items-center gap-2">
-          <div className="flex items-center justify-center">
-            {user?.avatar ? (
-              <img src={user?.avatar} />
-            ) : (
-              <div className="w-20 h-20 flex items-center justify-center rounded-[100%] bg-gray-500">
-                <span className="font-medium text-xl text-white">
-                  {user.fullname.charAt(0).toUpperCase()}
-                </span>
-              </div>
-            )}
+        {!disableCmt ? (
+          <div className="w-full border flex px-2 py-4 items-center gap-2">
+            <div className="flex items-center justify-center">
+              {user?.avatar ? (
+                <img src={user?.avatar} />
+              ) : (
+                <div className="w-20 h-20 flex items-center justify-center rounded-[100%] bg-gray-500">
+                  <span className="font-medium text-xl text-white">
+                    {user.fullname.charAt(0).toUpperCase()}
+                  </span>
+                </div>
+              )}
+            </div>
+            <TextAria
+              rows={3}
+              value={commentContent}
+              onChange={(e) => setCommentContent(e.target.value)}
+              placeholder="Leave your comment"
+            />
+            <Button
+              role="button"
+              type="primary"
+              title="Send"
+              onClick={comment}
+              icon={PaperAirplaneIcon}
+              disabled={!commentContent}
+            />
           </div>
-          <TextAria
-            rows={3}
-            value={commentContent}
-            onChange={(e) => setCommentContent(e.target.value)}
-            placeholder="Leave your comment"
-          />
-          <Button
-            role="button"
-            type="primary"
-            title="Send"
-            onClick={comment}
-            icon={PaperAirplaneIcon}
-            disabled={!commentContent}
-          />
-        </div>
+        ) : (
+          <div className="d-flex justify-center">
+            <h2 className="text-red-800 mt-5 text-center">Comment Is Close</h2>
+          </div>
+        )}
         <div className="w-full px-2 max-h-96 overflow-y-auto">
           {comments &&
             comments?.map((comment, index) => (
