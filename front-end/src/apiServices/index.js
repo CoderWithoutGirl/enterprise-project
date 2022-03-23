@@ -36,10 +36,24 @@ export const getAllUser = (token) =>
     headers: { Authorization: `Bearer ${token}` },
   });
 
+export const deleteUser = (token, id) =>
+  apiInstance.delete(`/users/${id}`, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+
 export const getSingleUser = (token, id) =>
   apiInstance.get(`/users/${id}`, {
     headers: { Authorization: `Bearer ${token}` },
   });
+
+export const updateUser = (formData, id, token) =>
+  apiInstance.put(
+    `/users/update/${id}`,
+    { ...formData },
+    {
+      headers: { Authorization: `Bearer ${token}` },
+    }
+  );
 
 export const getUserByDepartment = (token, deparment) =>
   apiInstance.get(`/users/?department=${deparment}`, {
@@ -70,12 +84,9 @@ export const assignStaffToManager = (formData, id, token) =>
   );
 
 export const getUserWithoutDepartment = (token) =>
-  apiInstance.get(
-    `users/getdepartment`,
-    {
-      headers: { Authorization: `Bearer ${token}` },
-    }
-  );
+  apiInstance.get(`users/getdepartment`, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
 
 export const uploadExcelCreateUser = (formData, token) =>
   apiInstance.post("/users/uploadexcel", formData, {
@@ -192,13 +203,21 @@ export const getSingleIdea = (id, token) =>
     headers: { Authorization: `Bearer ${token}` },
   });
 export const commentToIdea = (id, data, token) =>
-  apiInstance.post(`/ideas/${id}/comment`, { ...data }, {
-    headers: { Authorization: `Bearer ${token}` },
-  });
+  apiInstance.post(
+    `/ideas/${id}/comment`,
+    { ...data },
+    {
+      headers: { Authorization: `Bearer ${token}` },
+    }
+  );
 export const reactToIdea = (id, data, token) =>
-  apiInstance.post(`/ideas/${id}/reaction`, { ...data }, {
-    headers: { Authorization: `Bearer ${token}` },
-  });
+  apiInstance.post(
+    `/ideas/${id}/reaction`,
+    { ...data },
+    {
+      headers: { Authorization: `Bearer ${token}` },
+    }
+  );
 export const increateView = (id, token) =>
   apiInstance.get(`/ideas/${id}/view`, {
     headers: { Authorization: `Bearer ${token}` },

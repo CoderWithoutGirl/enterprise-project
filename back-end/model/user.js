@@ -1,5 +1,5 @@
-const mongoose = require('mongoose');
-const CryptoJS = require('crypto-js');
+const mongoose = require("mongoose");
+const CryptoJS = require("crypto-js");
 
 const UserSchema = new mongoose.Schema(
   {
@@ -39,14 +39,16 @@ const UserSchema = new mongoose.Schema(
       default: process.env.STAFF,
     },
     avatar: String,
+    deleted: { type: Boolean, required: false, default: false },
   },
   { timestamps: true }
 );
 
-UserSchema.pre("save", async function (next) {
+UserSchema.pre("save", async function(next) {
   try {
     const user = this;
-    user.age = (new Date().getFullYear()) - (new Date(user.dateOfBirth).getFullYear())
+    user.age =
+      new Date().getFullYear() - new Date(user.dateOfBirth).getFullYear();
     if (!user.isModified("password")) {
       next();
     }
@@ -60,7 +62,7 @@ UserSchema.pre("save", async function (next) {
   }
 });
 
-UserSchema.methods.validatePassword = async function (password, next) {
+UserSchema.methods.validatePassword = async function(password, next) {
   try {
     const decrypted = CryptoJS.AES.decrypt(
       this.password,
@@ -80,7 +82,7 @@ UserSchema.methods.validatePassword = async function (password, next) {
 UserSchema.set("toJSON", {
   virtuals: true,
   versionKey: false,
-  transform: function (doc, ret) {
+  transform: function(doc, ret) {
     // remove these props when object is serialized
     delete ret._id;
     delete ret.password;
