@@ -16,6 +16,8 @@ import UserInDepartment from "../screens/userInDepartment/";
 import PostIdea from "../screens/postIdea";
 import IdeaDetail from "../screens/IdeaDetail";
 import ItemInCategory from "../screens/itemInCategory";
+import ChartPage from "../screens/charts/diagram";
+import FindPostPage from "../screens/charts/findPost"
 
 const AppRouter = () => {
   return (
@@ -106,6 +108,22 @@ const AppRouter = () => {
           element={
             <PrivateRoute allowRoles={[roles.ADMIN]}>
               <UserPage />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/charts"
+          element={
+            <PrivateRoute allowRoles={[roles.QA_MANAGER]}>
+              <ChartPage />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/findPost"
+          element={
+            <PrivateRoute allowRoles={[roles.QA_MANAGER]}>
+              <FindPostPage />
             </PrivateRoute>
           }
         />

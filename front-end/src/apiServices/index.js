@@ -223,6 +223,16 @@ export const increateView = (id, token) =>
     headers: { Authorization: `Bearer ${token}` },
   });
 
+export const countIdea = (token) =>
+  apiInstance.get("/ideas/count", {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+
+export const findPost = (token) =>
+  apiInstance.get("/ideas/find-ideas", {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+
 export const getAllSubRoute = () => apiInstance.get("/sub-route");
 
 //academy
@@ -245,3 +255,4 @@ export const updateAcademic = (formData, id, token) =>
   apiInstance.put(`/academic/${id}`, formData, {
     headers: { Authorization: `Bearer ${token}` },
   });
+
