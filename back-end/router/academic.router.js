@@ -5,10 +5,19 @@ const { authorize } = require("../middleware/authorization");
 
 academicRouter.use([
   passport.authenticate("jwt", { session: false }),
-  authorize([process.env.QAMANAGER, process.env.ADMIN]),
+  authorize([
+    process.env.QAMANAGER,
+    process.env.ADMIN,
+    process.env.STAFF,
+    process.env.QACOORDINATOR,
+  ]),
 ]);
 
-academicRouter.post("/", academicController.create);
+academicRouter.post(
+  "/",
+  academicController.create,
+  authorize(process.env.ADMIN)
+);
 academicRouter.get("/", academicController.getAll);
 academicRouter.put(
   "/:id",
