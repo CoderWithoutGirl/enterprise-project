@@ -58,7 +58,12 @@ userRouter.get(
   "/:id",
   [
     passport.authenticate("jwt", { session: false }),
-    authorize([process.env.QAMANAGER, process.env.ADMIN]),
+    authorize([
+      process.env.QAMANAGER,
+      process.env.ADMIN,
+      process.env.STAFF,
+      process.env.QACOORDINATOR,
+    ]),
   ],
   userController.getUserById
 );

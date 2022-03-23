@@ -39,6 +39,13 @@ const Profile = ({ close, userId, token, getNewTokenRequest }) => {
     loadData();
   }, [loadData]);
 
+  const dateFormatter = (day) => {
+    const d = new Date(day);
+    var datestring =
+      d.getDate() + "-" + (d.getMonth() + 1) + "-" + d.getFullYear();
+    return datestring;
+  };
+
   return (
     <>
       <div className="flex items-center justify-center p-20">
@@ -59,7 +66,9 @@ const Profile = ({ close, userId, token, getNewTokenRequest }) => {
           <div className="flex justify-between p-4">
             <div>
               <h1 className="text-xs uppercase text-gray-500">Date Of Birth</h1>
-              <h1 className="text-xs text-yellow-500">{user.dateOfBirth}</h1>
+              <h1 className="text-xs text-yellow-500">
+                {dateFormatter(user.dateOfBirth)}
+              </h1>
             </div>
           </div>
           <div className="flex justify-between p-4">

@@ -14,7 +14,6 @@ import { subRouterUpdate } from "../store/actions/subRouterAction";
 import { useEffect, useState } from "react";
 import { ChevronDownIcon } from "@heroicons/react/solid";
 import Modal from "./modal";
-import EditUserPage from "../screens/users/editUser";
 import Profile from "../screens/users/profile";
 
 const SideBar = ({
