@@ -9,12 +9,16 @@ const {
   commentToIdea,
   reactionToIdea,
   inscreaseViewOfIdea,
+  countIdea,
+  findPost
 } = require("../controller/idea.controller");
 const passport = require('passport');
 const {authorize} = require('../middleware/authorization')
 
 ideaRouter.use([passport.authenticate('jwt', {session: false}), authorize()])
 ideaRouter.get("/", getAllIdeas);
+ideaRouter.get("/count", countIdea);
+ideaRouter.get("/find-ideas", findPost);
 ideaRouter.get("/:id", getSingleIdea);
 ideaRouter.post("/:id/comment", commentToIdea);
 ideaRouter.get("/:id/view", inscreaseViewOfIdea);
@@ -26,5 +30,6 @@ ideaRouter.post(
   uploadDocument.single("document"),
   uploadSupportDocument
 );
+
 
 module.exports = ideaRouter

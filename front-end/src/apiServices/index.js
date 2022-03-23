@@ -192,15 +192,25 @@ export const getSingleIdea = (id, token) =>
     headers: { Authorization: `Bearer ${token}` },
   });
 export const commentToIdea = (id, data, token) =>
-  apiInstance.post(`/ideas/${id}/comment`,{...data}, {
+  apiInstance.post(`/ideas/${id}/comment`, { ...data }, {
     headers: { Authorization: `Bearer ${token}` },
   });
 export const reactToIdea = (id, data, token) =>
-  apiInstance.post(`/ideas/${id}/reaction`,{...data}, {
+  apiInstance.post(`/ideas/${id}/reaction`, { ...data }, {
     headers: { Authorization: `Bearer ${token}` },
   });
 export const increateView = (id, token) =>
   apiInstance.get(`/ideas/${id}/view`, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+
+export const countIdea = (token) =>
+  apiInstance.get("/ideas/count", {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+
+export const findPost = (token) =>
+  apiInstance.get("/ideas/find-ideas", {
     headers: { Authorization: `Bearer ${token}` },
   });
 
@@ -226,3 +236,4 @@ export const updateAcademic = (formData, id, token) =>
   apiInstance.put(`/academic/${id}`, formData, {
     headers: { Authorization: `Bearer ${token}` },
   });
+
