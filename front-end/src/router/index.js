@@ -18,6 +18,8 @@ import IdeaDetail from "../screens/IdeaDetail";
 import ItemInCategory from "../screens/itemInCategory";
 import ChartPage from "../screens/charts/diagram";
 import FindPostPage from "../screens/charts/findPost"
+import DepartmentChart from "../screens/charts/DepartmentChart"
+import StaffPostedDepart from "../screens/charts/StaffPostedDepart";
 
 const AppRouter = () => {
   return (
@@ -124,6 +126,22 @@ const AppRouter = () => {
           element={
             <PrivateRoute allowRoles={[roles.QA_MANAGER]}>
               <FindPostPage />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/departmentChart"
+          element={
+            <PrivateRoute allowRoles={[roles.QA_COORDINATOR]}>
+              <DepartmentChart />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/findStaffPost"
+          element={
+            <PrivateRoute allowRoles={[roles.QA_COORDINATOR]}>
+              <StaffPostedDepart />
             </PrivateRoute>
           }
         />

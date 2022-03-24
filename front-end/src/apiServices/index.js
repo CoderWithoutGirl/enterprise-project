@@ -214,6 +214,16 @@ export const findPost = (token) =>
     headers: { Authorization: `Bearer ${token}` },
   });
 
+export const findPostOfDepartment = (token) =>
+  apiInstance.get("/ideas/department/count", {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+
+export const StaffPostedOrNotOfDepart = (token) =>
+  apiInstance.get("/ideas/department/find-post", {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+
 export const getAllSubRoute = () => apiInstance.get("/sub-route");
 
 //academy

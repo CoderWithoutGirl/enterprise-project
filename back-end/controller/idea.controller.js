@@ -9,8 +9,10 @@ const {
   reactionToAnIdea,
   increaseView,
   countIdeaInDepartment,
+  countIdeaInOneDepartment,
   findPostIdea,
-  findUserIdInDerpartment
+  findUserIdInDerpartment,
+  findStaffPostOfDepatment
 } = require("../service/idea.service");
 const {noticeQAForNewDocUpload} = require('../service/email.service')
 
@@ -88,6 +90,17 @@ const findPost = async (req, res) =>{
   res.status(200).send(result); 
 }
 
+const countIdeaOfDepartment = async (req, res) =>{
+  const result = await countIdeaInOneDepartment(req.user.department);
+  res.status(200).json(result);
+}
+
+const findPostOfDepartment = async (req, res) =>{
+  console.log(req.user.department);
+  const result = await findStaffPostOfDepatment(req.user.department);
+  res.status(200).json(result);
+}
+
 module.exports = {
   createIdeaWithDocument,
   createDocumentSupportedFromEditor,
@@ -98,5 +111,7 @@ module.exports = {
   reactionToIdea,
   inscreaseViewOfIdea,
   countIdea,
-  findPost
+  findPost,
+  countIdeaOfDepartment,
+  findPostOfDepartment
 };

@@ -214,33 +214,34 @@ const reactionToAnIdea = async (postId, reactionType, userId) => {
 const countIdeaInDepartment = async () => {
 
   const result = await IdeaModel.aggregate([
-    {$group : {_id:"$department", count:{$sum:1}}}
+    { $group: { _id: "$department", count: { $sum: 1 } } }
   ]);
   return result;
 }
 
-const findPostIdea = async () =>{
+const findPostIdea = async () => {
   let nameDepartments = []
-  const listAllUserInDepartment = await DepartmentModel.find({}).select({ "name": 1, "_id": 0})
+  const listAllUserInDepartment = await DepartmentModel.find({}).select({ "name": 1, "_id": 0 })
   let convert = JSON.stringify(listAllUserInDepartment)
   convert = JSON.parse(convert)
- 
+
   convert.map(item => {
     nameDepartments.push(Object.values(item)[0])
   })
   return nameDepartments;
 }
 
-const findUserIdInDerpartment = async (nameDepartments) =>{
-  const number = nameDepartments.map(async item =>{
- 
-    const finduserInDepartment = await UserModel.find({"department": item}).select({"_id": 1})
+const findUserIdInDerpartment = async (nameDepartments) => {
+  const number = nameDepartments.map(async item => {
+
+    const finduserInDepartment = await UserModel.find({ "department": item }).select({ "_id": 1 })
     let users = JSON.stringify(finduserInDepartment)
     users = JSON.parse(users)
-    
-    const findIdeaPosted = await IdeaModel.find({"department": item}).select({ "user": 1, "_id": 0}).distinct('user')
+    const findIdeaPosted = await IdeaModel.find({ "department": item }).select({ "user": 1, "_id": 0 }).distinct('user')
     let userPosted = JSON.stringify(findIdeaPosted)
     userPosted = JSON.parse(userPosted)
+    console.log(userPosted);
+
     let result = {
       label: item,
       posted: userPosted.length,
@@ -248,9 +249,40 @@ const findUserIdInDerpartment = async (nameDepartments) =>{
     }
     return result
   })
-  
+
   return Promise.all(number);
-  
+
+}
+
+const countIdeaInOneDepartment = async (department) => {
+
+  const result = await IdeaModel.aggregate([
+    { $match: { department: department } },
+    { $group: { _id: "$user", count: { $sum: 1 } } },
+    { $lookup: { from: 'users', localField: '_id', foreignField: '_id', as: 'user' } },
+
+  ]);
+  return result;
+}
+
+const findStaffPostOfDepatment = async (department) => {
+
+  const finduserInDepartment = await UserModel.find({ department: department, role: 'Staff' }).select({ "_id": 1 })
+  let users = JSON.stringify(finduserInDepartment)
+  users = JSON.parse(users)
+
+  const findIdeaPosted = await IdeaModel.find({ department: department }).select({ "user": 1, "_id": 0 }).distinct('user')
+  let userPosted = JSON.stringify(findIdeaPosted)
+  userPosted = JSON.parse(userPosted)
+
+  let result = [
+    {
+      StaffPosted: userPosted.length,
+      StaffnoPosted: users.length - userPosted.length
+    }
+  ]
+
+  return result
 }
 
 module.exports = {
@@ -265,5 +297,7 @@ module.exports = {
   increaseView,
   countIdeaInDepartment,
   findPostIdea,
-  findUserIdInDerpartment
+  findUserIdInDerpartment,
+  countIdeaInOneDepartment,
+  findStaffPostOfDepatment
 };
