@@ -8,6 +8,9 @@ const app = express();
 const path = require("path");
 //const { createClient } = require("redis");
 
+const cronJobProcess = require('./processes/cron-job');
+const {sendToQAManager} = require('./service/academic.service')
+
 const db = require("./persistance/db");
 const passport = require("passport");
 const passportConfig = require("./middleware/authentication");
@@ -57,5 +60,7 @@ app.use(passport.session());
 db.connect(process.env.DB_URL);
 
 app.use("/api", rootRouter);
+
+cronJobProcess(sendToQAManager)
 
 module.exports = app;

@@ -3,20 +3,12 @@ const academicController = require("../controller/academic.controller");
 const passport = require("passport");
 const { authorize } = require("../middleware/authorization");
 
-academicRouter.use([
-  passport.authenticate("jwt", { session: false }),
-  authorize([
-    process.env.QAMANAGER,
-    process.env.ADMIN,
-    process.env.STAFF,
-    process.env.QACOORDINATOR,
-  ]),
-]);
+academicRouter.use(passport.authenticate("jwt", { session: false }));
 
 academicRouter.post(
   "/",
+  authorize(process.env.ADMIN),
   academicController.create,
-  authorize(process.env.ADMIN)
 );
 academicRouter.get("/", academicController.getAll);
 academicRouter.put(
@@ -29,5 +21,11 @@ academicRouter.get(
   authorize(process.env.ADMIN),
   academicController.getById
 );
+
+// academicRouter.get(
+//   "/report/mailer",
+//   authorize(process.env.QAMANAGER),
+//   academicController.sendToQA
+// );
 
 module.exports = academicRouter;

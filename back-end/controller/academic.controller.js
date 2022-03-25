@@ -3,6 +3,7 @@ const {
   getAcademicYear,
   getAcademicYearById,
   updateAcademicYear,
+  sendToQAManager
 } = require("../service/academic.service");
 
 const academicControler = {
@@ -41,6 +42,10 @@ const academicControler = {
       console.log(err);
     }
   },
+  // sendToQA: async (req, res) => {
+  //   await sendToQAManager();
+  //   res.json({message: "Done"})
+  // }
 };
 
 module.exports = academicControler;
