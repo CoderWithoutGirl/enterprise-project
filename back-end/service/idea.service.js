@@ -114,7 +114,7 @@ const createIdea = async (
   documentLink = "",
   category,
   userId,
-
+  isAnonymous
 ) => {
   const categoryInDB = await CategoryModel.findOne({ name: category });
 
@@ -126,7 +126,8 @@ const createIdea = async (
     documentLink,
     category: categoryInDB._id,
     user: userId,
-    department: findUserIndDeaprtment.department
+    department: findUserIndDeaprtment.department,
+    isAnonymous,
   });
   await newIdea.save();
   categoryInDB.ideas.push(newIdea._id);
@@ -170,10 +171,10 @@ const countAllIdeas = async (limit = 5) => {
 }
 
 
-const commentToAnIdea = async (postId, content, userId) => {
+const commentToAnIdea = async (postId, content, userId, isAnonymous) => {
   const ideaInDb = await IdeaModel.findById(postId);
   const author = await UserModel.findById(ideaInDb.user);
-  ideaInDb.comments.push({ content, user: userId });
+  ideaInDb.comments.push({ content, user: userId , isAnonymous});
   await ideaInDb.save();
   emailProcess({
     to: author.email,

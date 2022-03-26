@@ -62,6 +62,7 @@ const PostIdea = ({ authenticateReducer, getNewTokenRequest }) => {
       title: "",
       description: "",
       category: "",
+      isAnonymous: false,
     },
   });
   const { token } = authenticateReducer;
@@ -78,7 +79,6 @@ const PostIdea = ({ authenticateReducer, getNewTokenRequest }) => {
     if (status === 200) {
       const newestYear = data[data.length - 1];
       const closureDate = new Date(newestYear.closureDate);
-      console.log(closureDate);
       if (closureDate < Date.now()) {
         setDisablePost(true);
       }
@@ -229,6 +229,14 @@ const PostIdea = ({ authenticateReducer, getNewTokenRequest }) => {
                   <ErrorMessageCustom message={message} />
                 )}
               />
+              <div className="w-full h-fit flex items-center gap-2">
+                <label htmlFor="category-dropdown">Post as Anonymous:</label>
+                <div className="h-3"></div>
+                <input
+                  type="checkbox"
+                  {...register('isAnonymous')}
+                />
+              </div>
 
               {switchUpload ? (
                 <div className="w-full flex flex-col justify-start align-top">

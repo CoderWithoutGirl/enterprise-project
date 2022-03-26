@@ -30,10 +30,10 @@ const getSingleIdea = async (req, res) => {
 };
 
 const commentToIdea = async (req, res) => {
-  const { userId, content } = req.body;
+  const { userId, content, isAnonymous } = req.body;
   const { id } = req.params;
 
-  await commentToAnIdea(id, content, userId);
+  await commentToAnIdea(id, content, userId, isAnonymous);
   res.status(201).json({ message: "comment success" });
 };
 const reactionToIdea = async (req, res) => {
@@ -45,7 +45,7 @@ const reactionToIdea = async (req, res) => {
 };
 
 const createIdeaWithDocument = async (req, res) => {
-  const { title, description, documentLink, category } = req.body;
+  const { title, description, documentLink, category, isAnonymous } = req.body;
   const userId = req?.user?._id || null;
   const createdIdea = await createIdea(
     title,
@@ -53,6 +53,7 @@ const createIdeaWithDocument = async (req, res) => {
     documentLink,
     category,
     userId,
+    isAnonymous
   );
   res.status(201).json({ message: "Idea Created", data: createdIdea });
 };

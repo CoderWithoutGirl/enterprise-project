@@ -30,6 +30,7 @@ const reactionType = {
 const IdeaDetail = ({ authenticateReducer, getNewTokenRequest }) => {
   const [ideaDetail, setIdeaDetail] = useState({});
   const [comments, setComments] = useState([]);
+  const [isAnonymous, setIsAnonymous] = useState(false);
   const [reactions, setReactions] = useState([]);
   const [commentContent, setCommentContent] = useState("");
   const [yourReaction, setYourReaction] = useState(null);
@@ -96,6 +97,7 @@ const IdeaDetail = ({ authenticateReducer, getNewTokenRequest }) => {
     const bodyData = {
       userId: user.id,
       content: commentContent,
+      isAnonymous
     };
     const { status } = await commentToIdea(id, bodyData, token);
     if (status === 201) {
@@ -103,6 +105,9 @@ const IdeaDetail = ({ authenticateReducer, getNewTokenRequest }) => {
       refreshReactionsAndCommentsList();
     }
   };
+  const toggleAnonymous = () => {
+    setIsAnonymous(prev => !prev);
+  }
 
   const getIdeaDetail = useCallback(async () => {
     const { data, status } = await getSingleIdea(id, token);
@@ -140,10 +145,16 @@ const IdeaDetail = ({ authenticateReducer, getNewTokenRequest }) => {
     <>
       <div className="container max-w-xl md:max-w-screen-lg mx-auto bg-white border shadow-sm px-4 py-3 rounded-lg">
         <div className="flex items-center">
-          {ideaDetail?.user?.avatart ? (
+          {ideaDetail?.isAnonymous ? (
+            <div className="w-12 h-12 flex items-center justify-center rounded-[100%] bg-gray-500">
+              <span className="font-medium text-[8px] text-white">
+                Anonymous
+              </span>
+            </div>
+          ) : ideaDetail?.user?.avatar ? (
             <img
               className="h-12 w-12 rounded-full"
-              src="https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
+              src={ideaDetail?.user?.avatar}
             />
           ) : (
             <div className="w-12 h-12 flex items-center justify-center rounded-[100%] bg-gray-500">
@@ -155,7 +166,9 @@ const IdeaDetail = ({ authenticateReducer, getNewTokenRequest }) => {
           <div className="ml-2">
             <div className="text-sm ">
               <span className="font-semibold">
-                {ideaDetail?.user?.fullname}
+                {ideaDetail?.isAnonymous
+                  ? "Anonymous"
+                  : ideaDetail?.user?.fullname}
               </span>
             </div>
             <div className="text-gray-500 text-xs ">
@@ -248,12 +261,18 @@ const IdeaDetail = ({ authenticateReducer, getNewTokenRequest }) => {
                 </div>
               )}
             </div>
-            <TextAria
-              rows={3}
-              value={commentContent}
-              onChange={(e) => setCommentContent(e.target.value)}
-              placeholder="Leave your comment"
-            />
+            <div className="block w-full">
+              <TextAria
+                rows={3}
+                value={commentContent}
+                onChange={(e) => setCommentContent(e.target.value)}
+                placeholder="Leave your comment"
+              />
+              <div>
+                <span className="pr-2">Anonymous:</span>
+                <input checked={isAnonymous} type="checkbox" onChange={toggleAnonymous} />
+              </div>
+            </div>
             <Button
               role="button"
               type="primary"
@@ -276,6 +295,7 @@ const IdeaDetail = ({ authenticateReducer, getNewTokenRequest }) => {
                 time={comment.createdAt}
                 user={comment?.user}
                 content={comment?.content}
+                isAnonymous={comment?.isAnonymous}
               />
             ))}
         </div>
