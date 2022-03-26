@@ -8,6 +8,10 @@ coverage/
 # production
 build/
 statics/documents/*
+statics/archiver/
+
+*.zip
+*.csv
 
 .docker/
 # misc
