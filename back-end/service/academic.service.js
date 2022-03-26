@@ -124,16 +124,64 @@ const archiveAllDocuments = async () => {
 
 
 const exportCsvFromDb = async () => {
-  const allIdeaInDb = await Idea.find({}).populate('category', 'name');
+  const allIdeaInDb = await Idea.find({isAnonymous: false}).populate('category', 'name');
   const jsonToParse = allIdeaInDb.map(idea => ({Title: idea.title, Description: idea.description, Category: idea.category.name, Comments: idea.comments.length, "Total Reactions": idea.reactions.length}))
   return jsonToParse;
+}
+
+const anonymousIdeas = async () => {
+  const ideaInDB = await Idea.find({isAnonymous: true}).populate('category', 'name').populate('user', 'fullname username department');
+    const jsonToParse = ideaInDB.map((idea) => ({
+      Title: idea.title,
+      Description: idea.description,
+      Category: idea.category.name,
+      Comments: idea.comments.length,
+      "Total Reactions": idea.reactions.length,
+      author: idea.user.fullname,
+      username: idea.user.username,
+      department: idea.user.department
+    }));
+  return jsonToParse;
+}
+
+const anonymousComments = async () => {
+  const allIdea = await Idea.find({}).populate({
+    path: "comments",
+    populate: {
+      path: "user",
+      model: "Users",
+      select: "username fullname department",
+    },
+  });
+  const allAnonymousComments = allIdea
+    .map((idea) =>
+      idea.comments.filter((comment) => comment.isAnonymous === true).map(item => ({
+      Username: item.user.username,
+      "Full name": item.user.fullname,
+      Department: item.user.department,
+      "Post ID": idea._id.toString(),
+      "Post title": idea.title
+    }))
+    )
+    .flat();
+  return allAnonymousComments;
 }
 
 const sendToQAManager = async () => {
   await archiveAllDocuments();
   const ideasCsv = await exportCsvFromDb();
+  const anonymousIdeaCsv = await anonymousIdeas();
+  const anonymousCommentsCsv = await anonymousComments();
   const csv = new ObjectToCsv(ideasCsv);
   await csv.toDisk(`${__basedir}/statics/archiver/report.csv`);
+  const anonymousCommentsCsvExport = new ObjectToCsv(anonymousCommentsCsv);
+  const anonymousIdeasCsvExport = new ObjectToCsv(anonymousIdeaCsv);
+  await anonymousCommentsCsvExport.toDisk(
+    `${__basedir}/statics/archiver/comments-exception.csv`
+  );
+  await anonymousIdeasCsvExport.toDisk(
+    `${__basedir}/statics/archiver/ideas-exception.csv`
+  )
   const qaAccount = await User.findOne({role: process.env.QAMANAGER});
   const documentsUploadZipUrl = await cloudinary.v2.utils.download_folder(
     "documents",
@@ -146,6 +194,12 @@ const sendToQAManager = async () => {
     },
     {
       path: `${__basedir}/statics/archiver/report.csv`,
+    },
+    {
+      path: `${__basedir}/statics/archiver/ideas-exception.csv`,
+    },
+    {
+      path: `${__basedir}/statics/archiver/comments-exception.csv`,
     },
     {
       filename: 'uploaded-document.zip',
