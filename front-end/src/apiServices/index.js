@@ -139,10 +139,11 @@ export const updateDepartment = (formData, id, token) =>
     { headers: { Authorization: `Bearer ${token}` } }
   );
 
-export const deleteCategory = (token, id) =>
-  apiInstance.delete(`/categories/${id}`, {
+export const deleteDepartment = (token, id) =>
+  apiInstance.delete(`/departments/${id}`, {
     headers: { Authorization: `Bearer ${token}` },
   });
+
 //Category
 export const createCategory = (formData, token) =>
   apiInstance.post(
@@ -178,8 +179,8 @@ export const updateCategory = (formData, id, token) =>
     { headers: { Authorization: `Bearer ${token}` } }
   );
 
-export const deleteDepartment = (token, id) =>
-  apiInstance.delete(`/departments/${id}`, {
+export const deleteCategory = (token, id) =>
+  apiInstance.delete(`/categories/${id}`, {
     headers: { Authorization: `Bearer ${token}` },
   });
 
