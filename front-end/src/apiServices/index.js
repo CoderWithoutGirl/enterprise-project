@@ -139,6 +139,11 @@ export const updateDepartment = (formData, id, token) =>
     { headers: { Authorization: `Bearer ${token}` } }
   );
 
+export const deleteDepartment = (token, id) =>
+  apiInstance.delete(`/departments/${id}`, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+
 //Category
 export const createCategory = (formData, token) =>
   apiInstance.post(
