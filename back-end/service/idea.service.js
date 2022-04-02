@@ -14,6 +14,7 @@ const filterEnum = {
   ALPHABET: "ALPHABET",
   LIKE: "LIKE",
   DISLIKE: "DISLIKE",
+  POPULAR: "POPULAR",
   DATE_ASC: "DATE_ASC",
   DATE_DESC: "DATE_DESC",
 };
@@ -54,6 +55,24 @@ const getAllIdeaWithFilter = async (filter = filterEnum.ALPHABET, page = 1, limi
               .length -
             prevIdea.reactions.filter((item) => item.reactionType === "Dislike")
               .length
+        )
+        .slice(
+          (page - 1) * limit, page * limit));
+    case filterEnum.POPULAR:
+      const allPostWithBoth = await IdeaModel.find({})
+        .populate("category", "name")
+      return (allIdeaInDB = allPostWithBoth
+        .sort(
+          (prevIdea, nextIdea) =>
+            nextIdea.reactions.filter((item) => item.reactionType === "Like")
+              .length -
+            nextIdea.reactions.filter((item) => item.reactionType === "Dislike")
+              .length -
+            prevIdea.reactions.filter((item) => item.reactionType === "Like")
+              .length +
+            prevIdea.reactions.filter((item) => item.reactionType === "Dislike")
+              .length
+
         )
         .slice(
           (page - 1) * limit, page * limit));
