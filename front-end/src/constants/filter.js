@@ -3,6 +3,7 @@ export const filters = {
   ALPHABET: "ALPHABET",
   LIKE: "LIKE",
   DISLIKE: "DISLIKE",
+  POPULAR: "POPULAR",
   DATE_ASC: "DATE_ASC",
   DATE_DESC: "DATE_DESC",
 };
