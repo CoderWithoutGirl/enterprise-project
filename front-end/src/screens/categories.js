@@ -63,7 +63,6 @@ function Categories({ getNewTokenRequest, token }) {
     }
   }, [token, getNewTokenRequest]);
 
-  console.log(categories);
   useEffect(() => {
     fetchData();
     document.title = "Categories";
@@ -179,19 +178,16 @@ function Categories({ getNewTokenRequest, token }) {
 
   const editHandle = (e, _id) => {
     e.preventDefault();
-    console.log(_id);
     const getSingleCategory = async () => {
       const loadAllDataOfCategory = async () => {
         const { data, status } = await findCategoryByID(token, _id);
-
         return { data, status };
       };
-      //Đảm bảo token hết hạn cx ko bị logout
       const { status, data } = await tokenRequestInterceptor(
         loadAllDataOfCategory,
         getNewTokenRequest
       );
-
+        console.log(data);
       if (status === 200) {
         setEditCategory((prev) => data.data);
       }

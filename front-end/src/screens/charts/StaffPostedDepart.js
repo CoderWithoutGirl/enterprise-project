@@ -39,7 +39,7 @@ function StaffPostedDepart({ authenticateReducer, getNewTokenRequest }) {
         <div>
             <ReactApexChart
                 type="pie"
-                width={380}
+                width="100%"
                 options={{
                     labels: ["StaffPosted", "StaffNoPosted"]
                 }}

@@ -2,17 +2,19 @@ import { useCallback, useEffect, useState } from "react";
 import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/solid";
 import IdeaItem from "../components/IdeaItem";
 import { filters } from "../constants/filter";
-import { getAllIdeaWithFilter, tokenRequestInterceptor } from "../apiServices/index";
-import {connect} from 'react-redux'
+import {
+  getAllIdeaWithFilter,
+  tokenRequestInterceptor,
+} from "../apiServices/index";
+import { connect } from "react-redux";
 import { getNewToken } from "../store/actions/authenticateAction";
 
-
-const HomePage = ({authenticateReducer, getNewTokenRequest}) => {
+const HomePage = ({ authenticateReducer, getNewTokenRequest }) => {
   const [pages, setPages] = useState(1);
   const [currPage, setCurrPage] = useState(1);
   const [ideas, setIdeas] = useState([]);
   const [filterOption, setFilterOption] = useState(filters.VIEW);
-  const {token, user} = authenticateReducer;
+  const { token } = authenticateReducer;
 
   const getAllIdeas = useCallback(async () => {
     const getAllData = async () => {
@@ -39,20 +41,20 @@ const HomePage = ({authenticateReducer, getNewTokenRequest}) => {
   }, [filterOption, currPage, getNewTokenRequest, token]);
 
   const nextPage = () => {
-    setCurrPage(prev => prev + 1)
-  }
+    setCurrPage((prev) => prev + 1);
+  };
 
   const prevPage = () => {
-    setCurrPage(prev => prev - 1)
-  }
+    setCurrPage((prev) => prev - 1);
+  };
 
   useEffect(() => {
     getAllIdeas();
   }, [getAllIdeas]);
 
   const handleFilterChange = (e) => {
-    setFilterOption(e.target.value)
-  }
+    setFilterOption(e.target.value);
+  };
 
   document.title = "Home";
   return (
@@ -62,7 +64,11 @@ const HomePage = ({authenticateReducer, getNewTokenRequest}) => {
           <h3 className="font-black text-gray-600 text-3xl">
             Your next favorite thing
           </h3>
-          <select className="border-none" value={filterOption} onChange={handleFilterChange}>
+          <select
+            className="border-none"
+            value={filterOption}
+            onChange={handleFilterChange}
+          >
             <option value={filters.VIEW}>View</option>
             <option value={filters.ALPHABET}>Alphabet</option>
             <option value={filters.DATE_ASC}>Newest</option>
@@ -84,7 +90,6 @@ const HomePage = ({authenticateReducer, getNewTokenRequest}) => {
               commentCount={item.comments.length}
               like={item.reactions.length}
               view={item?.viewCount | 0}
-              role={user?.role}
             />
           ))}
         </ul>
