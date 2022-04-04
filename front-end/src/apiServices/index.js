@@ -163,7 +163,7 @@ export const getCategory = (token) =>
   });
 
 export const getSingleCategory = (categoryName, token) =>
-  apiInstance.get(`/categories/${categoryName}`, {
+  apiInstance.get(`/categories/ideas/${categoryName}`, {
     headers: { Authorization: `Bearer ${token}` },
   });
 

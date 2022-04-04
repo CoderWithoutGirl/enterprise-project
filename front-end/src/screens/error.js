@@ -10,9 +10,9 @@ const ErrorPage = () => {
           <div className="w-full md:w-1/2">
             <div className="mb-10 md:mb-20 text-gray-600 font-light">
               <h1 className="font-black uppercase text-3xl lg:text-5xl text-indigo-700 mb-10">
-                404
+                Oops
                 <br />
-                Not Found
+                Something went wrong.
               </h1>
               <p>This site is not available</p>
               <p>or you don't have permission to access this page.</p>

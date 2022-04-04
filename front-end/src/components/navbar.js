@@ -3,24 +3,32 @@ import React, { useState } from "react";
 import { Disclosure, Menu, Transition } from "@headlessui/react";
 import { MenuIcon, XIcon } from "@heroicons/react/outline";
 import { Fragment } from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { logout } from "../store/actions/authenticateAction";
 import Modal from "./modal";
 import Profile from "../screens/users/profile";
 
-const navigation = [
-  { name: "Home", href: "/", current: true },
-  { name: "Contribute", href: "/contribute", current: false },
-];
 
-function classNames(...classes) {
-  return classes.filter(Boolean).join(" ");
-}
 
 const Navbar = ({ authenticateReducer, doLogout }) => {
-  const { isAuthenticated, token } = authenticateReducer;
+  const { isAuthenticated } = authenticateReducer;
   const [open, setOpen] = useState(false);
   const [userId, setUserId] = useState("");
+  const location = useLocation();
+  const navigate = useNavigate();
+
+  const navigation = [
+    { name: "Ideas", href: "/ideas", current: location.pathname === "/ideas" },
+    {
+      name: "Contribute",
+      href: "/contribute",
+      current: location.pathname === "/contribute",
+    },
+  ];
+
+  function classNames(...classes) {
+    return classes.filter(Boolean).join(" ");
+  }
 
   const handleLogout = (e) => {
     e.preventDefault();
@@ -52,7 +60,7 @@ const Navbar = ({ authenticateReducer, doLogout }) => {
                   </Disclosure.Button>
                 </div>
                 <div className="flex-1 flex items-center justify-center sm:items-stretch sm:justify-start">
-                  <div className="flex-shrink-0 flex items-center">
+                  <div className="cursor-pointer flex-shrink-0 flex items-center" onClick={() => navigate('/')}>
                     <img
                       className="block lg:hidden h-8 w-auto"
                       src="https://tailwindui.com/img/logos/workflow-mark-indigo-500.svg"
@@ -118,24 +126,11 @@ const Navbar = ({ authenticateReducer, doLogout }) => {
                                 }
                                 className={classNames(
                                   active ? "bg-gray-100" : "",
-                                  "block px-4 py-2 text-sm text-gray-700"
+                                  "block px-4 py-2 text-sm text-gray-700 w-full text-left"
                                 )}
                               >
                                 Your Profile
                               </button>
-                            )}
-                          </Menu.Item>
-                          <Menu.Item>
-                            {({ active }) => (
-                              <a
-                                href="/settings"
-                                className={classNames(
-                                  active ? "bg-gray-100" : "",
-                                  "block px-4 py-2 text-sm text-gray-700"
-                                )}
-                              >
-                                Settings
-                              </a>
                             )}
                           </Menu.Item>
                           <Menu.Item>

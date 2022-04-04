@@ -44,7 +44,7 @@ function FindPost({ authenticateReducer, getNewTokenRequest }) {
 
 
     return (
-        <div id="chart">
+        <div id="chart" className='h-full w-full'>
             <ReactApexChart
                 options={{
                     chart: {
@@ -86,12 +86,12 @@ function FindPost({ authenticateReducer, getNewTokenRequest }) {
                         data: series1
                     },
                     {
-                        name: 'noPosted',
+                        name: 'not yet',
                         data: series2
                     }
                 ]}
                 type="bar"
-                height={430}
+                height="100%"
             />
         </div>
     )

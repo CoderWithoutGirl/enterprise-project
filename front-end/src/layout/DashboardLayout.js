@@ -2,12 +2,12 @@ import SideBar from "../components/sidebar";
 
 const DashBoardLayout = ({ children }) => {
   return (
-    <div className="w-full h-screen flex">
-      <div className="w-max sm:w-1/6 h-full">
+    <div className="w-screen h-screen flex flex-col-reverse md:flex-row">
+      <div className="w-full sm:w-[200px] md:h-full">
         <SideBar />
       </div>
-      <main className="w-5/6 flex justify-center h-full">
-        <div className="w-4/5 sm:mt-5">{children}</div>
+      <main className="w-full mb-5 flex justify-center h-full overflow-y-auto">
+        <div className="w-full sm:mt-5">{children}</div>
       </main>
     </div>
   );

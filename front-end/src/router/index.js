@@ -20,6 +20,9 @@ import ChartPage from "../screens/charts/diagram";
 import FindPostPage from "../screens/charts/findPost"
 import DepartmentChart from "../screens/charts/DepartmentChart"
 import StaffPostedDepart from "../screens/charts/StaffPostedDepart";
+import LandingPage from "../screens/landingPage";
+import ManagerStatistic from "../screens/charts/manager";
+import CoordinatorStatistic from "../screens/charts/coodinator";
 
 const AppRouter = () => {
   return (
@@ -35,6 +38,30 @@ const AppRouter = () => {
         />
         <Route
           path="/"
+          element={
+            <PrivateRoute>
+              <LandingPage />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/dashboard"
+          element={
+            <PrivateRoute>
+              <ManagerStatistic />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/statistics"
+          element={
+            <PrivateRoute>
+              <CoordinatorStatistic />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/ideas"
           element={
             <PrivateRoute>
               <HomePage />
@@ -55,14 +82,6 @@ const AppRouter = () => {
             <PrivateRoute>
               <PostIdea />
             </PrivateRoute>
-          }
-        />
-        <Route
-          path="/test"
-          element={
-            <ApplicationBaseLayout>
-              <TestScreen />
-            </ApplicationBaseLayout>
           }
         />
         <Route
@@ -114,25 +133,9 @@ const AppRouter = () => {
           }
         />
         <Route
-          path="/charts"
-          element={
-            <PrivateRoute allowRoles={[roles.QA_MANAGER]}>
-              <ChartPage />
-            </PrivateRoute>
-          }
-        />
-        <Route
-          path="/findPost"
-          element={
-            <PrivateRoute allowRoles={[roles.QA_MANAGER]}>
-              <FindPostPage />
-            </PrivateRoute>
-          }
-        />
-        <Route
           path="/departmentChart"
           element={
-            <PrivateRoute allowRoles={[roles.QA_COORDINATOR]}>
+            <PrivateRoute allowRoles={[roles.QA_COORDINATOR, roles.QA_MANAGER]}>
               <DepartmentChart />
             </PrivateRoute>
           }
