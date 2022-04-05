@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react'
 import { connect } from 'react-redux'
 import ReactApexChart from "react-apexcharts";
-import Chart from "react-apexcharts";
 import {
     StaffPostedOrNotOfDepart,
     tokenRequestInterceptor,

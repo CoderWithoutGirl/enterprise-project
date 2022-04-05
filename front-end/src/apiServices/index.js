@@ -24,8 +24,8 @@ export const login = (formData) =>
 export const register = (formData) =>
   apiInstance.post("/auth/register", { ...formData });
 
-export const refreshToken = (refreshToken) =>
-  apiInstance.post("/auth/refresh-token", { refreshToken: refreshToken });
+export const refreshToken = () =>
+  apiInstance.get("/auth/refresh-token");
 
 export const logout = (refreshToken) =>
   apiInstance.post("/auth/logout", { ...refreshToken });

@@ -60,6 +60,7 @@ const createIdeaWithDocument = async (req, res) => {
 
 const uploadSupportDocument = async (req, res) => {
   const filename = req.file.filename;
+  console.log(filename);
   const documentLink = await getFileUrl(filename);
   await noticeQAForNewDocUpload(documentLink, req.user.id);
 
@@ -68,7 +69,8 @@ const uploadSupportDocument = async (req, res) => {
 
 const createDocumentSupportedFromEditor = async (req, res) => {
   const filename = req.file.filename;  
-  const documentLink = await createDocumentFromMarkdown(filename);
+  const user = req.user;
+  const documentLink = await createDocumentFromMarkdown(filename, user.fullname, user.id);
   await noticeQAForNewDocUpload(documentLink, req.user.id);
 
   res.status(201).json({ documentLink });

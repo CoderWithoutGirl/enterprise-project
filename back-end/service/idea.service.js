@@ -4,7 +4,6 @@ const CategoryModel = require("../model/category");
 const DepartmentModel = require("../model/department");
 const mdpdf = require("mdpdf");
 const fs = require('fs')
-const emailProcess = require("../processes/email.process");
 const { notificationUser } = require('../documents/index');
 const { uploadDocument } = require("../processes/cloudinary");
 const { sendNewEmail } = require('../queue/email.queue')
@@ -165,9 +164,9 @@ const getFileUrl = async (filename) => {
   }
 };
 
-const createDocumentFromMarkdown = async (mdfile) => {
+const createDocumentFromMarkdown = async (mdfile, fullname, id) => {
   try {
-    const destination = `/statics/documents/document-auto-created-${Date.now()}.pdf`
+    const destination = `/statics/documents/${fullname.split(' ').join("-")}-${id}-${Date.now()}-support-document.pdf`
     const options = {
       source: __basedir + `/statics/documents/${mdfile}`,
       destination:
@@ -195,7 +194,7 @@ const commentToAnIdea = async (postId, content, userId, isAnonymous) => {
   const author = await UserModel.findById(ideaInDb.user);
   ideaInDb.comments.push({ content, user: userId , isAnonymous});
   await ideaInDb.save();
-  emailProcess({
+  sendNewEmail({
     to: author.email,
     subject: "New Comment In Your Post",
     html: notificationUser(
@@ -220,7 +219,7 @@ const reactionToAnIdea = async (postId, reactionType, userId) => {
     ideaInDb.reactions.push(newReaction);
   }
   await ideaInDb.save();
-  emailProcess({
+  sendNewEmail({
     to: author.email,
     subject: "New Reaction In Your Post",
     html: notificationUser(
@@ -241,7 +240,7 @@ const countIdeaInDepartment = async () => {
 
 const findPostIdea = async () => {
   let nameDepartments = []
-  const listAllUserInDepartment = await DepartmentModel.find({}).select({ "name": 1, "_id": 0 })
+  const listAllUserInDepartment = await DepartmentModel.find({deleted: false}).select({ "name": 1, "_id": 0 })
   let convert = JSON.stringify(listAllUserInDepartment)
   convert = JSON.parse(convert)
 
@@ -277,7 +276,7 @@ const findUserIdInDerpartment = async (nameDepartments) => {
 const countIdeaInOneDepartment = async (department) => {
 
   const result = await IdeaModel.aggregate([
-    { $match: { department: department } },
+    { $match: { department: department, deleted: false } },
     { $group: { _id: "$user", count: { $sum: 1 } } },
     { $lookup: { from: 'users', localField: '_id', foreignField: '_id', as: 'user' } },
 

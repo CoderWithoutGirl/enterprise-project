@@ -34,6 +34,7 @@ const ManagerStatistic = ({ authenticateReducer, getNewTokenRequest }) => {
 
   useEffect(() => {
     loadData();
+    document.title = "Statistics"
   }, [loadData]);
   return (
     <div className="my-5 w-full flex justify-center items-center">

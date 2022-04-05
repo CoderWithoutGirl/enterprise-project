@@ -27,9 +27,7 @@ function* postLoginForm(action) {
 }
 
 function* getNewToken() {
-  const objectFromLocal = JSON.parse(localStorage.getItem("persist:root"));
-  const authObject = JSON.parse(objectFromLocal.authenticateReducer);
-  const { data, status } = yield call(refreshToken, authObject.refreshToken);
+  const { data, status } = yield call(refreshToken);
   if(status === 200) {
     yield put(getNewTokenSuccess(data));
   }

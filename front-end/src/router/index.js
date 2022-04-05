@@ -2,10 +2,8 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import PrivateRoute from "./customRouters/privateRouter";
 import UnauthorizeRoute from "./customRouters/unauthorizeRouter";
 
-import ApplicationBaseLayout from "../layout/ApplicationBaseLayout";
 import HomePage from "../screens/home";
 import LoginPage from "../screens/login";
-import TestScreen from "../screens/test";
 import Departments from "../screens/departments";
 import Categories from "../screens/categories";
 import UserPage from "../screens/users/";
@@ -16,8 +14,6 @@ import UserInDepartment from "../screens/userInDepartment/";
 import PostIdea from "../screens/postIdea";
 import IdeaDetail from "../screens/IdeaDetail";
 import ItemInCategory from "../screens/itemInCategory";
-import ChartPage from "../screens/charts/diagram";
-import FindPostPage from "../screens/charts/findPost"
 import DepartmentChart from "../screens/charts/DepartmentChart"
 import StaffPostedDepart from "../screens/charts/StaffPostedDepart";
 import LandingPage from "../screens/landingPage";

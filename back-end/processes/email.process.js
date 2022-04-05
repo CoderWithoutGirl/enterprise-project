@@ -20,7 +20,7 @@ const emailProcess = async (job) => {
 
   let info = await transporter.sendMail({
     from: "CoderWithOurGirl",
-    ...job,
+    ...job.data,
   });
 
   console.log("Message sent: %s", info.messageId);

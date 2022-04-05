@@ -11,6 +11,7 @@ import Password from "../components/password";
 import Button from "../components/button";
 import { ErrorMessage } from "@hookform/error-message";
 import ErrorMessageCustom from "../components/errorMessage";
+import logo from '../assets/logo.png';
 
 const loginFormValidationSchema = yup.object({
   username: yup.string().required("Username must be filled"),
@@ -40,8 +41,8 @@ const LoginPage = ({ submitLoginForm }) => {
         <div className="max-w-lg w-screen space-y-8">
           <div>
             <img
-              className="mx-auto h-12 w-auto animate-bounce"
-              src="https://tailwindui.com/img/logos/workflow-mark-indigo-600.svg"
+              className="mx-auto h-20 w-auto animate-bounce"
+              src={logo}
               alt="Workflow"
             />
             <h2 className="mt-6 text-center text-3xl font-extrabold text-white">
