@@ -26,7 +26,6 @@ function FindPost({ authenticateReducer, getNewTokenRequest }) {
             getNewTokenRequest
         );
         if (status === 200) {
-            console.log(data);
             data.map(async item => {
                 await department.push(item.label);
                 await data1.push(item.posted);

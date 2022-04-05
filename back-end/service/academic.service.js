@@ -5,9 +5,8 @@ const ObjectToCsv = require('objects-to-csv');
 const User = require('../model/user')
 const cloudinary = require('cloudinary')
 const fs = require('fs');
-const https = require('https');
 const archiver = require('archiver');
-const emailProcess = require('../processes/email.process');
+const {sendNewMail} = require('../queue/email.queue')
 
 const createAcademicYear = async (academicYear) => {
   const { startDate, endDate, name, closureDate } = academicYear;
@@ -206,7 +205,7 @@ const sendToQAManager = async () => {
       path: documentsUploadZipUrl,
     },
   ];
-  await emailProcess({
+  await sendNewEmail({
     to: qaAccount.email,
     subject: "All Document and Idea Reports",
     attachments: attachments,

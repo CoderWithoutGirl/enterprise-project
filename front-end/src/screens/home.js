@@ -54,7 +54,7 @@ const HomePage = ({authenticateReducer, getNewTokenRequest}) => {
     setFilterOption(e.target.value)
   }
 
-  document.title = "Home";
+  document.title = "Ideas";
   return (
     <div className="container max-w-xl md:max-w-screen-lg mx-auto">
       <div className="mx-auto">

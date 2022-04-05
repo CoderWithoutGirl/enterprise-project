@@ -7,7 +7,7 @@ const LandingPage = () => {
           <h1 className="text-xl lg:text-4xl text-center font-bold max-w-2xl text-violet-700">
             University Survey System
           </h1>
-          <img className="w-4/5" src={backdrop} />
+          <img className="w-4/5" src={backdrop} alt="backdrop" />
         </div>
       </div>
     );

@@ -15,7 +15,7 @@ authenticateRouter.post('/login',
 passport.authenticate('local', {session: false}),
 login);
 
-authenticateRouter.post("/refresh-token", refeshToken);
+authenticateRouter.get("/refresh-token", refeshToken);
 
 authenticateRouter.post('/register', register);
 

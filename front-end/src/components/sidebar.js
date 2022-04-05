@@ -65,7 +65,7 @@ const SideBar = ({
   return (
     <>
       <aside
-        className="w-full md:h-full dark:bg-gray-800 shadow-2xl"
+        className="w-full md:h-full bg-gray-800 shadow-2xl"
         aria-label="Sidebar"
       >
         <div className="w-full px-3 py-4 overflow-y-auto rounded">
@@ -101,7 +101,7 @@ const SideBar = ({
                     location.pathname === "/dashboard"
                       ? "bg-gray-700 dark:bg-gray-900"
                       : "bg-inherit"
-                  } text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700`}
+                  } rounded-lg text-white hover:bg-gray-100 dark:hover:bg-gray-700`}
                 >
                   <div className="flex items-center">
                     <ChartPieIcon className="text-gray-500 w-5 h-5" />
@@ -120,7 +120,7 @@ const SideBar = ({
                     location.pathname === "/statistics"
                       ? "bg-gray-700 dark:bg-gray-900"
                       : "bg-inherit"
-                  } text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700`}
+                  } rounded-lg text-white hover:bg-gray-100 dark:hover:bg-gray-700`}
                 >
                   <div className="flex items-center">
                     <ChartPieIcon className="text-gray-500 w-5 h-5" />
@@ -138,7 +138,7 @@ const SideBar = ({
                   location.pathname === "/ideas"
                     ? "bg-gray-700 dark:bg-gray-900"
                     : "bg-inherit"
-                } text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700`}
+                } rounded-lg text-white hover:bg-gray-100 dark:hover:bg-gray-700`}
               >
                 <div className="flex items-center">
                   <DocumentIcon className="text-gray-500 w-5 h-5" />
@@ -155,7 +155,7 @@ const SideBar = ({
                       location.pathname === "/users"
                         ? "bg-gray-700 dark:bg-gray-900"
                         : "bg-inherit"
-                    } text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700`}
+                    } rounded-lg text-white hover:bg-gray-100 dark:hover:bg-gray-700`}
                   >
                     <div className="flex items-center">
                       <UserIcon className="text-gray-500 w-5 h-5" />
@@ -170,7 +170,7 @@ const SideBar = ({
                       location.pathname === "/departments"
                         ? "bg-gray-700 dark:bg-gray-900"
                         : "bg-inherit"
-                    } text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700`}
+                    } rounded-lg text-white hover:bg-gray-100 dark:hover:bg-gray-700`}
                   >
                     <div className="flex items-center">
                       <UserGroupIcon className="text-gray-500 w-5 h-5" />
@@ -180,31 +180,32 @@ const SideBar = ({
                     </div>
                     <ChevronDownIcon
                       onClick={handleDepToggle}
-                      className="text-gray-500 w-10 h-10 hidden md:block"
+                      className="text-gray-500 w-10 h-10"
                     />
                   </Link>
+                  <ul
+                    className={`${
+                      departmentToggle ? "flex flex-col sm:block" : "hidden"
+                    } sm:ml-4 space-y-2 absolute bottom-[90px] sm:bottom-0 z-50 sm:relative bg-gray-800`}
+                  >
+                    {departmentRouters?.map((item, index) => (
+                      <li key={index} className="w-full">
+                        <Link
+                          to={`/departments/${item.name}`}
+                          className={`flex items-center p-2 text-base font-normal ${
+                            location.pathname === `/departments/${item.name}`
+                              ? "bg-gray-700 dark:bg-gray-900"
+                              : "bg-inherit"
+                          } rounded-lg text-white hover:bg-gray-100 dark:hover:bg-gray-700`}
+                        >
+                          <UserGroupIcon className="text-gray-500 w-5 h-5" />
+                          <span className="md:ml-3">{item.name}</span>
+                        </Link>
+                      </li>
+                    ))}
+                  </ul>
                 </li>
-                <ul
-                  className={`${
-                    departmentToggle ? null : "hidden"
-                  } sm:ml-4 space-y-2 w-full`}
-                >
-                  {departmentRouters?.map((item, index) => (
-                    <li key={index} className="w-full">
-                      <Link
-                        to={`/departments/${item.name}`}
-                        className={`flex items-center p-2 text-base font-normal ${
-                          location.pathname === `/departments/${item.name}`
-                            ? "bg-gray-700 dark:bg-gray-900"
-                            : "bg-inherit"
-                        } text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700`}
-                      >
-                        <UserGroupIcon className="text-gray-500 w-5 h-5" />
-                        <span className="md:ml-3">{item.name}</span>
-                      </Link>
-                    </li>
-                  ))}
-                </ul>
+
                 <li className="w-full">
                   <Link
                     to="/categories"
@@ -212,7 +213,7 @@ const SideBar = ({
                       location.pathname === "/categories"
                         ? "bg-gray-700 dark:bg-gray-900"
                         : "bg-inherit"
-                    } text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700`}
+                    } rounded-lg text-white hover:bg-gray-100 dark:hover:bg-gray-700`}
                   >
                     <div className="flex items-center">
                       <DocumentDuplicateIcon className="text-gray-500 w-5 h-5" />
@@ -222,31 +223,32 @@ const SideBar = ({
                     </div>
                     <ChevronDownIcon
                       onClick={handleCateToggle}
-                      className="text-gray-500 w-10 h-10 hidden md:block"
+                      className="text-gray-500 w-10 h-10"
                     />
                   </Link>
+                  <ul
+                    className={`${
+                      categoryToggle ? "flex flex-col sm:block" : "hidden"
+                    } sm:ml-4 space-y-2 absolute bottom-[90px] sm:bottom-0 sm:relative bg-gray-800`}
+                  >
+                    {categoryRouters?.map((item, index) => (
+                      <li key={index} className="w-full">
+                        <Link
+                          to={`/categories/${item.name}`}
+                          className={`flex items-center p-2 text-base font-normal ${
+                            location.pathname === `/departments/${item.name}`
+                              ? "bg-gray-700 dark:bg-gray-900"
+                              : "bg-inherit"
+                          } rounded-lg text-white hover:bg-gray-100 dark:hover:bg-gray-700`}
+                        >
+                          <DuplicateIcon className="text-gray-500 w-5 h-5" />
+                          <span className="sm:ml-3">{item.name}</span>
+                        </Link>
+                      </li>
+                    ))}
+                  </ul>
                 </li>
-                <ul
-                  className={`${
-                    categoryToggle ? null : "hidden"
-                  } sm:ml-4 space-y-2`}
-                >
-                  {categoryRouters?.map((item, index) => (
-                    <li key={index} className="w-full">
-                      <Link
-                        to={`/categories/${item.name}`}
-                        className={`flex items-center p-2 text-base font-normal ${
-                          location.pathname === `/departments/${item.name}`
-                            ? "bg-gray-700 dark:bg-gray-900"
-                            : "bg-inherit"
-                        } text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700`}
-                      >
-                        <DuplicateIcon className="text-gray-500 w-5 h-5" />
-                        <span className="sm:ml-3">{item.name}</span>
-                      </Link>
-                    </li>
-                  ))}
-                </ul>
+
                 <li className="w-full">
                   <Link
                     to="/academic"
@@ -254,7 +256,7 @@ const SideBar = ({
                       location.pathname === "/academic"
                         ? "bg-gray-700 dark:bg-gray-900"
                         : "bg-inherit"
-                    } text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700`}
+                    } rounded-lg text-white hover:bg-gray-100 dark:hover:bg-gray-700`}
                   >
                     <div className="flex items-center">
                       <CalendarIcon className="text-gray-500 w-5 h-5" />
@@ -270,7 +272,7 @@ const SideBar = ({
               <Link
                 to="/"
                 onClick={handleLogout}
-                className="flex items-center p-2 text-base font-normal text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700"
+                className="flex items-center p-2 text-base font-normal rounded-lg text-white hover:bg-gray-100 dark:hover:bg-gray-700"
               >
                 <LogoutIcon className="text-gray-500 w-5 h-5" />
                 <span className="hidden md:inline-block ml-3">Logout</span>
