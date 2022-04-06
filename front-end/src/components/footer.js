@@ -3,7 +3,87 @@ const Footer = () => {
     return (
       <footer className="text-center bg-gray-900 text-white flex flex-col items-center">
         <div className="container px-6 pt-6 ">
-          <div className="flex justify-center mb-6">
+          
+          <div className="grid lg:grid-cols-4 sm:grid-cols-2">
+            <div className="mb-6">
+              <p className="font-bold mb-2.5 w-50 inline ">
+                <img className="w-12 h-12 mx-auto "  src="/static/media/logo.71111848b5cb2de9b4be.png"/>
+                CodeWithOurGirl</p>
+
+              <ul className="list-none mb-0">
+              
+                <li>
+                  <p className="flex justify-center ">
+                  <svg 
+                    xmlns="http://www.w3.org/2000/svg" 
+                    class="h-6 w-6 text-center" 
+                    fill="none" 
+                    viewBox="0 0 24 24" 
+                    stroke="currentColor" 
+                    stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M20 12H4" />
+                  </svg>
+                  </p>
+                </li>
+                <li>
+                  <p className="flex justify-center ">
+                    <svg 
+                      xmlns="http://www.w3.org/2000/svg" 
+                      class="h-4 w-4 mt-1 mr-3" 
+                      viewBox="0 0 20 20" 
+                      fill="currentColor">
+                      <path d="M2 3a1 1 0 011-1h2.153a1 1 0 01.986.836l.74 4.435a1 1 0 01-.54 1.06l-1.548.773a11.037 11.037 0 006.105 6.105l.774-1.548a1 1 0 011.059-.54l4.435.74a1 1 0 01.836.986V17a1 1 0 01-1 1h-2C7.82 18 2 12.18 2 5V3z" />
+                    </svg>
+                      0915012166</p>
+                </li>
+                <li>
+                  <p className="flex justify-center ">
+                      <svg 
+                        xmlns="http://www.w3.org/2000/svg" 
+                        class="h-5 w-5 mt-1 mr-3" 
+                        viewBox="0 0 20 20" 
+                        fill="currentColor">
+                        <path d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884z" />
+                        <path d="M18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z" />
+                      </svg>
+                      codewithourgirl@gmail.com</p>
+                  
+                </li>
+            
+              </ul>
+            </div>
+
+            <div className="mb-6">
+              <h5 className="uppercase font-bold mb-2.5">About Us</h5>
+
+              <ul className="list-none mb-0 text-justify">
+                This is University Survey System. You can contribute your ideas here.
+                Thank you for the ideas you contributed.
+              </ul>
+            </div>
+
+            <div className="mb-6">
+              <h5 className="uppercase font-bold mb-2.5">Page</h5>
+
+              <ul className="list-none mb-0">
+                <li>
+                  <a href="/ideas" className="text-white">
+                    Ideas
+                  </a>
+                </li>
+                <li>
+                  <a href="contribute" className="text-white">
+                    Contribute
+                  </a>
+                </li>
+              </ul>
+            </div>
+
+            <div className="mb-6">
+              <h5 className="uppercase font-bold mb-2.5">Follow Us</h5>
+
+              <ul className="list-none mb-0">
+              <div className="flex justify-center mb-6">
             <a
               href="#!"
               type="button"
@@ -22,28 +102,6 @@ const Footer = () => {
                 <path
                   fill="currentColor"
                   d="M279.14 288l14.22-92.66h-88.91v-60.13c0-25.35 12.42-50.06 52.24-50.06h40.42V6.26S260.43 0 225.36 0c-73.22 0-121.08 44.38-121.08 124.72v70.62H22.89V288h81.39v224h100.17V288z"
-                ></path>
-              </svg>
-            </a>
-
-            <a
-              href="#!"
-              type="button"
-              className="rounded-full border-2 border-white text-white leading-normal uppercase hover:bg-black hover:bg-opacity-5 focus:outline-none focus:ring-0 transition duration-150 ease-in-out w-9 h-9 m-1"
-            >
-              <svg
-                aria-hidden="true"
-                focusable="false"
-                data-prefix="fab"
-                data-icon="twitter"
-                className="w-3 h-full mx-auto"
-                role="img"
-                xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 512 512"
-              >
-                <path
-                  fill="currentColor"
-                  d="M459.37 151.716c.325 4.548.325 9.097.325 13.645 0 138.72-105.583 298.558-298.558 298.558-59.452 0-114.68-17.219-161.137-47.106 8.447.974 16.568 1.299 25.34 1.299 49.055 0 94.213-16.568 130.274-44.832-46.132-.975-84.792-31.188-98.112-72.772 6.498.974 12.995 1.624 19.818 1.624 9.421 0 18.843-1.3 27.614-3.573-48.081-9.747-84.143-51.98-84.143-102.985v-1.299c13.969 7.797 30.214 12.67 47.431 13.319-28.264-18.843-46.781-51.005-46.781-87.391 0-19.492 5.197-37.36 14.294-52.954 51.655 63.675 129.3 105.258 216.365 109.807-1.624-7.797-2.599-15.918-2.599-24.04 0-57.828 46.782-104.934 104.934-104.934 30.213 0 57.502 12.67 76.67 33.137 23.715-4.548 46.456-13.32 66.599-25.34-7.798 24.366-24.366 44.833-46.132 57.827 21.117-2.273 41.584-8.122 60.426-16.243-14.292 20.791-32.161 39.308-52.628 54.253z"
                 ></path>
               </svg>
             </a>
@@ -115,7 +173,7 @@ const Footer = () => {
             </a>
 
             <a
-              href="#!"
+              href="https://github.com/CoderWithoutGirl/enterprise-project"
               type="button"
               className="rounded-full border-2 border-white text-white leading-normal uppercase hover:bg-black hover:bg-opacity-5 focus:outline-none focus:ring-0 transition duration-150 ease-in-out w-9 h-9 m-1"
             >
@@ -136,168 +194,6 @@ const Footer = () => {
               </svg>
             </a>
           </div>
-
-          <div>
-            <form action="">
-              <div className="grid md:grid-cols-3 gird-cols-1 gap-4 justify-center items-center">
-                <div className="md:ml-auto md:mb-6">
-                  <p className="">
-                    <strong>Sign up for our newsletter</strong>
-                  </p>
-                </div>
-
-                <div className="md:mb-6">
-                  <input
-                    type="text"
-                    className="
-                form-control
-                block
-                w-full
-                px-3
-                py-1.5
-                text-base
-                font-normal
-                text-gray-700
-                bg-white bg-clip-padding
-                border border-solid border-gray-300
-                rounded
-                transition
-                ease-in-out
-                m-0
-                focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none
-              "
-                    id="exampleFormControlInput1"
-                    placeholder="Email address"
-                  />
-                </div>
-
-                <div className="md:mr-auto mb-6">
-                  <button
-                    type="submit"
-                    className="inline-block px-6 py-2 border-2 border-white text-white font-medium text-xs leading-tight uppercase rounded hover:bg-black hover:bg-opacity-5 focus:outline-none focus:ring-0 transition duration-150 ease-in-out"
-                  >
-                    Subscribe
-                  </button>
-                </div>
-              </div>
-            </form>
-          </div>
-
-          <div className="mb-6">
-            <p>
-              Lorem ipsum dolor sit amet consectetur adipisicing elit. Sunt
-              distinctio earum repellat quaerat voluptatibus placeat nam,
-              commodi optio pariatur est quia magnam eum harum corrupti dicta,
-              aliquam sequi voluptate quas.
-            </p>
-          </div>
-
-          <div className="grid lg:grid-cols-4 md:grid-cols-2">
-            <div className="mb-6">
-              <h5 className="uppercase font-bold mb-2.5">Links</h5>
-
-              <ul className="list-none mb-0">
-                <li>
-                  <a href="#!" className="text-white">
-                    Link 1
-                  </a>
-                </li>
-                <li>
-                  <a href="#!" className="text-white">
-                    Link 2
-                  </a>
-                </li>
-                <li>
-                  <a href="#!" className="text-white">
-                    Link 3
-                  </a>
-                </li>
-                <li>
-                  <a href="#!" className="text-white">
-                    Link 4
-                  </a>
-                </li>
-              </ul>
-            </div>
-
-            <div className="mb-6">
-              <h5 className="uppercase font-bold mb-2.5">Links</h5>
-
-              <ul className="list-none mb-0">
-                <li>
-                  <a href="#!" className="text-white">
-                    Link 1
-                  </a>
-                </li>
-                <li>
-                  <a href="#!" className="text-white">
-                    Link 2
-                  </a>
-                </li>
-                <li>
-                  <a href="#!" className="text-white">
-                    Link 3
-                  </a>
-                </li>
-                <li>
-                  <a href="#!" className="text-white">
-                    Link 4
-                  </a>
-                </li>
-              </ul>
-            </div>
-
-            <div className="mb-6">
-              <h5 className="uppercase font-bold mb-2.5">Links</h5>
-
-              <ul className="list-none mb-0">
-                <li>
-                  <a href="#!" className="text-white">
-                    Link 1
-                  </a>
-                </li>
-                <li>
-                  <a href="#!" className="text-white">
-                    Link 2
-                  </a>
-                </li>
-                <li>
-                  <a href="#!" className="text-white">
-                    Link 3
-                  </a>
-                </li>
-                <li>
-                  <a href="#!" className="text-white">
-                    Link 4
-                  </a>
-                </li>
-              </ul>
-            </div>
-
-            <div className="mb-6">
-              <h5 className="uppercase font-bold mb-2.5">Links</h5>
-
-              <ul className="list-none mb-0">
-                <li>
-                  <a href="#!" className="text-white">
-                    Link 1
-                  </a>
-                </li>
-                <li>
-                  <a href="#!" className="text-white">
-                    Link 2
-                  </a>
-                </li>
-                <li>
-                  <a href="#!" className="text-white">
-                    Link 3
-                  </a>
-                </li>
-                <li>
-                  <a href="#!" className="text-white">
-                    Link 4
-                  </a>
-                </li>
               </ul>
             </div>
           </div>
@@ -307,9 +203,8 @@ const Footer = () => {
           className="text-center p-4 self-stretch"
           style={{ backgroundColor: "black", opacity: 0.2 }}
         >
-          © 2021 Copyright:
-          <a className="text-white" href="https://tailwind-elements.com/">
-            Tailwind Elements
+          © 2022 Copyright: 
+          <a className="text-white" href="https://tailwind-elements.com/"> CodeWithOurGirl
           </a>
         </div>
       </footer>
