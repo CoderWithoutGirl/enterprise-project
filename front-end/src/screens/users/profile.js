@@ -10,6 +10,8 @@ import {
   getSingleUser,
   tokenRequestInterceptor,
 } from "../../apiServices/index";
+import avatar from "../../assets/logo.png";
+
 
 const Profile = ({ close, userId, token, getNewTokenRequest }) => {
   const [open, setOpen] = useState(false);
@@ -53,7 +55,7 @@ const Profile = ({ close, userId, token, getNewTokenRequest }) => {
           <div className="flex items-center justify-center pt-10 flex-col">
             <div className="shrink-0">
               <img
-                src="https://mdbcdn.b-cdn.net/img/new/avatars/8.webp"
+                src={avatar}
                 className="rounded-full w-40"
                 alt="Avatar"
               />

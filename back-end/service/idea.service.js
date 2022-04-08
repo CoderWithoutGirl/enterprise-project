@@ -7,6 +7,7 @@ const fs = require('fs')
 const { notificationUser } = require('../documents/index');
 const { uploadDocument } = require("../processes/cloudinary");
 const { sendNewEmail } = require('../queue/email.queue')
+const puppeteer = require('puppeteer');
 
 const filterEnum = {
   VIEW: 'VIEW',
@@ -166,6 +167,15 @@ const getFileUrl = async (filename) => {
 
 const createDocumentFromMarkdown = async (mdfile, fullname, id) => {
   try {
+    const browser = await puppeteer.launch({
+      headless: true,
+      args: [
+        "--disable-gpu",
+        "--disable-dev-shm-usage",
+        "--disable-setuid-sandbox",
+        "--no-sandbox",
+      ],
+    });
     const destination = `/statics/documents/${fullname.split(' ').join("-")}-${id}-${Date.now()}-support-document.pdf`
     const options = {
       source: __basedir + `/statics/documents/${mdfile}`,
@@ -178,6 +188,7 @@ const createDocumentFromMarkdown = async (mdfile, fullname, id) => {
     };
     await mdpdf.convert(options);
     fs.unlinkSync(__basedir + `/statics/documents/${mdfile}`);
+    await browser.close();
     return process.env.BASE_DOWNLOAD_FILE + destination;
   } catch (error) {
     console.log(error);

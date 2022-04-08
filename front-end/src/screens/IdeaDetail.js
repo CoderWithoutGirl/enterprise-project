@@ -21,6 +21,7 @@ import TextAria from "../components/text-area";
 import Button from "../components/button";
 import CommentItem from "../components/commentItem";
 import { date } from "yup/lib/locale";
+import { roles } from "../constants/role";
 
 const reactionType = {
   LIKE: "Like",
@@ -249,7 +250,8 @@ const IdeaDetail = ({ authenticateReducer, getNewTokenRequest }) => {
       </div>
       <div className="container max-w-xl md:max-w-screen-lg mx-auto bg-white border shadow-sm rounded-lg mt-20">
         {!disableCmt ? (
-          <div className="w-full border flex px-2 py-4 items-center gap-2">
+          user?.role === roles.STAFF && (
+              <div className="w-full border flex px-2 py-4 items-center gap-2">
             <div className="flex items-center justify-center">
               {user?.avatar ? (
                 <img src={user?.avatar} />
@@ -262,17 +264,21 @@ const IdeaDetail = ({ authenticateReducer, getNewTokenRequest }) => {
               )}
             </div>
             <div className="block w-full">
-              <TextAria
-                rows={3}
-                value={commentContent}
-                onChange={(e) => setCommentContent(e.target.value)}
-                placeholder="Leave your comment"
-              />
-              <div>
-                <span className="pr-2">Anonymous:</span>
-                <input checked={isAnonymous} type="checkbox" onChange={toggleAnonymous} />
+                <TextAria
+                  rows={3}
+                  value={commentContent}
+                  onChange={(e) => setCommentContent(e.target.value)}
+                  placeholder="Leave your comment"
+                />
+                <div>
+                  <span className="pr-2">Anonymous:</span>
+                  <input
+                    checked={isAnonymous}
+                    type="checkbox"
+                    onChange={toggleAnonymous}
+                  />
+                </div>
               </div>
-            </div>
             <Button
               role="button"
               type="primary"
@@ -282,6 +288,7 @@ const IdeaDetail = ({ authenticateReducer, getNewTokenRequest }) => {
               disabled={!commentContent}
             />
           </div>
+            )
         ) : (
           <div className="d-flex justify-center">
             <h2 className="text-red-800 mt-5 text-center">Comment Is Close</h2>

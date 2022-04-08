@@ -40,13 +40,14 @@ const DocumentStorage = multer.diskStorage({
         cb(null, './statics/documents');
     },
     filename: (req, file, cb) => {
+      console.log(file.originalname);
          const fileName =
            req.user.fullname.split(" ").join("-") +
            "-" + req.user.id +
            "-" +
            Date.now().toString()
            +
-           "-support-document.docx";
+           "-support-document." + file.originalname.split('.')[1];
          cb(null, fileName);
     }
 })

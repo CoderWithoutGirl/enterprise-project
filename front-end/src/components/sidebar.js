@@ -17,6 +17,7 @@ import { ChevronDownIcon } from "@heroicons/react/solid";
 import Modal from "./modal";
 import Profile from "../screens/users/profile";
 import {roles} from '../constants/role'
+import avatar from '../assets/logo.png'
 
 const SideBar = ({
   authenticateReducer,
@@ -76,7 +77,7 @@ const SideBar = ({
             >
               <div className="shrink-0">
                 <img
-                  src="https://mdbcdn.b-cdn.net/img/new/avatars/8.webp"
+                  src={avatar}
                   className="rounded-full w-10"
                   alt="Avatar"
                 />

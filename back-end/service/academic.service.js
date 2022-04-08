@@ -6,7 +6,9 @@ const User = require('../model/user')
 const cloudinary = require('cloudinary')
 const fs = require('fs');
 const archiver = require('archiver');
-const {sendNewMail} = require('../queue/email.queue')
+const { sendNewEmail } = require("../queue/email.queue");
+const cronJobProcess = require("../processes/cron-job");
+
 
 const createAcademicYear = async (academicYear) => {
   const { startDate, endDate, name, closureDate } = academicYear;
@@ -38,6 +40,7 @@ const createAcademicYear = async (academicYear) => {
   } else {
     const createAcademic = new AcademicYear({ ...academicYear });
     await createAcademic.save();
+    cronJobProcess(sendToQAManager)
     return createAcademic;
   }
 };
@@ -205,7 +208,7 @@ const sendToQAManager = async () => {
       path: documentsUploadZipUrl,
     },
   ];
-  await sendNewEmail({
+  sendNewEmail({
     to: qaAccount.email,
     subject: "All Document and Idea Reports",
     attachments: attachments,

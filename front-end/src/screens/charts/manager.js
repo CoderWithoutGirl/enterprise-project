@@ -41,13 +41,13 @@ const ManagerStatistic = ({ authenticateReducer, getNewTokenRequest }) => {
       <div className="w-4/5 grid grid-cols-4 grid-row-3 gap-8">
         <div className="col-span-4 lg:col-span-2 lg:row-span-3 border rounded-md px-4 py-3 shadow-xl h-full">
           <span className="text-xs font-bold text-gray-500">
-            Users had posted ideas/not yet in each department
+            Number of contributors within each Department.
           </span>
           <FindPost />
         </div>
         <div className="col-span-4 lg:col-span-2 border rounded-md px-4 py-3 shadow-2xl h-fit">
           <span className="text-xs font-bold text-gray-500">
-            Ideas Submitted of each department
+            Number of contributors within each Department.
           </span>
           <ReactApexChart
             height={300}
@@ -70,7 +70,7 @@ const ManagerStatistic = ({ authenticateReducer, getNewTokenRequest }) => {
         </div>
         <div className="col-span-4 lg:col-span-2 border rounded-md px-4 py-3 shadow-2xl w-full h-fit">
           <span className="text-xs font-bold text-gray-500">
-            Percentage of users in department
+            Percentage of ideas by each Department.
           </span>
           <ReactApexChart
             type="pie"

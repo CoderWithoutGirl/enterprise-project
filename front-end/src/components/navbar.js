@@ -7,11 +7,12 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import { logout } from "../store/actions/authenticateAction";
 import Modal from "./modal";
 import Profile from "../screens/users/profile";
+import avatar from "../assets/logo.png";
 
 
 
 const Navbar = ({ authenticateReducer, doLogout }) => {
-  const { isAuthenticated } = authenticateReducer;
+  const { isAuthenticated, user } = authenticateReducer;
   const [open, setOpen] = useState(false);
   const [userId, setUserId] = useState("");
   const location = useLocation();
@@ -60,15 +61,13 @@ const Navbar = ({ authenticateReducer, doLogout }) => {
                   </Disclosure.Button>
                 </div>
                 <div className="flex-1 flex items-center justify-center sm:items-stretch sm:justify-start">
-                  <div className="cursor-pointer flex-shrink-0 flex items-center" onClick={() => navigate('/')}>
+                  <div
+                    className="cursor-pointer flex-shrink-0 flex items-center"
+                    onClick={() => navigate("/")}
+                  >
                     <img
-                      className="block lg:hidden h-8 w-auto"
-                      src="https://tailwindui.com/img/logos/workflow-mark-indigo-500.svg"
-                      alt="Workflow"
-                    />
-                    <img
-                      className="hidden lg:block h-8 w-auto"
-                      src="https://tailwindui.com/img/logos/workflow-logo-indigo-500-mark-white-text.svg"
+                      className="hidden lg:block h-10 w-10"
+                      src={avatar}
                       alt="Workflow"
                     />
                   </div>
@@ -96,11 +95,14 @@ const Navbar = ({ authenticateReducer, doLogout }) => {
                   {isAuthenticated ? (
                     <Menu as="div" className="ml-3 relative">
                       <div>
-                        <Menu.Button className="bg-gray-800 flex text-sm rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-white">
+                        <Menu.Button className="bg-gray-800 flex text-sm gap-1 items-center rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-white">
                           <span className="sr-only">Open user menu</span>
+                          <span className="font-medium text-white">
+                            Hello, {user.fullname}
+                          </span>
                           <img
                             className="h-8 w-8 rounded-full"
-                            src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
+                            src={user?.avatar || avatar}
                             alt=""
                           />
                         </Menu.Button>
