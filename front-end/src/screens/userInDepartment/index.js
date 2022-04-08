@@ -97,6 +97,9 @@ const UserInDepartmentPage = ({ getNewTokenRequest, token }) => {
       setEditOpen((prev) => !prev);
       loadUser();
     }
+    else {
+       toast.error(data.message);
+    }
   };
 
 

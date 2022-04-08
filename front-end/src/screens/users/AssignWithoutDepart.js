@@ -1,7 +1,7 @@
-import React, { useCallback, useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import InputField from '../../components/inputField';
 import Button from '../../components/button';
-
+import {PencilAltIcon, XIcon} from '@heroicons/react/solid'
 function AssignWithoutDepart({ setOpen, role, users, handleSubmit }) {
 
     const [selectedId, setSelectedId] = useState("");
@@ -31,18 +31,20 @@ function AssignWithoutDepart({ setOpen, role, users, handleSubmit }) {
                 }
             </select>
             
-            <div className="w-3/5 flex flex-wrap justify-between items-center">
+            <div className="w-full flex flex-wrap justify-between items-center">
                 <Button
                     // onClick={update}
                     role="button"
                     type="primary"
                     title="Update"
+                    icon={PencilAltIcon}
                     onClick={() => handleSubmit(selectedId)}
 
                 />
                 <Button
                     type="danger"
                     title="Cancel"
+                    icon={XIcon}
                     onClick={setOpen}
                 />
             </div>

@@ -2,10 +2,8 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import PrivateRoute from "./customRouters/privateRouter";
 import UnauthorizeRoute from "./customRouters/unauthorizeRouter";
 
-import ApplicationBaseLayout from "../layout/ApplicationBaseLayout";
 import HomePage from "../screens/home";
 import LoginPage from "../screens/login";
-import TestScreen from "../screens/test";
 import Departments from "../screens/departments";
 import Categories from "../screens/categories";
 import UserPage from "../screens/users/";
@@ -16,6 +14,11 @@ import UserInDepartment from "../screens/userInDepartment/";
 import PostIdea from "../screens/postIdea";
 import IdeaDetail from "../screens/IdeaDetail";
 import ItemInCategory from "../screens/itemInCategory";
+import DepartmentChart from "../screens/charts/DepartmentChart"
+import StaffPostedDepart from "../screens/charts/StaffPostedDepart";
+import LandingPage from "../screens/landingPage";
+import ManagerStatistic from "../screens/charts/manager";
+import CoordinatorStatistic from "../screens/charts/coodinator";
 
 const AppRouter = () => {
   return (
@@ -31,6 +34,30 @@ const AppRouter = () => {
         />
         <Route
           path="/"
+          element={
+            <PrivateRoute>
+              <LandingPage />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/dashboard"
+          element={
+            <PrivateRoute>
+              <ManagerStatistic />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/statistics"
+          element={
+            <PrivateRoute>
+              <CoordinatorStatistic />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/ideas"
           element={
             <PrivateRoute>
               <HomePage />
@@ -51,14 +78,6 @@ const AppRouter = () => {
             <PrivateRoute>
               <PostIdea />
             </PrivateRoute>
-          }
-        />
-        <Route
-          path="/test"
-          element={
-            <ApplicationBaseLayout>
-              <TestScreen />
-            </ApplicationBaseLayout>
           }
         />
         <Route
@@ -106,6 +125,22 @@ const AppRouter = () => {
           element={
             <PrivateRoute allowRoles={[roles.ADMIN]}>
               <UserPage />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/departmentChart"
+          element={
+            <PrivateRoute allowRoles={[roles.QA_COORDINATOR, roles.QA_MANAGER]}>
+              <DepartmentChart />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/findStaffPost"
+          element={
+            <PrivateRoute allowRoles={[roles.QA_COORDINATOR]}>
+              <StaffPostedDepart />
             </PrivateRoute>
           }
         />

@@ -1,33 +1,71 @@
 import { useEffect, useState, useCallback } from "react";
 import { connect } from "react-redux";
 import { useParams } from "react-router-dom";
-import { getSingleIdea, reactToIdea, commentToIdea, increateView } from "../apiServices";
+import {
+  getSingleIdea,
+  reactToIdea,
+  commentToIdea,
+  increateView,
+  getAllAcademic,
+  tokenRequestInterceptor,
+} from "../apiServices";
 import {
   ChevronDoubleDownIcon,
   ChevronDoubleUpIcon,
   PaperAirplaneIcon,
-  DownloadIcon
+  DownloadIcon,
 } from "@heroicons/react/outline";
+import { getNewToken } from "../store/actions/authenticateAction";
 
 import TextAria from "../components/text-area";
-import Button from '../components/button'
+import Button from "../components/button";
 import CommentItem from "../components/commentItem";
+import { date } from "yup/lib/locale";
+import { roles } from "../constants/role";
 
 const reactionType = {
   LIKE: "Like",
-  DISLIKE: 'Dislike',
-}
+  DISLIKE: "Dislike",
+};
 
-const IdeaDetail = ({ authenticateReducer }) => {
+const IdeaDetail = ({ authenticateReducer, getNewTokenRequest }) => {
   const [ideaDetail, setIdeaDetail] = useState({});
   const [comments, setComments] = useState([]);
+  const [isAnonymous, setIsAnonymous] = useState(false);
   const [reactions, setReactions] = useState([]);
   const [commentContent, setCommentContent] = useState("");
   const [yourReaction, setYourReaction] = useState(null);
   const { token, user } = authenticateReducer;
+  const [disableLike, setDisableLike] = useState(false);
+  const [disableCmt, setDisableCmt] = useState(false);
 
   const { id } = useParams();
 
+  const getAcademicYear = useCallback(async () => {
+    const loadAcademicYear = async () => {
+      const { data, status } = await getAllAcademic(token);
+      return { data, status };
+    };
+    const { status, data } = await tokenRequestInterceptor(
+      loadAcademicYear,
+      getNewTokenRequest
+    );
+    if (status === 200) {
+      const newestYear = data[data.length - 1];
+      const closureDate = new Date(newestYear.closureDate);
+      const finalDate = new Date(newestYear.endDate);
+      if (closureDate < Date.now()) {
+        setDisableLike(true);
+      }
+      if (finalDate < Date.now()) {
+        setDisableCmt(true);
+      }
+    }
+  }, [token, getNewTokenRequest]);
+
+  useEffect(() => {
+    getAcademicYear();
+  }, [getAcademicYear]);
 
   const refreshReactionsAndCommentsList = useCallback(async () => {
     const { data, status } = await getSingleIdea(id, token);
@@ -42,8 +80,8 @@ const IdeaDetail = ({ authenticateReducer }) => {
   }, [id, token, user.id]);
 
   const inscreaseViewOfIdea = async () => {
-    await increateView(id, token)
-  }
+    await increateView(id, token);
+  };
 
   const reaction = async (reactionType) => {
     const bodyData = {
@@ -54,18 +92,22 @@ const IdeaDetail = ({ authenticateReducer }) => {
     if (status === 201) {
       refreshReactionsAndCommentsList();
     }
-  }
+  };
 
   const comment = async () => {
     const bodyData = {
       userId: user.id,
-      content: commentContent
-    }
-    const {status} = await commentToIdea(id, bodyData, token);
-    if(status === 201) {
-      setCommentContent("")
+      content: commentContent,
+      isAnonymous
+    };
+    const { status } = await commentToIdea(id, bodyData, token);
+    if (status === 201) {
+      setCommentContent("");
       refreshReactionsAndCommentsList();
     }
+  };
+  const toggleAnonymous = () => {
+    setIsAnonymous(prev => !prev);
   }
 
   const getIdeaDetail = useCallback(async () => {
@@ -85,7 +127,7 @@ const IdeaDetail = ({ authenticateReducer }) => {
       });
     }
   }, [id, token, user.id]);
-  
+
   useEffect(() => {
     inscreaseViewOfIdea();
   }, []);
@@ -104,10 +146,16 @@ const IdeaDetail = ({ authenticateReducer }) => {
     <>
       <div className="container max-w-xl md:max-w-screen-lg mx-auto bg-white border shadow-sm px-4 py-3 rounded-lg">
         <div className="flex items-center">
-          {ideaDetail?.user?.avatart ? (
+          {ideaDetail?.isAnonymous ? (
+            <div className="w-12 h-12 flex items-center justify-center rounded-[100%] bg-gray-500">
+              <span className="font-medium text-[8px] text-white">
+                Anonymous
+              </span>
+            </div>
+          ) : ideaDetail?.user?.avatar ? (
             <img
               className="h-12 w-12 rounded-full"
-              src="https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
+              src={ideaDetail?.user?.avatar}
             />
           ) : (
             <div className="w-12 h-12 flex items-center justify-center rounded-[100%] bg-gray-500">
@@ -119,7 +167,9 @@ const IdeaDetail = ({ authenticateReducer }) => {
           <div className="ml-2">
             <div className="text-sm ">
               <span className="font-semibold">
-                {ideaDetail?.user?.fullname}
+                {ideaDetail?.isAnonymous
+                  ? "Anonymous"
+                  : ideaDetail?.user?.fullname}
               </span>
             </div>
             <div className="text-gray-500 text-xs ">
@@ -157,69 +207,93 @@ const IdeaDetail = ({ authenticateReducer }) => {
             Download
           </a>
         )}
-        <div className="flex gap-3 items-center mt-3">
-          <div className="flex gap-1 items-center">
-            <ChevronDoubleUpIcon
-              onClick={() => reaction(reactionType.LIKE)}
-              className={`${
-                yourReaction?.reactionType === reactionType.LIKE
-                  ? "bg-orange-200 cursor-not-allowed"
-                  : "bg-gray-200 cursor-pointer"
-              } text-gray-500 w-7 h-7  rounded-md font-medium `}
-            />
-            <span className="font-medium">
-              {reactions?.filter(
-                (item) => item.reactionType === reactionType.LIKE
-              )?.length || 0}{" "}
-              up votes
-            </span>
+        {!disableLike ? (
+          <div className="flex gap-3 items-center mt-3">
+            <div className="flex gap-1 items-center">
+              <ChevronDoubleUpIcon
+                onClick={() => reaction(reactionType.LIKE)}
+                className={`${
+                  yourReaction?.reactionType === reactionType.LIKE
+                    ? "bg-orange-200 cursor-not-allowed"
+                    : "bg-gray-200 cursor-pointer"
+                } text-gray-500 w-7 h-7  rounded-md font-medium `}
+              />
+              <span className="font-medium">
+                {reactions?.filter(
+                  (item) => item.reactionType === reactionType.LIKE
+                )?.length || 0}{" "}
+                up votes
+              </span>
+            </div>
+            <div className="flex gap-1 items-center">
+              <ChevronDoubleDownIcon
+                onClick={() => reaction(reactionType.DISLIKE)}
+                className={`${
+                  yourReaction?.reactionType === reactionType.DISLIKE
+                    ? "bg-orange-200 cursor-not-allowed"
+                    : "bg-gray-200 cursor-pointer"
+                } text-gray-500 w-7 h-7  rounded-md font-medium `}
+              />
+              <span className="font-medium">
+                {reactions?.filter(
+                  (item) => item.reactionType === reactionType.DISLIKE
+                )?.length || 0}{" "}
+                down votes
+              </span>
+            </div>
           </div>
-          <div className="flex gap-1 items-center">
-            <ChevronDoubleDownIcon
-              onClick={() => reaction(reactionType.DISLIKE)}
-              className={`${
-                yourReaction?.reactionType === reactionType.DISLIKE
-                  ? "bg-orange-200 cursor-not-allowed"
-                  : "bg-gray-200 cursor-pointer"
-              } text-gray-500 w-7 h-7  rounded-md font-medium `}
-            />
-            <span className="font-medium">
-              {reactions?.filter(
-                (item) => item.reactionType === reactionType.DISLIKE
-              )?.length || 0}{" "}
-              down votes
-            </span>
-          </div>
-        </div>
+        ) : (
+          <h2 className="text-red-800 mt-5 ">
+            Thumbs Up or Thumbs Down Is Close
+          </h2>
+        )}
       </div>
       <div className="container max-w-xl md:max-w-screen-lg mx-auto bg-white border shadow-sm rounded-lg mt-20">
-        <div className="w-full border flex px-2 py-4 items-center gap-2">
-          <div className="flex items-center justify-center">
-            {user?.avatar ? (
-              <img src={user?.avatar} />
-            ) : (
-              <div className="w-20 h-20 flex items-center justify-center rounded-[100%] bg-gray-500">
-                <span className="font-medium text-xl text-white">
-                  {user.fullname.charAt(0).toUpperCase()}
-                </span>
+        {!disableCmt ? (
+          user?.role === roles.STAFF && (
+              <div className="w-full border flex px-2 py-4 items-center gap-2">
+            <div className="flex items-center justify-center">
+              {user?.avatar ? (
+                <img src={user?.avatar} />
+              ) : (
+                <div className="w-20 h-20 flex items-center justify-center rounded-[100%] bg-gray-500">
+                  <span className="font-medium text-xl text-white">
+                    {user.fullname.charAt(0).toUpperCase()}
+                  </span>
+                </div>
+              )}
+            </div>
+            <div className="block w-full">
+                <TextAria
+                  rows={3}
+                  value={commentContent}
+                  onChange={(e) => setCommentContent(e.target.value)}
+                  placeholder="Leave your comment"
+                />
+                <div>
+                  <span className="pr-2">Anonymous:</span>
+                  <input
+                    checked={isAnonymous}
+                    type="checkbox"
+                    onChange={toggleAnonymous}
+                  />
+                </div>
               </div>
-            )}
+            <Button
+              role="button"
+              type="primary"
+              title="Send"
+              onClick={comment}
+              icon={PaperAirplaneIcon}
+              disabled={!commentContent}
+            />
           </div>
-          <TextAria
-            rows={3}
-            value={commentContent}
-            onChange={(e) => setCommentContent(e.target.value)}
-            placeholder="Leave your comment"
-          />
-          <Button
-            role="button"
-            type="primary"
-            title="Send"
-            onClick={comment}
-            icon={PaperAirplaneIcon}
-            disabled={!commentContent}
-          />
-        </div>
+            )
+        ) : (
+          <div className="d-flex justify-center">
+            <h2 className="text-red-800 mt-5 text-center">Comment Is Close</h2>
+          </div>
+        )}
         <div className="w-full px-2 max-h-96 overflow-y-auto">
           {comments &&
             comments?.map((comment, index) => (
@@ -228,6 +302,7 @@ const IdeaDetail = ({ authenticateReducer }) => {
                 time={comment.createdAt}
                 user={comment?.user}
                 content={comment?.content}
+                isAnonymous={comment?.isAnonymous}
               />
             ))}
         </div>
@@ -242,4 +317,10 @@ const mapStateToProps = (state) => {
   };
 };
 
-export default connect(mapStateToProps)(IdeaDetail);
+const mapDispatchToProps = (dispatch) => {
+  return {
+    getNewTokenRequest: () => dispatch(getNewToken()),
+  };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(IdeaDetail);

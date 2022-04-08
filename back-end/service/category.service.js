@@ -13,8 +13,7 @@ const createCategory = async (defaultCategory) => {
     const checkCategoryExistedInDb = await Category.findOne({name});
     if (checkCategoryExistedInDb){
         throw new Error("Category already exists");
-        return;
-    }  
+        }  
     else{
         const createCategory = new Category({ ...defaultCategory});
         await createCategory.save();

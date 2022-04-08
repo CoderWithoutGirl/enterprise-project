@@ -81,7 +81,7 @@ const ItemInCategoryPage = ({ getNewTokenRequest, token }) => {
         <div className="text-left">{item?.reactions.length} Reactions</div>
       </td>
       <td className="p-2 whitespace-nowrap">
-        <a className="bg-blue-400 text-white rounded-md px-3 py-1" target="_blank" href={item?.documentLink}>Download</a>  
+        <a className="bg-blue-400 text-white rounded-md px-3 py-1" target="_blank" href={item?.documentLink || "#"}>Download</a>  
         </td>
     </tr>
   );

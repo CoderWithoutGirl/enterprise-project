@@ -22,22 +22,24 @@ const Button = ({type, title, role, children,icon: Icon, ...rest}) => {
     }
 
     return (
-      <button
-        className={`${typeCheck()} ${
-          rest.disabled ? "cursor-not-allowed" : "cursor-pointer"
-        } flex gap-1 sm:gap-2 items-center h-fit text-white rounded-md font-semibold px-[10px] py-[7px] sm:px-4 sm:py-3 w-fit`}
-        type={role}
-        {...rest}
-      >
-        <label
-          className={`${
+      <>
+        <button
+          className={`${typeCheck()} ${
             rest.disabled ? "cursor-not-allowed" : "cursor-pointer"
-          } hidden sm:inline-block`}
+          } flex gap-1 sm:gap-2 items-center h-fit text-white rounded-md font-semibold px-[10px] py-[7px] sm:px-4 sm:py-3 w-fit`}
+          type={role}
+          {...rest}
         >
-          {title}
-        </label>
-        {Icon && <Icon className="h-5 w-5" />}
-      </button>
+          <label
+            className={`${
+              rest.disabled ? "cursor-not-allowed" : "cursor-pointer"
+            } hidden sm:inline-block`}
+          >
+            {title}
+          </label>
+          {Icon && <Icon className="h-5 w-5" />}
+        </button>
+      </>
     );
 }
 

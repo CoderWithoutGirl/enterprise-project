@@ -12,7 +12,7 @@ const HomePage = ({authenticateReducer, getNewTokenRequest}) => {
   const [currPage, setCurrPage] = useState(1);
   const [ideas, setIdeas] = useState([]);
   const [filterOption, setFilterOption] = useState(filters.VIEW);
-  const {token} = authenticateReducer;
+  const {token, user} = authenticateReducer;
 
   const getAllIdeas = useCallback(async () => {
     const getAllData = async () => {
@@ -54,7 +54,7 @@ const HomePage = ({authenticateReducer, getNewTokenRequest}) => {
     setFilterOption(e.target.value)
   }
 
-  document.title = "Home";
+  document.title = "Ideas";
   return (
     <div className="container max-w-xl md:max-w-screen-lg mx-auto">
       <div className="mx-auto">
@@ -67,6 +67,7 @@ const HomePage = ({authenticateReducer, getNewTokenRequest}) => {
             <option value={filters.ALPHABET}>Alphabet</option>
             <option value={filters.DATE_ASC}>Newest</option>
             <option value={filters.DATE_DESC}>Oldest</option>
+            <option value={filters.POPULAR}>Popular</option>
             <option value={filters.LIKE}>Upvote</option>
             <option value={filters.DISLIKE}>Downvote</option>
           </select>
@@ -83,6 +84,7 @@ const HomePage = ({authenticateReducer, getNewTokenRequest}) => {
               commentCount={item.comments.length}
               like={item.reactions.length}
               view={item?.viewCount | 0}
+              role={user?.role}
             />
           ))}
         </ul>

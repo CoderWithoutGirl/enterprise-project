@@ -24,8 +24,8 @@ export const login = (formData) =>
 export const register = (formData) =>
   apiInstance.post("/auth/register", { ...formData });
 
-export const refreshToken = (refreshToken) =>
-  apiInstance.post("/auth/refresh-token", { refreshToken: refreshToken });
+export const refreshToken = () =>
+  apiInstance.get("/auth/refresh-token");
 
 export const logout = (refreshToken) =>
   apiInstance.post("/auth/logout", { ...refreshToken });
@@ -36,10 +36,24 @@ export const getAllUser = (token) =>
     headers: { Authorization: `Bearer ${token}` },
   });
 
+export const deleteUser = (token, id) =>
+  apiInstance.delete(`/users/${id}`, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+
 export const getSingleUser = (token, id) =>
   apiInstance.get(`/users/${id}`, {
     headers: { Authorization: `Bearer ${token}` },
   });
+
+export const updateUser = (formData, id, token) =>
+  apiInstance.put(
+    `/users/update/${id}`,
+    { ...formData },
+    {
+      headers: { Authorization: `Bearer ${token}` },
+    }
+  );
 
 export const getUserByDepartment = (token, deparment) =>
   apiInstance.get(`/users/?department=${deparment}`, {
@@ -70,12 +84,9 @@ export const assignStaffToManager = (formData, id, token) =>
   );
 
 export const getUserWithoutDepartment = (token) =>
-  apiInstance.get(
-    `users/getdepartment`,
-    {
-      headers: { Authorization: `Bearer ${token}` },
-    }
-  );
+  apiInstance.get(`users/getdepartment`, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
 
 export const uploadExcelCreateUser = (formData, token) =>
   apiInstance.post("/users/uploadexcel", formData, {
@@ -128,6 +139,11 @@ export const updateDepartment = (formData, id, token) =>
     { headers: { Authorization: `Bearer ${token}` } }
   );
 
+export const deleteDepartment = (token, id) =>
+  apiInstance.delete(`/departments/${id}`, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+
 //Category
 export const createCategory = (formData, token) =>
   apiInstance.post(
@@ -147,7 +163,7 @@ export const getCategory = (token) =>
   });
 
 export const getSingleCategory = (categoryName, token) =>
-  apiInstance.get(`/categories/${categoryName}`, {
+  apiInstance.get(`/categories/ideas/${categoryName}`, {
     headers: { Authorization: `Bearer ${token}` },
   });
 
@@ -192,15 +208,43 @@ export const getSingleIdea = (id, token) =>
     headers: { Authorization: `Bearer ${token}` },
   });
 export const commentToIdea = (id, data, token) =>
-  apiInstance.post(`/ideas/${id}/comment`,{...data}, {
-    headers: { Authorization: `Bearer ${token}` },
-  });
+  apiInstance.post(
+    `/ideas/${id}/comment`,
+    { ...data },
+    {
+      headers: { Authorization: `Bearer ${token}` },
+    }
+  );
 export const reactToIdea = (id, data, token) =>
-  apiInstance.post(`/ideas/${id}/reaction`,{...data}, {
-    headers: { Authorization: `Bearer ${token}` },
-  });
+  apiInstance.post(
+    `/ideas/${id}/reaction`,
+    { ...data },
+    {
+      headers: { Authorization: `Bearer ${token}` },
+    }
+  );
 export const increateView = (id, token) =>
   apiInstance.get(`/ideas/${id}/view`, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+
+export const countIdea = (token) =>
+  apiInstance.get("/ideas/count", {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+
+export const findPost = (token) =>
+  apiInstance.get("/ideas/find-ideas", {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+
+export const findPostOfDepartment = (token) =>
+  apiInstance.get("/ideas/department/count", {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+
+export const StaffPostedOrNotOfDepart = (token) =>
+  apiInstance.get("/ideas/department/find-post", {
     headers: { Authorization: `Bearer ${token}` },
   });
 
@@ -226,3 +270,4 @@ export const updateAcademic = (formData, id, token) =>
   apiInstance.put(`/academic/${id}`, formData, {
     headers: { Authorization: `Bearer ${token}` },
   });
+

@@ -1,4 +1,14 @@
 const AcademicYear = require("../model/academicYear");
+const Idea = require("../model/idea");
+const CategoryModel = require("../model/category");
+const ObjectToCsv = require('objects-to-csv');
+const User = require('../model/user')
+const cloudinary = require('cloudinary')
+const fs = require('fs');
+const archiver = require('archiver');
+const { sendNewEmail } = require("../queue/email.queue");
+const cronJobProcess = require("../processes/cron-job");
+
 
 const createAcademicYear = async (academicYear) => {
   const { startDate, endDate, name, closureDate } = academicYear;
@@ -30,6 +40,7 @@ const createAcademicYear = async (academicYear) => {
   } else {
     const createAcademic = new AcademicYear({ ...academicYear });
     await createAcademic.save();
+    cronJobProcess(sendToQAManager)
     return createAcademic;
   }
 };
@@ -92,9 +103,124 @@ const updateAcademicYear = async (id, academicYear) => {
   }
 };
 
+const archiveAllDocuments = async () => {
+  const autoCreatedDocumentsOutput = fs.createWriteStream(
+    __basedir + `/statics/archiver/auto-created-documents.zip`
+  );
+  const autoCreatedDocumentArchive = archiver("zip", {
+    zlib: { level: 2 },
+  });
+  autoCreatedDocumentsOutput.on("end", function() {
+    console.log("Data has been drained");
+  });
+  autoCreatedDocumentArchive.on("error", function(err) {
+    throw err;
+  });
+
+  autoCreatedDocumentArchive.pipe(autoCreatedDocumentsOutput);
+
+  autoCreatedDocumentArchive.directory(`${__basedir}/statics/documents`, false)
+  
+  await autoCreatedDocumentArchive.finalize();
+}
+
+
+const exportCsvFromDb = async () => {
+  const allIdeaInDb = await Idea.find({isAnonymous: false}).populate('category', 'name');
+  const jsonToParse = allIdeaInDb.map(idea => ({Title: idea.title, Description: idea.description, Category: idea.category.name, Comments: idea.comments.length, "Total Reactions": idea.reactions.length}))
+  return jsonToParse;
+}
+
+const anonymousIdeas = async () => {
+  const ideaInDB = await Idea.find({isAnonymous: true}).populate('category', 'name').populate('user', 'fullname username department');
+    const jsonToParse = ideaInDB.map((idea) => ({
+      Title: idea.title,
+      Description: idea.description,
+      Category: idea.category.name,
+      Comments: idea.comments.length,
+      "Total Reactions": idea.reactions.length,
+      author: idea.user.fullname,
+      username: idea.user.username,
+      department: idea.user.department
+    }));
+  return jsonToParse;
+}
+
+const anonymousComments = async () => {
+  const allIdea = await Idea.find({}).populate({
+    path: "comments",
+    populate: {
+      path: "user",
+      model: "Users",
+      select: "username fullname department",
+    },
+  });
+  const allAnonymousComments = allIdea
+    .map((idea) =>
+      idea.comments.filter((comment) => comment.isAnonymous === true).map(item => ({
+      Username: item.user.username,
+      "Full name": item.user.fullname,
+      Department: item.user.department,
+      "Post ID": idea._id.toString(),
+      "Post title": idea.title
+    }))
+    )
+    .flat();
+  return allAnonymousComments;
+}
+
+const sendToQAManager = async () => {
+  await archiveAllDocuments();
+  const ideasCsv = await exportCsvFromDb();
+  const anonymousIdeaCsv = await anonymousIdeas();
+  const anonymousCommentsCsv = await anonymousComments();
+  const csv = new ObjectToCsv(ideasCsv);
+  await csv.toDisk(`${__basedir}/statics/archiver/report.csv`);
+  const anonymousCommentsCsvExport = new ObjectToCsv(anonymousCommentsCsv);
+  const anonymousIdeasCsvExport = new ObjectToCsv(anonymousIdeaCsv);
+  await anonymousCommentsCsvExport.toDisk(
+    `${__basedir}/statics/archiver/comments-exception.csv`
+  );
+  await anonymousIdeasCsvExport.toDisk(
+    `${__basedir}/statics/archiver/ideas-exception.csv`
+  )
+  const qaAccount = await User.findOne({role: process.env.QAMANAGER});
+  const documentsUploadZipUrl = await cloudinary.v2.utils.download_folder(
+    "documents",
+    { target_public_id: "MyFolder" },
+    (error, result) => result
+  );
+  const attachments = [
+    {
+      path: `${__basedir}/statics/archiver/auto-created-documents.zip`,
+    },
+    {
+      path: `${__basedir}/statics/archiver/report.csv`,
+    },
+    {
+      path: `${__basedir}/statics/archiver/ideas-exception.csv`,
+    },
+    {
+      path: `${__basedir}/statics/archiver/comments-exception.csv`,
+    },
+    {
+      filename: 'uploaded-document.zip',
+      path: documentsUploadZipUrl,
+    },
+  ];
+  sendNewEmail({
+    to: qaAccount.email,
+    subject: "All Document and Idea Reports",
+    attachments: attachments,
+  });
+}
+
 module.exports = {
   createAcademicYear,
   getAcademicYear,
   getAcademicYearById,
   updateAcademicYear,
+  archiveAllDocuments,
+  exportCsvFromDb,
+  sendToQAManager,
 };

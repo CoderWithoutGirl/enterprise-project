@@ -5,19 +5,22 @@ const emailProcess = async (job) => {
     service: "Gmail",
     host: "smtp.gmail.com",
     port: 587,
-    secure: false, // true for 465, false for other ports
+    secure: false,
+    ignoreTLS: true,
     auth: {
       user: process.env.SMTP_USER, //  username
       pass: process.env.SMTP_PASS, // password
     },
     tls: {
+      ciphers: "SSLv3",
       rejectUnauthorized: false,
     },
+    debug: true,
   });
 
   let info = await transporter.sendMail({
     from: "CoderWithOurGirl",
-    ...job,
+    ...job.data,
   });
 
   console.log("Message sent: %s", info.messageId);

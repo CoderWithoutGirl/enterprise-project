@@ -7,7 +7,6 @@ cloudinary.config({
 });
 
 const uploadDocument = async (filePath, filename) => {
-    console.log(filename);
     try {
         const uploadResult = await cloudinary.uploader.upload(filePath, {
             folder: 'documents',

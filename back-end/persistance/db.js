@@ -9,6 +9,16 @@ db.mongoose = mongoose;
 
 db.seedData = async () => {
     try {
+        const departmentCount = await Department.estimatedDocumentCount();
+        if(!departmentCount) {
+            const itMajor = new Department({name: "IT Major", description: "For IT Staff"})
+            const bizMajor = new Department({name: "Business Major", description: "For Business Staff"})
+            const gdMajor = new Department({name: "Graphic Design Major", description: "For Graphic Design Staff"})
+            await itMajor.save();
+            await bizMajor.save();
+            await gdMajor.save();
+        }
+        
         const userInDbCount = await User.estimatedDocumentCount();
         if (!userInDbCount) {
             const admin = new User({
@@ -23,10 +33,10 @@ db.seedData = async () => {
             });
             await admin.save();
             const userTest1 = await new User({
-              username: "usertest1",
-              password: "abc123",
-              fullname: "user test 1",
-              email: "user@gmail.com",
+              username: "mxnghia49@gmail.com",
+              password: "Darkraiser49@",
+              fullname: "Application QA Manager",
+              email: "mxnghia49@gmail.com",
               dateOfBirth: new Date(),
               age: 21,
               gender: "Male",
@@ -34,24 +44,26 @@ db.seedData = async () => {
             });
             await userTest1.save();
             const userTest2 = await new User({
-              username: "usertest2",
-              password: "abc123",
+              username: "nghiamxgcd18432@fpt.edu.vn",
+              password: "Darkraiser49@",
               fullname: "user test 2",
-              email: "user2@gmail.com",
+              email: "nghiamxgcd18432@fpt.edu.vn",
               dateOfBirth: new Date(),
               age: 21,
               gender: "Male",
+              department: "IT Major",
               role: process.env.QACOORDINATOR,
             });
             await userTest2.save();
             const userTest3 = await new User({
-              username: "usertest3",
+              username: "usertest3@gmail.com",
               password: "abc123",
               fullname: "user test 3",
               email: "user3@gmail.com",
               dateOfBirth: new Date(),
               age: 21,
               gender: "Male",
+              department: "IT Major",
               role: process.env.STAFF,
             });
             await userTest3.save();

@@ -11,7 +11,8 @@ import {
   confirmUserExcel,
   cancelUserExcel,
   getUserWithoutDepartment,
-  assignStaffToManager
+  assignStaffToManager,
+  deleteUser,
 } from "../../apiServices";
 import { getNewToken } from "../../store/actions/authenticateAction";
 import Modal from "../../components/modal";
@@ -21,9 +22,12 @@ import DetailPage from "./detail";
 import AssignWithoutDepart from "./AssignWithoutDepart";
 import SpreadSheet from "react-spreadsheet";
 import { toast } from "react-toastify";
-import { IdentificationIcon, BackspaceIcon, UploadIcon } from '@heroicons/react/solid'
+import {
+  IdentificationIcon,
+  BackspaceIcon,
+  UploadIcon,
+} from "@heroicons/react/solid";
 import { roles } from "../../constants/role";
-
 
 const userTableHead = [
   "Fullname",
@@ -63,7 +67,7 @@ const UserPage = ({ getNewTokenRequest, token }) => {
 
   useEffect(() => {
     loadUser();
-    document.title = "Users"
+    document.title = "Users";
   }, [loadUser]);
 
   const hangleSearch = (keyword) => {
@@ -92,19 +96,44 @@ const UserPage = ({ getNewTokenRequest, token }) => {
     console.log(id);
     const loadSingleUser = async () => {
       const loadSingleUser = async () => {
-        const { data, status } = await getSingleUser(token, id)
+        const { data, status } = await getSingleUser(token, id);
         console.log(data);
-        return { data, status }
-      }
-      const { status, data } = await tokenRequestInterceptor(loadSingleUser, getNewTokenRequest);
+        return { data, status };
+      };
+      const { status, data } = await tokenRequestInterceptor(
+        loadSingleUser,
+        getNewTokenRequest
+      );
 
       if (status === 200) {
         setUser((prev) => data);
       }
-    }
+    };
     loadSingleUser();
-    setOpenDetail(prev => !prev);
-  }
+    setOpenDetail((prev) => !prev);
+  };
+
+  const deleteHandler = (e, id) => {
+    e.preventDefault();
+    if (window.confirm("Are you sure you want to delete")) {
+      const deletedUser = async () => {
+        const deletedUser = async () => {
+          const { data, status } = await deleteUser(token, id);
+          return { data, status };
+        };
+        const { status, data } = await tokenRequestInterceptor(
+          deletedUser,
+          getNewTokenRequest
+        );
+
+        if (status === 200) {
+          toast.error("Deleted User Successfully");
+        }
+      };
+      deletedUser();
+    }
+    loadUser();
+  };
 
   const uploadFile = (e) => {
     setFile(e.target.files[0]);
@@ -162,7 +191,6 @@ const UserPage = ({ getNewTokenRequest, token }) => {
     }
   };
 
-
   const getWithoutDepartment = async () => {
     const loadAllDataOfUser = async () => {
       const { data, status } = await getUserWithoutDepartment(token);
@@ -177,10 +205,10 @@ const UserPage = ({ getNewTokenRequest, token }) => {
     }
   };
 
-  const handleAssign = async() =>{
+  const handleAssign = async () => {
     await getWithoutDepartment();
     setOpenAssign(true);
-  }
+  };
 
   console.log(userAssign);
 
@@ -192,7 +220,7 @@ const UserPage = ({ getNewTokenRequest, token }) => {
         id,
         token
       );
-      
+
       return { data, status };
     };
 
@@ -208,12 +236,12 @@ const UserPage = ({ getNewTokenRequest, token }) => {
     }
   };
 
-
   const renderTableHead = (item, index) => (
     <th key={index} className="p-2 whitespace-nowrap">
       <div
-        className={`font-semibold ${item.toLowerCase() === "actions" ? "text-center" : "text-left"
-          }`}
+        className={`font-semibold ${
+          item.toLowerCase() === "actions" ? "text-center" : "text-left"
+        }`}
       >
         {item}
       </div>
@@ -242,8 +270,18 @@ const UserPage = ({ getNewTokenRequest, token }) => {
       </td>
       <td className="p-2 whitespace-nowrap">
         <div className="flex gap-3">
-          <Button icon={IdentificationIcon} type="warning" title="Detail" onClick={(e) => detailHandler(e, item.id)} />
-          <Button icon={BackspaceIcon} type="danger" title="Delete" />
+          <Button
+            icon={IdentificationIcon}
+            type="warning"
+            title="Detail"
+            onClick={(e) => detailHandler(e, item.id)}
+          />
+          <Button
+            onClick={(e) => deleteHandler(e, item.id)}
+            icon={BackspaceIcon}
+            type="danger"
+            title="Delete"
+          />
         </div>
       </td>
     </tr>
@@ -264,10 +302,12 @@ const UserPage = ({ getNewTokenRequest, token }) => {
         assignButtonHandler={handleAssign}
       />
       <Modal open={open} setOpen={setOpen}>
-        <RegisterPage close={() => setOpen(!open)} loadUser={loadUser} token={token} getNewTokenRequest={getNewTokenRequest} />
-      </Modal>
-      <Modal open={openDetail} setOpen={setOpenDetail}>
-        <DetailPage user={user} />
+        <RegisterPage
+          close={() => setOpen(!open)}
+          loadUser={loadUser}
+          token={token}
+          getNewTokenRequest={getNewTokenRequest}
+        />
       </Modal>
 
       <Modal open={openImport} setOpen={setOpenImport}>
@@ -337,7 +377,12 @@ const UserPage = ({ getNewTokenRequest, token }) => {
       <Modal open={openAssign} setOpen={setOpenAssign}>
         <div className="w-full">
           <Form title="Assign QA COORDINATOR">
-            <AssignWithoutDepart role={roles.QA_MANAGER} handleSubmit={assignStaff} users={userAssign} setOpen={()=> setOpenAssign(!openAssign)} />
+            <AssignWithoutDepart
+              role={roles.QA_MANAGER}
+              handleSubmit={assignStaff}
+              users={userAssign}
+              setOpen={() => setOpenAssign(!openAssign)}
+            />
           </Form>
         </div>
       </Modal>
@@ -357,4 +402,4 @@ const mapDispatchToProps = (dispatch) => {
   };
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(UserPage)
+export default connect(mapStateToProps, mapDispatchToProps)(UserPage);
