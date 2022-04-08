@@ -5,7 +5,7 @@ import Table from "../../components/table";
 import { getNewToken } from "../../store/actions/authenticateAction";
 import {useParams} from 'react-router-dom'
 import { toast } from "react-toastify";
-import { getUserByDepartment, tokenRequestInterceptor,getSingleUser, assignStaff } from "../../apiServices";
+import { getUserByDepartment, tokenRequestInterceptor,getSingleUser, assignStaff, deleteUser, reactiveUser } from "../../apiServices";
 import { roles } from "../../constants/role";
 import Modal from "../../components/modal";
 import Form from "../../components/form";
@@ -13,8 +13,10 @@ import Assign from './Assign'
 import {
   IdentificationIcon,
   BackspaceIcon,
-  PencilAltIcon
+  PencilAltIcon,
+  RefreshIcon
 } from "@heroicons/react/solid";
+import Detail from '../users/detail';
 
 
 const userTableHead = [
@@ -32,6 +34,8 @@ const UserInDepartmentPage = ({ getNewTokenRequest, token }) => {
   const [users, setUsers] = useState([]);
     const [editOpen, setEditOpen] = useState(false);
     const [valueAssign, setValueAssign] = useState({});
+    const [openDetail, setOpenDetail] = useState(false);
+    const [user, setUser] = useState({});
 
   const {department} = useParams();
 
@@ -50,6 +54,27 @@ const UserInDepartmentPage = ({ getNewTokenRequest, token }) => {
       setUsers((prev) => data);
     }
   }, [token, getNewTokenRequest, department]);
+
+  const hangleSearch = (keyword) => {
+    if (keyword) {
+      const search = async () => {
+        const loadAllDataOfSearchUser = async () => {
+          const { data, status } = await getUserByDepartment(token, department, keyword);
+          return { data, status };
+        };
+        const { status, data } = await tokenRequestInterceptor(
+          loadAllDataOfSearchUser,
+          getNewTokenRequest
+        );
+        if (status === 200) {
+          setUsers((prev) => data);
+        }
+      };
+      search();
+    } else {
+      loadUser();
+    }
+  };
 
   useEffect(() => {loadUser()} , [loadUser]);
 
@@ -73,6 +98,26 @@ const UserInDepartmentPage = ({ getNewTokenRequest, token }) => {
      };
      loadSingleUser();
      setEditOpen((prev) => !prev);
+   };
+
+   const activeAccountHandler = async (e, id) => {
+     e.preventDefault();
+     const activeUser = async () => {
+       const reactiveUserAccount = async () => {
+         const { data, status } = await reactiveUser(token, id);
+         return { data, status };
+       };
+       const { status } = await tokenRequestInterceptor(
+         reactiveUserAccount,
+         getNewTokenRequest
+       );
+
+       if (status === 200) {
+         toast.error("Deleted User Successfully");
+         loadUser();
+       }
+     };
+     activeUser();
    };
 
   const assign = async (e) => {
@@ -100,6 +145,48 @@ const UserInDepartmentPage = ({ getNewTokenRequest, token }) => {
     else {
        toast.error(data.message);
     }
+  };
+
+  const detailHandler = (e, id) => {
+    e.preventDefault();
+    console.log(id);
+    const loadSingleUser = async () => {
+      const loadSingleUser = async () => {
+        const { data, status } = await getSingleUser(token, id);
+        console.log(data);
+        return { data, status };
+      };
+      const { status, data } = await tokenRequestInterceptor(
+        loadSingleUser,
+        getNewTokenRequest
+      );
+
+      if (status === 200) {
+        setUser((prev) => data);
+      }
+    };
+    loadSingleUser();
+    setOpenDetail((prev) => !prev);
+  };
+
+  const deleteHandler = (e, id) => {
+    e.preventDefault();
+    const dectiveUser = async () => {
+      const deletedUser = async () => {
+        const { data, status } = await deleteUser(token, id);
+        return { data, status };
+      };
+      const { status } = await tokenRequestInterceptor(
+        deletedUser,
+        getNewTokenRequest
+      );
+
+      if (status === 200) {
+        toast.error("Deleted User Successfully");
+        loadUser();
+      }
+    };
+    dectiveUser();
   };
 
 
@@ -143,8 +230,27 @@ const UserInDepartmentPage = ({ getNewTokenRequest, token }) => {
             title="Assign"
             onClick={(e) => editHandler(e, item.id)}
           />
-          <Button icon={IdentificationIcon} type="warning" title="Detail" />
-          <Button icon={BackspaceIcon} type="danger" title="Delete" />
+          <Button
+            onClick={(e) => detailHandler(e, item.id)}
+            icon={IdentificationIcon}
+            type="warning"
+            title="Detail"
+          />
+          {item.deleted ? (
+            <Button
+              onClick={(e) => activeAccountHandler(e, item.id)}
+              icon={RefreshIcon}
+              type="success"
+              title="Reactive"
+            />
+          ) : (
+            <Button
+              onClick={(e) => deleteHandler(e, item.id)}
+              icon={BackspaceIcon}
+              type="danger"
+              title="Deactive"
+            />
+          )}
         </div>
       </td>
     </tr>
@@ -159,8 +265,7 @@ const UserInDepartmentPage = ({ getNewTokenRequest, token }) => {
         renderData={renderTableBody}
         renderHead={renderTableHead}
         tableTitle={"User Table"}
-        //search={hangleSearch}
-        // createButtonHandler={() => setOpen(true)}
+        search={hangleSearch}
       />
       <Modal open={editOpen} setOpen={setEditOpen}>
         <div className="w-full">
@@ -173,6 +278,9 @@ const UserInDepartmentPage = ({ getNewTokenRequest, token }) => {
             />
           </Form>
         </div>
+      </Modal>
+      <Modal open={openDetail} setOpen={setOpenDetail}>
+        <Detail user={user} />
       </Modal>
     </div>
   );

@@ -1,11 +1,12 @@
-const { 
-    createDepartment, 
-    getAllDepartments, 
-    findIdDepartment, 
-    deleteDepartment,
-    updateDepartment,
-    searchDepartment
-} = require('../service/department.service');
+const {
+  createDepartment,
+  getAllDepartments,
+  findIdDepartment,
+  deleteDepartment,
+  updateDepartment,
+  searchDepartment,
+  reactiveDepartment,
+} = require("../service/department.service");
 
 const departmentController = {
     createDepartment: async (req, res) => {
@@ -53,6 +54,16 @@ const departmentController = {
             res.status(400).json({ message: error.message, status: 400 });
         }
     },
+    reactive: async (req, res) => {
+        try {
+            await reactiveDepartment(req.params.id);
+            res.status(200).json({message: "Department reactived"})
+        } catch (error) {
+            res.status(200).json({ message: error.message });
+
+        }
+    }
+    ,
 
     updateDepartment: async (req, res) =>{
         const { id } = req.params;

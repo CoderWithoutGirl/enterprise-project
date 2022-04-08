@@ -91,12 +91,14 @@ const Table = ({
                 className="w-[80px] sm:w-1/5 rounded-md mt-1 border-gray-300"
               />
               <div className="w-fit flex gap-3 justify-around items-center">
-               {assignButtonHandler && <Button
-                  icon={PlusCircleIcon}
-                  title="Assign"
-                  type="secondary"
-                  onClick={assignButtonHandler}
-                />}
+                {assignButtonHandler && (
+                  <Button
+                    icon={PlusCircleIcon}
+                    title="Assign"
+                    type="secondary"
+                    onClick={assignButtonHandler}
+                  />
+                )}
                 {importButtonHandler && (
                   <Button
                     icon={UploadIcon}
@@ -105,12 +107,14 @@ const Table = ({
                     onClick={importButtonHandler}
                   />
                 )}
-                <Button
-                  icon={PlusCircleIcon}
-                  title="Create"
-                  type="primary"
-                  onClick={createButtonHandler}
-                />
+                {createButtonHandler && (
+                  <Button
+                    icon={PlusCircleIcon}
+                    title="Create"
+                    type="primary"
+                    onClick={createButtonHandler}
+                  />
+                )}
               </div>
             </div>
           </header>
@@ -152,9 +156,10 @@ const Table = ({
                       key={index}
                       aria-current="page"
                       onClick={() => selectPage(index)}
-                      className={`z-10 bg-indigo-50 ${currPage === index &&
+                      className={`z-10 bg-indigo-50 ${
+                        currPage === index &&
                         "border-indigo-500 text-indigo-600"
-                        } inline-flex items-center px-4 py-2 border-2 text-sm font-medium`}
+                      } inline-flex items-center px-4 py-2 border-2 text-sm font-medium`}
                     >
                       {item + 1}
                     </button>

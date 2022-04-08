@@ -3,14 +3,10 @@ import { connect } from "react-redux";
 import Table from "../components/table";
 import { getNewToken } from "../store/actions/authenticateAction";
 import { useParams } from "react-router-dom";
-import { toast } from "react-toastify";
 import {
   getSingleCategory,
   tokenRequestInterceptor,
 } from "../apiServices";
-import {
-  DownloadIcon
-} from "@heroicons/react/solid";
 
 const ideaTableHead = [
   "Title",
@@ -29,9 +25,9 @@ const ItemInCategoryPage = ({ getNewTokenRequest, token }) => {
 
   document.title = `List Ideas In ${category} Department`;
 
-  const loadUser = useCallback(async () => {
+  const loadIdeas = useCallback(async () => {
     const loadAllDataOfUser = async () => {
-      const { data, status } = await getSingleCategory(category, token);
+      const { data, status } = await getSingleCategory(category, "" ,token);
       return { data, status };
     };
     const { status, data } = await tokenRequestInterceptor(
@@ -44,9 +40,33 @@ const ItemInCategoryPage = ({ getNewTokenRequest, token }) => {
   }, [token, getNewTokenRequest, category]);
 
   useEffect(() => {
-    loadUser();
-  }, [loadUser]);
+    loadIdeas();
+  }, [loadIdeas]);
 
+  const hangleSearch = (keyword) => {
+    if (keyword) {
+      const search = async () => {
+        const loadDataSearchSingleCate = async () => {
+          const { data, status } = await getSingleCategory(
+            category,
+            keyword,
+            token
+          );
+          return { data, status };
+        };
+        const { status, data } = await tokenRequestInterceptor(
+          loadDataSearchSingleCate,
+          getNewTokenRequest
+        );
+        if (status === 200) {
+          setAllIdeas((prev) => data.data.ideas);
+        }
+      };
+      search();
+    } else {
+      loadIdeas();
+    }
+  };
 
   const renderTableHead = (item, index) => (
     <th key={index} className="p-2 whitespace-nowrap">
@@ -81,8 +101,17 @@ const ItemInCategoryPage = ({ getNewTokenRequest, token }) => {
         <div className="text-left">{item?.reactions.length} Reactions</div>
       </td>
       <td className="p-2 whitespace-nowrap">
-        <a className="bg-blue-400 text-white rounded-md px-3 py-1" target="_blank" href={item?.documentLink || "#"}>Download</a>  
-        </td>
+        {item?.documentLink && (
+          <a
+            className="bg-blue-400 text-white rounded-md px-3 py-1"
+            target="_blank"
+            rel="noreferrer"
+            href={item?.documentLink || "#"}
+          >
+            Download
+          </a>
+        )}
+      </td>
     </tr>
   );
 
@@ -95,8 +124,7 @@ const ItemInCategoryPage = ({ getNewTokenRequest, token }) => {
         renderData={renderTableBody}
         renderHead={renderTableHead}
         tableTitle={`Category: ${category}`}
-        //search={hangleSearch}
-        // createButtonHandler={() => setOpen(true)}
+        search={hangleSearch}
       />
     </div>
   );

@@ -39,7 +39,11 @@ const registerFormValidationSchema = yup.object({
   //   .min(1, "You must be at least 1 years")
   //   .max(100, "You must be at most 100 years"),
   // address: yup.string().required("Address must be filled").max(500),
-  dateOfBirth: yup.date().required("Date of Birth is required"),
+  dateOfBirth: yup
+    .date()
+    .required("Date of Birth is required")
+    .min(new Date(1950, 0, 1), "Your Birthday cannot before 1/1/1950")
+    .max(new Date(2004, 0, 1), "Your Birthday cannot after 1/1/2004"),
 });
 
 
@@ -136,8 +140,8 @@ const RegisterPage = ({ close, loadUser, token, getNewTokenRequest }) => {
           <DateTimePicker
             placeholder="Date Of Birth"
             {...register("dateOfBirth")}
-            max={new Date()}
-            min={new Date("1/1/1950")}
+            max={`2004-01-01`}
+            min={"1950-01-01"}
           />
           <ErrorMessage
             name="dateOfBirth"
@@ -156,7 +160,7 @@ const RegisterPage = ({ close, loadUser, token, getNewTokenRequest }) => {
           <SelectOption
             {...register("department")}
             defaultValue={getValues("department")}
-            listData={departments}
+            listData={departments.filter((item) => !item.deleted)}
           />
           <Button
             onClick={handleSubmit(onSubmit)}

@@ -7,11 +7,14 @@ const User = require('../model/user');
 
 passport.use(new LocalStrategy(
     function(username, password, next) {
-      User.findOne({ username: username }, function (err, user) {
-        if (err) { return next(err); }
+      User.findOne({ username: username }, function(err, user) {
+        console.log(user);
+        if (err) {
+          return next(err);
+        }
         if (!user) return next(null, false);
         user.validatePassword(password, next); //req.user;
-      });
+      })
     }
 ));
 

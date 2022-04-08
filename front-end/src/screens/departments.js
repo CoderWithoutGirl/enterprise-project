@@ -15,8 +15,8 @@ import {
   updateDepartment,
   findDepartmentByID,
   searchDepartByName,
-  deleteDepartment
-
+  deleteDepartment,
+  reactiveDepartment
 } from "../apiServices";
 import { toast } from "react-toastify";
 import { ErrorMessage } from "@hookform/error-message";
@@ -27,7 +27,8 @@ import {
   PencilAltIcon,
   BackspaceIcon,
   XCircleIcon,
-  PlusCircleIcon
+  PlusCircleIcon,
+  RefreshIcon
 } from "@heroicons/react/solid";
 
 
@@ -148,6 +149,7 @@ function Departments({ getNewTokenRequest, token, updateRouter }) {
   //Delete
   const deleteDep = async (event) => {
     event.preventDefault();
+    console.log(departmentDelete);
     const deleteDepart = async () => {
       const { data, status } = await deleteDepartment(
         token,
@@ -170,12 +172,19 @@ function Departments({ getNewTokenRequest, token, updateRouter }) {
   }
 
 
-  const handleDelete = async (e, item) => {
+  const handleDelete = (e, item) => {
     e.preventDefault();
 
     setDeleteOpen((prev) => !prev);
 
     setDepartmentDelete(item);
+  }
+
+  const activeDepartmentHandler = async (e, id) => {
+    const {status} = await reactiveDepartment(token, id);
+    if(status === 200) {
+      loadDepartment()
+    }
   }
 
   const editHandler = (e, _id) => {
@@ -236,7 +245,21 @@ function Departments({ getNewTokenRequest, token, updateRouter }) {
             title="Edit"
             onClick={(e) => editHandler(e, item._id)}
           />
-          <Button icon={BackspaceIcon} type="danger" title="Delete" onClick={async (e) => handleDelete(e, item)} />
+          {item.deleted ? (
+            <Button
+              onClick={(e) => activeDepartmentHandler(e, item._id)}
+              icon={RefreshIcon}
+              type="success"
+              title="Reactive"
+            />
+          ) : (
+            <Button
+              onClick={(e) => handleDelete(e, item)}
+              icon={BackspaceIcon}
+              type="danger"
+              title="Deactive"
+            />
+          )}
         </div>
       </td>
     </tr>

@@ -36,6 +36,14 @@ userRouter.delete(
   ],
   userController.delete
 );
+userRouter.get(
+  "/reactive/:id",
+  [
+    passport.authenticate("jwt", { session: false }),
+    authorize([process.env.ADMIN]),
+  ],
+  userController.reactive
+);
 
 userRouter.get(
   "/getdepartment",

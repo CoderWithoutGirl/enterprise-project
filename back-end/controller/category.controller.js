@@ -34,7 +34,8 @@ const categoryController = {
     },
     getAllIdeaInCategory: async (req, res) => {
         const {name} = req.params;
-        const data = await getAllIdeaWithCategoryName(name);
+        const {title} = req.query;
+        const data = await getAllIdeaWithCategoryName(name, title);
         res.status(200).json({data})
     },
 
