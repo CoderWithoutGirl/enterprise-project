@@ -37,8 +37,8 @@ app.use("/statics", express.static(path.join(__dirname, "statics")));
 app.use(passport.initialize());
 app.use(
   cors({
-    origin: "*",
-    credentials: false,
+    origin: ["http://localhost:3000", "http://localhost"],
+    credentials: true,
   })
 );
 app.use(

@@ -270,14 +270,13 @@ const SideBar = ({
               </>
             )}
             <li className="w-full">
-              <Link
-                to="/"
+              <div
                 onClick={handleLogout}
                 className="flex items-center p-2 text-base font-normal rounded-lg text-white hover:bg-gray-100 dark:hover:bg-gray-700"
               >
                 <LogoutIcon className="text-gray-500 w-5 h-5" />
                 <span className="hidden md:inline-block ml-3">Logout</span>
-              </Link>
+              </div>
             </li>
           </ul>
         </div>

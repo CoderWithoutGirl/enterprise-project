@@ -65,7 +65,6 @@ const LoginPage = ({ submitLoginForm }) => {
               />
               <Password
                 {...register("password")}
-                type="password"
                 placeholder="Password"
               />
               <ErrorMessage
@@ -76,7 +75,7 @@ const LoginPage = ({ submitLoginForm }) => {
                 )}
               />
 
-              <div className="w-full flex items-center justify-between">
+              {/* <div className="w-full flex items-center justify-between">
                 <div className="flex items-center">
                   <input
                     id="remember-me"
@@ -100,7 +99,7 @@ const LoginPage = ({ submitLoginForm }) => {
                     Forgot your password?
                   </a>
                 </div>
-              </div>
+              </div> */}
 
               <div>
                 <Button

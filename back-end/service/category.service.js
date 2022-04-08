@@ -27,9 +27,7 @@ const getCategory= async () =>{
 }
 
 const getCategoryByName = async (name) => {
-    const filterCategory = await Category.find().sort([["createdAt", "asc"]]);
-    const results = filterCategory.filter(item => item.name.includes(name));
-    return results;
+    return await Category.find({name: new RegExp(name, 'i')}).sort([["createdAt", "asc"]]);
 }
 
 const findIdCategory = async (id) =>{
@@ -40,8 +38,8 @@ const findIdCategory = async (id) =>{
     return categoryDb;
 }
 
-const getAllIdeaWithCategoryName = async (name) => {
-    return await Category.findOne({name}).populate({path: 'ideas', populate: {path: 'user'}});
+const getAllIdeaWithCategoryName = async (name, title="") => {
+    return await Category.findOne({name}).populate({path: 'ideas', match: {title: new RegExp(title, 'i')}, populate: {path: 'user'}});
 }
 
 const updateCategory = async(id, description) =>{

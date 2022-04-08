@@ -62,7 +62,11 @@ const HomePage = ({authenticateReducer, getNewTokenRequest}) => {
           <h3 className="font-black text-gray-600 text-3xl">
             Your next favorite thing
           </h3>
-          <select className="border-none" value={filterOption} onChange={handleFilterChange}>
+          <select
+            className="border-none"
+            value={filterOption}
+            onChange={handleFilterChange}
+          >
             <option value={filters.VIEW}>View</option>
             <option value={filters.ALPHABET}>Alphabet</option>
             <option value={filters.DATE_ASC}>Newest</option>
@@ -88,46 +92,49 @@ const HomePage = ({authenticateReducer, getNewTokenRequest}) => {
             />
           ))}
         </ul>
-        <div className="w-full overflow-x-auto flex justify-center p-5">
-          <nav
-            className="relative z-0 inline-flex rounded-md shadow-sm -space-x-px"
-            aria-label="Pagination"
-          >
-            <button
-              onClick={prevPage}
-              disabled={currPage === 1}
-              className={`${
-                currPage === 1 ? "cursor-not-allowed" : "cursor-pointer"
-              } relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50`}
+        {pages >= 2 && (
+          <div className="w-full overflow-x-auto flex justify-center p-5">
+            <nav
+              className="relative z-0 inline-flex rounded-md shadow-sm -space-x-px"
+              aria-label="Pagination"
             >
-              <span className="sr-only">Previous</span>
-              <ChevronLeftIcon className="h-5 w-5" aria-hidden="true" />
-            </button>
-            {pages >= 1 &&
-              [...Array(pages).keys()].map((page, index) => (
-                <button
-                  key={index}
-                  onClick={() => setCurrPage(page + 1)}
-                  aria-current="page"
-                  className={`z-10 bg-indigo-50 ${
-                    currPage === page + 1 && "border-indigo-500 text-indigo-600"
-                  } inline-flex items-center px-4 py-2 border-2 text-sm font-medium`}
-                >
-                  {page + 1}
-                </button>
-              ))}
-            <button
-              onClick={nextPage}
-              disabled={currPage === pages}
-              className={`${
-                currPage === pages ? "cursor-not-allowed" : "cursor-pointer"
-              } relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50`}
-            >
-              <span className="sr-only">Next</span>
-              <ChevronRightIcon className="h-5 w-5" aria-hidden="true" />
-            </button>
-          </nav>
-        </div>
+              <button
+                onClick={prevPage}
+                disabled={currPage === 1}
+                className={`${
+                  currPage === 1 ? "cursor-not-allowed" : "cursor-pointer"
+                } relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50`}
+              >
+                <span className="sr-only">Previous</span>
+                <ChevronLeftIcon className="h-5 w-5" aria-hidden="true" />
+              </button>
+              {pages >= 1 &&
+                [...Array(pages).keys()].map((page, index) => (
+                  <button
+                    key={index}
+                    onClick={() => setCurrPage(page + 1)}
+                    aria-current="page"
+                    className={`z-10 bg-indigo-50 ${
+                      currPage === page + 1 &&
+                      "border-indigo-500 text-indigo-600"
+                    } inline-flex items-center px-4 py-2 border-2 text-sm font-medium`}
+                  >
+                    {page + 1}
+                  </button>
+                ))}
+              <button
+                onClick={nextPage}
+                disabled={currPage === pages}
+                className={`${
+                  currPage === pages ? "cursor-not-allowed" : "cursor-pointer"
+                } relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50`}
+              >
+                <span className="sr-only">Next</span>
+                <ChevronRightIcon className="h-5 w-5" aria-hidden="true" />
+              </button>
+            </nav>
+          </div>
+        )}
       </div>
     </div>
   );

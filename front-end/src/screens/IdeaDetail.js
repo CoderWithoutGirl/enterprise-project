@@ -50,7 +50,7 @@ const IdeaDetail = ({ authenticateReducer, getNewTokenRequest }) => {
       loadAcademicYear,
       getNewTokenRequest
     );
-    if (status === 200) {
+    if (status === 200 && data.length > 0) {
       const newestYear = data[data.length - 1];
       const closureDate = new Date(newestYear.closureDate);
       const finalDate = new Date(newestYear.endDate);

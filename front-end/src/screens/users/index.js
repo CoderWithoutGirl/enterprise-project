@@ -13,6 +13,7 @@ import {
   getUserWithoutDepartment,
   assignStaffToManager,
   deleteUser,
+  reactiveUser
 } from "../../apiServices";
 import { getNewToken } from "../../store/actions/authenticateAction";
 import Modal from "../../components/modal";
@@ -26,6 +27,7 @@ import {
   IdentificationIcon,
   BackspaceIcon,
   UploadIcon,
+  RefreshIcon
 } from "@heroicons/react/solid";
 import { roles } from "../../constants/role";
 
@@ -115,24 +117,42 @@ const UserPage = ({ getNewTokenRequest, token }) => {
 
   const deleteHandler = (e, id) => {
     e.preventDefault();
-    if (window.confirm("Are you sure you want to delete")) {
-      const deletedUser = async () => {
-        const deletedUser = async () => {
-          const { data, status } = await deleteUser(token, id);
-          return { data, status };
-        };
-        const { status, data } = await tokenRequestInterceptor(
-          deletedUser,
-          getNewTokenRequest
-        );
+   const dectiveUser = async () => {
+     const deletedUser = async () => {
+       const { data, status } = await deleteUser(token, id);
+       return { data, status };
+     };
+     const { status } = await tokenRequestInterceptor(
+       deletedUser,
+       getNewTokenRequest
+     );
 
-        if (status === 200) {
-          toast.error("Deleted User Successfully");
-        }
+     if (status === 200) {
+       toast.error("Deleted User Successfully");
+       loadUser();
+     }
+   };
+   dectiveUser();
+  };
+
+  const activeAccountHandler = async (e, id) => {
+    e.preventDefault();
+    const activeUser = async () => {
+      const reactiveUserAccount = async () => {
+        const { data, status } = await reactiveUser(token, id);
+        return { data, status };
       };
-      deletedUser();
-    }
-    loadUser();
+      const { status } = await tokenRequestInterceptor(
+        reactiveUserAccount,
+        getNewTokenRequest
+      );
+
+      if (status === 200) {
+        toast.error("Deleted User Successfully");
+        loadUser();
+      }
+    };
+    activeUser();
   };
 
   const uploadFile = (e) => {
@@ -210,8 +230,6 @@ const UserPage = ({ getNewTokenRequest, token }) => {
     setOpenAssign(true);
   };
 
-  console.log(userAssign);
-
   const assignStaff = async (id) => {
     // e.preventDefault();
     const assignStaffRequest = async () => {
@@ -276,12 +294,21 @@ const UserPage = ({ getNewTokenRequest, token }) => {
             title="Detail"
             onClick={(e) => detailHandler(e, item.id)}
           />
-          <Button
-            onClick={(e) => deleteHandler(e, item.id)}
-            icon={BackspaceIcon}
-            type="danger"
-            title="Delete"
-          />
+          {item.deleted ? (
+            <Button
+              onClick={(e) => activeAccountHandler(e, item.id)}
+              icon={RefreshIcon}
+              type="success"
+              title="Reactive"
+            />
+          ) : (
+            <Button
+              onClick={(e) => deleteHandler(e, item.id)}
+              icon={BackspaceIcon}
+              type="danger"
+              title="Deactive"
+            />
+          )}
         </div>
       </td>
     </tr>
@@ -308,6 +335,10 @@ const UserPage = ({ getNewTokenRequest, token }) => {
           token={token}
           getNewTokenRequest={getNewTokenRequest}
         />
+      </Modal>
+
+      <Modal open={openDetail} setOpen={setOpenDetail}>
+        <DetailPage user={user} />
       </Modal>
 
       <Modal open={openImport} setOpen={setOpenImport}>
@@ -354,6 +385,7 @@ const UserPage = ({ getNewTokenRequest, token }) => {
                       <input
                         type="file"
                         className="opacity-0"
+                        accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"
                         onChange={uploadFile}
                       />
                     </label>

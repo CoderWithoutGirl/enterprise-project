@@ -1,7 +1,7 @@
 
 const Footer = () => {
     return (
-      <footer className="text-center bg-gray-900 text-white flex flex-col items-center">
+      <footer className="w-full text-center bg-gray-900 text-white flex flex-col items-center">
         <div className="container px-6 pt-6 ">
           
           <div className="grid lg:grid-cols-4 sm:grid-cols-2">
@@ -16,12 +16,12 @@ const Footer = () => {
                   <p className="flex justify-center ">
                   <svg 
                     xmlns="http://www.w3.org/2000/svg" 
-                    class="h-6 w-6 text-center" 
+                    className="h-6 w-6 text-center" 
                     fill="none" 
                     viewBox="0 0 24 24" 
                     stroke="currentColor" 
-                    stroke-width="2">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M20 12H4" />
+                    strokeWidth="2">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M20 12H4" />
                   </svg>
                   </p>
                 </li>
@@ -29,7 +29,7 @@ const Footer = () => {
                   <p className="flex justify-center ">
                     <svg 
                       xmlns="http://www.w3.org/2000/svg" 
-                      class="h-4 w-4 mt-1 mr-3" 
+                      className="h-4 w-4 mt-1 mr-3" 
                       viewBox="0 0 20 20" 
                       fill="currentColor">
                       <path d="M2 3a1 1 0 011-1h2.153a1 1 0 01.986.836l.74 4.435a1 1 0 01-.54 1.06l-1.548.773a11.037 11.037 0 006.105 6.105l.774-1.548a1 1 0 011.059-.54l4.435.74a1 1 0 01.836.986V17a1 1 0 01-1 1h-2C7.82 18 2 12.18 2 5V3z" />
@@ -40,7 +40,7 @@ const Footer = () => {
                   <p className="flex justify-center ">
                       <svg 
                         xmlns="http://www.w3.org/2000/svg" 
-                        class="h-5 w-5 mt-1 mr-3" 
+                        className="h-5 w-5 mt-1 mr-3" 
                         viewBox="0 0 20 20" 
                         fill="currentColor">
                         <path d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884z" />

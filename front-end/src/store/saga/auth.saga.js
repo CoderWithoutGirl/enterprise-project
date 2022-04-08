@@ -18,6 +18,8 @@ function* postLoginForm(action) {
     if (status === 200) {
       yield put(loginSuccess(data));
       return;
+    } else if(status === 400) {
+      return toast.error(data.message);
     } else {
       return toast.error("Unauthorize");
     }

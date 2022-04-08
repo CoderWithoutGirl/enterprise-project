@@ -7,35 +7,35 @@ const CryptoJS = require("crypto-js");
 const getAllUser = async () => {
   const qaManager = await User.findOne({ role: process.env.QAMANAGER })
     .sort([["createdAt", "asc"]])
-    .where("deleted")
-    .ne(true);
   const userDb = await User.find({ role: process.env.STAFF })
     .sort([["createdAt", "asc"]])
-    .where("deleted")
-    .ne(true);
 
   return [qaManager, ...userDb];
 };
 
 const getUserByUsername = async (username) => {
-  const listUserInDb = await User.find()
+   const qaManager = await User.findOne({
+     role: process.env.QAMANAGER,
+     fullname: new RegExp(username, "i"),
+   });
+  const listUserInDb = await User.find({role: process.env.STAFF, fullname: new RegExp(username, 'i')})
     .sort([["createdAt", "asc"]])
-    .where("deleted")
-    .ne(true);
-  const dataFiltering = listUserInDb.filter((item) =>
-    item.username.includes(username)
-  );
-  return dataFiltering;
+    if(qaManager) {
+      return [qaManager, ...listUserInDb]
+    }
+    return listUserInDb;
 };
 
-const getUserByDepartment = async (department) => {
+const getUserByDepartment = async (department, username = '') => {
   const listUserInDb = await User.find({
     department: department,
     role: process.env.STAFF,
+    fullname: new RegExp(username, 'i')
   }).sort([["createdAt", "asc"]]);
   const qaCoordinatorOfDepartment = await User.findOne({
-    department,
+    department: department,
     role: process.env.QACOORDINATOR,
+    fullname: new RegExp(username, 'i')
   });
   if (qaCoordinatorOfDepartment) {
     return [qaCoordinatorOfDepartment, ...listUserInDb];
@@ -94,6 +94,10 @@ const updateUser = async (id, updateAccount) => {
 const deleteUser = async (id) => {
   await User.findByIdAndUpdate(id, { deleted: true });
 };
+
+const reactiveUser = async (id) => {
+  await User.findByIdAndUpdate(id, {deleted: false});
+}
 
 const assignStaff = async (role, department, id) => {
   const userInDb = await User.findById(id);
@@ -207,4 +211,5 @@ module.exports = {
   assignStaffToManager,
   updateUser,
   deleteUser,
+  reactiveUser,
 };

@@ -20,18 +20,16 @@ const createDepartment = async (defaultDepartment) => {
 };
 
 const getAllDepartments = async () =>{
-    const departmentDB = await Department.find({deleted: false} ).sort([["createdAt", "asc"]]);
+    const departmentDB = await Department.find().sort([["createdAt", "asc"]]);
     return [...departmentDB];
 }
 
 const searchDepartment = async (name) => {
-    const listDepartInDb = await Department.find({deleted: false}).sort([["createdAt", "asc"]]);
-    const dataFiltering = listDepartInDb.filter((item) => item.name.includes(name));
-    return dataFiltering;
+    return await Department.find({name: new RegExp(name, 'i')}).sort([["createdAt", "asc"]]);
 }
 
 const findIdDepartment = async (id) =>{
-    const departmentDb = await Department.findById(id, {deleted: false});
+    const departmentDb = await Department.findById(id);
     if(!departmentDb){
         throw new Error("Department does not exist");
     }
@@ -43,7 +41,6 @@ const deleteDepartment = async (id) =>{
     const checkDepartmentUsed = await UserModel.find({department:getDepartment.name})
     const checkDepartmentAtIdea = await IdeaModel.find({department:getDepartment.name})
 
-    console.log(checkDepartmentUsed);
     await Department.findByIdAndUpdate(id , {deleted: true});
     if (checkDepartmentUsed){
         await UserModel.updateMany({department: getDepartment.name},{ department: "" })
@@ -56,16 +53,21 @@ const deleteDepartment = async (id) =>{
     return canDelete;
 }
 
+const reactiveDepartment = async (id) => {
+    await Department.findByIdAndUpdate(id, {deleted: false})
+}
+
 const updateDepartment = async(id, description) =>{
     await Department.findByIdAndUpdate(id , {description: description});
 }
 
-module.exports = { 
-    createDepartment, 
-     getAllDepartments, 
-     findIdDepartment, 
-     deleteDepartment, 
-     updateDepartment, 
-     searchDepartment
+module.exports = {
+  createDepartment,
+  getAllDepartments,
+  findIdDepartment,
+  deleteDepartment,
+  updateDepartment,
+  searchDepartment,
+  reactiveDepartment,
 };
 

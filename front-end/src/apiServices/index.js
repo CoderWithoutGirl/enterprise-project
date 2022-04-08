@@ -20,15 +20,15 @@ export const tokenRequestInterceptor = async (apiCall, refreshToken) => {
 };
 // Authenticate
 export const login = (formData) =>
-  apiInstance.post("/auth/login", { ...formData });
+  apiInstance.post("/auth/login", { ...formData }, {withCredentials: true});
 export const register = (formData) =>
   apiInstance.post("/auth/register", { ...formData });
 
 export const refreshToken = () =>
-  apiInstance.get("/auth/refresh-token");
+  apiInstance.get("/auth/refresh-token", {withCredentials: true});
 
 export const logout = (refreshToken) =>
-  apiInstance.post("/auth/logout", { ...refreshToken });
+  apiInstance.post("/auth/logout", { ...refreshToken }, {withCredentials: true});
 
 // Users
 export const getAllUser = (token) =>
@@ -38,6 +38,10 @@ export const getAllUser = (token) =>
 
 export const deleteUser = (token, id) =>
   apiInstance.delete(`/users/${id}`, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+export const reactiveUser = (token, id) =>
+  apiInstance.get(`/users/reactive/${id}`, {
     headers: { Authorization: `Bearer ${token}` },
   });
 
@@ -55,8 +59,8 @@ export const updateUser = (formData, id, token) =>
     }
   );
 
-export const getUserByDepartment = (token, deparment) =>
-  apiInstance.get(`/users/?department=${deparment}`, {
+export const getUserByDepartment = (token, deparment, username="") =>
+  apiInstance.get(`/users/?department=${deparment}&username=${username}`, {
     headers: { Authorization: `Bearer ${token}` },
   });
 
@@ -143,6 +147,10 @@ export const deleteDepartment = (token, id) =>
   apiInstance.delete(`/departments/${id}`, {
     headers: { Authorization: `Bearer ${token}` },
   });
+export const reactiveDepartment = (token, id) =>
+  apiInstance.get(`/departments/reactive/${id}`, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
 
 //Category
 export const createCategory = (formData, token) =>
@@ -162,8 +170,8 @@ export const getCategory = (token) =>
     headers: { Authorization: `Bearer ${token}` },
   });
 
-export const getSingleCategory = (categoryName, token) =>
-  apiInstance.get(`/categories/ideas/${categoryName}`, {
+export const getSingleCategory = (categoryName, ideaTitle = "", token) =>
+  apiInstance.get(`/categories/ideas/${categoryName}?title=${ideaTitle}`, {
     headers: { Authorization: `Bearer ${token}` },
   });
 
