@@ -6,4 +6,5 @@ export const filters = {
   POPULAR: "POPULAR",
   DATE_ASC: "DATE_ASC",
   DATE_DESC: "DATE_DESC",
+  MY_IDEA: "MY_IDEA",
 };

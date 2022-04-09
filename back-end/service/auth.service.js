@@ -2,7 +2,7 @@ const Jwt = require("jsonwebtoken");
 const User = require("../model/user");
 const RefreshToken = require("../model/refresh-token.model");
 const crypto = require("crypto");
-const emailProcess = require("../processes/email.process");
+const {sendNewEmail} = require('../queue/email.queue')
 const { inviteUser } = require("../documents/index");
 
 const randomTokenString = () => {
@@ -61,7 +61,7 @@ const refreshJwtToken = async (token) => {
   };
 };
 
-const register = async (registerAccount) => {
+const register = async (registerAccount, origin) => {
   const { username, password, confirmPassword } = registerAccount;
   const checkAccountExistedInDb = await User.findOne({ username });
   if (checkAccountExistedInDb) {
@@ -75,12 +75,12 @@ const register = async (registerAccount) => {
         role: process.env.STAFF,
       });
       await createAccount.save();
-      emailProcess({
+      sendNewEmail({
         to: username,
         subject: "Congratulations, Your account is here!",
         html: inviteUser(
           createAccount.fullname,
-          process.env.LOGIN_PAGE,
+          `${origin}/login`,
           username,
           process.env.DEFAULT_PASSWORD
         ),

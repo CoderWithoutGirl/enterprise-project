@@ -18,8 +18,9 @@ const {noticeQAForNewDocUpload} = require('../service/email.service')
 
 const getAllIdeas = async (req, res) => {
   const { filter, page } = req.query;
+  const id = req.user._id;
   const pages = await countAllIdeas();
-  const allIdeas = await getAllIdeaWithFilter(filter, page);
+  const allIdeas = await getAllIdeaWithFilter(id, filter, page);
   res.status(200).json({ pages, data: allIdeas });
 };
 
@@ -32,15 +33,18 @@ const getSingleIdea = async (req, res) => {
 const commentToIdea = async (req, res) => {
   const { userId, content, isAnonymous } = req.body;
   const { id } = req.params;
+  const origin = req.get('origin');
 
-  await commentToAnIdea(id, content, userId, isAnonymous);
+  await commentToAnIdea(id, content, userId, isAnonymous, origin);
   res.status(201).json({ message: "comment success" });
 };
 const reactionToIdea = async (req, res) => {
   const { userId, reactionType } = req.body;
   const { id } = req.params;
+    const origin = req.get("origin");
 
-  await reactionToAnIdea(id, reactionType, userId);
+
+  await reactionToAnIdea(id, reactionType, userId, origin);
   res.status(201).json({ message: "react success" });
 };
 
@@ -60,7 +64,6 @@ const createIdeaWithDocument = async (req, res) => {
 
 const uploadSupportDocument = async (req, res) => {
   const filename = req.file.filename;
-  console.log(filename);
   const documentLink = await getFileUrl(filename);
   await noticeQAForNewDocUpload(documentLink, req.user.id);
 
@@ -69,8 +72,14 @@ const uploadSupportDocument = async (req, res) => {
 
 const createDocumentSupportedFromEditor = async (req, res) => {
   const filename = req.file.filename;  
-  const user = req.user;
-  const documentLink = await createDocumentFromMarkdown(filename, user.fullname, user.id);
+  const user = req.user;c
+  const origin = req.get('origin')
+  const documentLink = await createDocumentFromMarkdown(
+    filename,
+    user.fullname,
+    user.id,
+    origin
+  );
   await noticeQAForNewDocUpload(documentLink, req.user.id);
 
   res.status(201).json({ documentLink });
@@ -84,7 +93,6 @@ const inscreaseViewOfIdea = async (req, res) => {
 const countIdea = async (req, res) =>{
   const result = await countIdeaInDepartment();
   res.status(200).json(result);
-  console.log(result);
 }
 
 const findPost = async (req, res) =>{
@@ -99,7 +107,6 @@ const countIdeaOfDepartment = async (req, res) =>{
 }
 
 const findPostOfDepartment = async (req, res) =>{
-  console.log(req.user.department);
   const result = await findStaffPostOfDepatment(req.user.department);
   res.status(200).json(result);
 }

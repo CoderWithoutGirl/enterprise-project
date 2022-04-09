@@ -74,6 +74,7 @@ const HomePage = ({authenticateReducer, getNewTokenRequest}) => {
             <option value={filters.POPULAR}>Popular</option>
             <option value={filters.LIKE}>Upvote</option>
             <option value={filters.DISLIKE}>Downvote</option>
+            <option value={filters.MY_IDEA}>My Idea</option>
           </select>
         </div>
         <ul className="px-5 py-2">
