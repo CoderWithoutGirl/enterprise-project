@@ -8,7 +8,6 @@ const authenticateControler = {
         }
         else {
             const refreshToken = await generateRefreshToken(req.user, req.ip);
-            console.log(refreshToken.token);
             if (req.isAuthenticated()) {
               res.cookie("refresh-token", refreshToken.token, {
                 httpOnly: true,
@@ -26,8 +25,9 @@ const authenticateControler = {
     },
     register: async (req, res) => {
         const registerAccount = req.body;
+        const origin = req.get('origin')
         try {
-            const createAccount = await register(registerAccount);
+            const createAccount = await register(registerAccount, origin);
             res.status(201).json({
                 message: "Account registed successfully",
                 status: 201,

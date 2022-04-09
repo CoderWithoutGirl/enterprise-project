@@ -165,7 +165,7 @@ const getFileUrl = async (filename) => {
   }
 };
 
-const createDocumentFromMarkdown = async (mdfile, fullname, id) => {
+const createDocumentFromMarkdown = async (mdfile, fullname, id, origin) => {
   try {
     const browser = await puppeteer.launch({
       headless: true,
@@ -189,7 +189,7 @@ const createDocumentFromMarkdown = async (mdfile, fullname, id) => {
     await mdpdf.convert(options);
     fs.unlinkSync(__basedir + `/statics/documents/${mdfile}`);
     await browser.close();
-    return process.env.BASE_DOWNLOAD_FILE + destination;
+    return origin + destination;
   } catch (error) {
     console.log(error);
   }
@@ -200,7 +200,7 @@ const countAllIdeas = async (limit = 5) => {
 }
 
 
-const commentToAnIdea = async (postId, content, userId, isAnonymous) => {
+const commentToAnIdea = async (postId, content, userId, isAnonymous, origin) => {
   const ideaInDb = await IdeaModel.findById(postId);
   const author = await UserModel.findById(ideaInDb.user);
   ideaInDb.comments.push({ content, user: userId , isAnonymous});
@@ -211,12 +211,12 @@ const commentToAnIdea = async (postId, content, userId, isAnonymous) => {
     html: notificationUser(
       "comment",
       author.fullname,
-      process.env.BASE_IDEA_URL + ideaInDb._id.toString()
+      `${origin}/post/` + ideaInDb._id.toString()
     ),
   });
 }
 
-const reactionToAnIdea = async (postId, reactionType, userId) => {
+const reactionToAnIdea = async (postId, reactionType, userId, origin) => {
   const ideaInDb = await IdeaModel.findById(postId);
   const author = await UserModel.findById(ideaInDb.user);
   const newReaction = { reactionType, user: userId };
@@ -236,7 +236,7 @@ const reactionToAnIdea = async (postId, reactionType, userId) => {
     html: notificationUser(
       "reaction",
       author.fullname,
-      process.env.BASE_IDEA_URL + ideaInDb._id.toString()
+      `${origin}/post/` + ideaInDb._id.toString()
     ),
   });
 }
@@ -285,13 +285,17 @@ const findUserIdInDerpartment = async (nameDepartments) => {
 }
 
 const countIdeaInOneDepartment = async (department) => {
-
-  const result = await IdeaModel.aggregate([
-    { $match: { department: department, deleted: false } },
-    { $group: { _id: "$user", count: { $sum: 1 } } },
-    { $lookup: { from: 'users', localField: '_id', foreignField: '_id', as: 'user' } },
-
-  ]);
+  const result = await IdeaModel.aggregate()
+    .match({
+      department: department,
+    })
+    .group({ _id: "$user", count: { $sum: 1 } })
+    .lookup({
+      from: "users",
+      localField: "_id",
+      foreignField: "_id",
+      as: "user",
+    });
   return result;
 }
 

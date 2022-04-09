@@ -26,13 +26,12 @@ function DepartmentChart({ authenticateReducer, getNewTokenRequest }) {
             getNewTokenRequest
         );
         if (status === 200) {
-            data.map(async item => {
-                console.log(item.user);
-                await department.push(item.user[0].fullname);
-                await count.push(item.count);
-                setCategories(department)
-                setData(count)
+            data.map(item => {
+                department.push(item.user[0].fullname);
+                count.push(item.count);
             })
+            setCategories(department);
+            setData(count);
         }
     }, [token, getNewTokenRequest])
 
