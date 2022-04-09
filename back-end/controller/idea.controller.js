@@ -18,8 +18,9 @@ const {noticeQAForNewDocUpload} = require('../service/email.service')
 
 const getAllIdeas = async (req, res) => {
   const { filter, page } = req.query;
+  const id = req.user._id;
   const pages = await countAllIdeas();
-  const allIdeas = await getAllIdeaWithFilter(filter, page);
+  const allIdeas = await getAllIdeaWithFilter(id, filter, page);
   res.status(200).json({ pages, data: allIdeas });
 };
 

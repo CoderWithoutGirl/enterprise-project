@@ -17,9 +17,11 @@ const filterEnum = {
   POPULAR: "POPULAR",
   DATE_ASC: "DATE_ASC",
   DATE_DESC: "DATE_DESC",
+  MY_IDEA: "MY_IDEA",
 };
 
-const getAllIdeaWithFilter = async (filter = filterEnum.ALPHABET, page = 1, limit = 5) => {
+
+const getAllIdeaWithFilter = async (id, filter = filterEnum.ALPHABET, page = 1, limit = 5) => {
   switch (filter) {
     case filterEnum.VIEW:
       return (allIdeaInDB = await IdeaModel.find({})
@@ -84,6 +86,14 @@ const getAllIdeaWithFilter = async (filter = filterEnum.ALPHABET, page = 1, limi
         .limit(limit));
     case filterEnum.DATE_DESC:
       return (allIdeaInDB = await IdeaModel.find({})
+        .populate("category", "name")
+        .sort({
+          createdAt: 1,
+        })
+        .skip((page - 1) * limit)
+        .limit(limit));
+    case filterEnum.MY_IDEA:
+      return (allIdeaInDB = await IdeaModel.find({user:id})
         .populate("category", "name")
         .sort({
           createdAt: 1,
