@@ -214,7 +214,7 @@ const UserPage = ({ getNewTokenRequest, token }) => {
       getNewTokenRequest
     );
     if (status === 200) {
-      toast.success("Create User Successfully");
+      toast.success("Excel import done");
       setOpenImport(false);
       setData([]);
       setFile(null);
