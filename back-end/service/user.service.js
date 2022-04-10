@@ -1,4 +1,5 @@
 const User = require("../model/user");
+const Department = require('../model/department')
 const fs = require("fs");
 const xlsx = require("node-xlsx");
 const { register } = require("./auth.service");
@@ -140,7 +141,7 @@ const findStaffWithoutDepartment = async () => {
 };
 
 const excelDataExtractor = async (filename) => {
-  const obj = xlsx.parse(__basedir + `/statics/excels/${filename}`);
+  const obj = xlsx.parse(__basedir + `/statics/excels/${filename}`, {cellDates: true});
   const { data } = obj[0];
   return data.map((item) => [
     { value: item[0] },
@@ -148,27 +149,19 @@ const excelDataExtractor = async (filename) => {
     { value: item[2] },
     { value: item[3] },
     { value: item[4] },
-    { value: item[5] },
-    {
-      value: parseInt(item[6]) ? new Date(item[6]) : item[6],
-    },
-    { value: item[7] },
   ]);
 };
 
 const importDataFromExcelToDb = async (filename) => {
-  const obj = xlsx.parse(__basedir + `/statics/excels/${filename}`);
+  const obj = xlsx.parse(__basedir + `/statics/excels/${filename}`, {cellDates: true});
   const { data } = obj[0];
-  return data.slice(1).map((item, index) => ({
+  return data.slice(1).map((item) => ({
     fullname: item[0],
     username: item[1],
     email: item[1],
-    password: item[2],
-    confirmPassword: item[3],
-    address: item[4],
-    age: item[5],
-    dateOfBirth: item[6],
-    gender: item[7],
+    dateOfBirth: item[2],
+    gender: item[3],
+    department: item[4],
     role: process.env.STAFF,
   }));
 };
@@ -177,7 +170,15 @@ const createUserByExcel = async (filename) => {
   const data = await importDataFromExcelToDb(filename);
   let array = data.map(async (user) => {
     try {
-      const useObj = new User({ ...user });
+      console.log(user.dateOfBirth)
+      const departmentInDB = await Department.findOne({
+        name: new RegExp(user.department, 'i'),
+      });
+      const userInDB = await User.findOne({username: user.username});
+      if(userInDB) {
+        return;
+      }
+      const useObj = new User({ ...user, department: departmentInDB.name });
       await useObj.save();
       return useObj;
     } catch (e) {
@@ -185,8 +186,6 @@ const createUserByExcel = async (filename) => {
     }
   });
   await Promise.all(array);
-  // const url = __basedir + `/statics/excels/${filename}`;
-  // fs.unlinkSync(url);
 };
 
 const deleteExcel = async (filename) => {
