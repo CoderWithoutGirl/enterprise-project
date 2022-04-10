@@ -84,12 +84,14 @@ const Table = ({
           <header className="px-5 py-4 border-b border-gray-100">
             <h2 className="font-semibold text-gray-800">{tableTitle}</h2>
             <div className="w-full flex justify-between">
-              <InputField
-                type="text"
-                placeholder="Search..."
-                onChange={(e) => searchWithDebounce(e.target.value)}
-                className="w-[80px] sm:w-1/5 rounded-md mt-1 border-gray-300"
-              />
+              {search && (
+                <InputField
+                  type="text"
+                  placeholder="Search..."
+                  onChange={(e) => searchWithDebounce(e.target.value)}
+                  className="w-[80px] sm:w-1/5 rounded-md mt-1 border-gray-300"
+                />
+              )}
               <div className="w-fit flex gap-3 justify-around items-center">
                 {assignButtonHandler && (
                   <Button

@@ -22,29 +22,27 @@ import { connect } from "react-redux";
 
 const editFormValidationSchema = yup.object({
   fullname: yup.string().required("Fullname must be filled"),
-  password: yup
-    .string()
-    .required("No password provided.")
-    .min(8, "Password is too short - should be 8 chars minimum.")
-    .matches(/[a-zA-Z]/, "Password can only contain Latin letters."),
-  confirmPassword: yup
-    .string()
-    .oneOf([yup.ref("password"), null], "Passwords must match"),
+  // password: yup
+  //   .string()
+  //   .required("No password provided.")
+  //   .min(8, "Password is too short - should be 8 chars minimum.")
+  //   .matches(/[a-zA-Z]/, "Password can only contain Latin letters."),
+  // confirmPassword: yup
+  //   .string()
+  //   .oneOf([yup.ref("password"), null], "Passwords must match"),
   age: yup
     .number()
     .required("Please supply your age")
     .min(1, "You must be at least 1 years")
     .max(100, "You must be at most 100 years"),
   address: yup.string().required("Address must be filled").max(500),
-  dateOfBirth: yup.date().required("Date of Birth is required"),
+  dateOfBirth: yup.date().required("Date of Birth is required").min(new Date(1950, 0, 1)).max(new Date(2004, 0, 1)),
 });
 
 const initial = {
   dateOfBirth: "",
   gender: "Male",
   fullname: "",
-  password: "",
-  confirmPassword: "",
   age: "",
 };
 
@@ -84,14 +82,6 @@ const EditUserPage = ({ close, userId, token, getNewTokenRequest }) => {
     setValue((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   };
 
-  const dateFormatter = (day) => {
-    const d = new Date(day);
-    var month =
-      d.getMonth() + 1 < 10 ? "0" + (d.getMonth() + 1) : d.getMonth() + 1;
-    var datestring = d.getFullYear() + "-" + month + "-" + d.getDate();
-    return datestring;
-  };
-
   const loadData = useCallback(async () => {
     const loadDataOfUser = async () => {
       const { data, status } = await getSingleUser(token, userId);
@@ -104,7 +94,7 @@ const EditUserPage = ({ close, userId, token, getNewTokenRequest }) => {
     );
     if (status === 200) {
       setValue("fullname", data.fullname);
-      setValue("dateOfBirth", dateFormatter(data.dateOfBirth));
+      setValue("dateOfBirth", data?.dateOfBirth.slice(0, 10));
       setValue("gender", data.gender);
       setValue("age", data.age);
       setValue("address", data.address);
@@ -152,31 +142,7 @@ const EditUserPage = ({ close, userId, token, getNewTokenRequest }) => {
             render={({ message }) => <ErrorMessageCustom message={message} />}
           />
           <InputField
-            type="password"
-            name="password"
-            onChange={onEditChange}
-            placeholder="Password"
-            {...register("password")}
-          />
-          <ErrorMessage
-            name="password"
-            errors={errors}
-            render={({ message }) => <ErrorMessageCustom message={message} />}
-          />
-          <InputField
-            type="password"
-            name="confirmPassword"
-            onChange={onEditChange}
-            placeholder="ConfirmPassword"
-            {...register("confirmPassword")}
-          />
-          <ErrorMessage
-            name="confirmPassword"
-            errors={errors}
-            render={({ message }) => <ErrorMessageCustom message={message} />}
-          />
-          <InputField
-            type="text"
+            type="number"
             placeholder="Age"
             name="age"
             onChange={onEditChange}
@@ -204,8 +170,8 @@ const EditUserPage = ({ close, userId, token, getNewTokenRequest }) => {
             name="dateOfBirth"
             onChange={onEditChange}
             {...register("dateOfBirth")}
-            max={new Date()}
-            min={new Date("1/1/1950")}
+            max={'2004-01-01'}
+            min={'1950-01-01'}
           />
           <ErrorMessage
             name="dateOfBirth"
