@@ -274,7 +274,7 @@ const findPostIdea = async () => {
 const findUserIdInDerpartment = async (nameDepartments) => {
   const number = nameDepartments.map(async item => {
 
-    const finduserInDepartment = await UserModel.find({ "department": item }).select({ "_id": 1 })
+    const finduserInDepartment = await UserModel.find({ "department": item, deleted: false }).select({ "_id": 1 })
     let users = JSON.stringify(finduserInDepartment)
     users = JSON.parse(users)
     const findIdeaPosted = await IdeaModel.find({ "department": item }).select({ "user": 1, "_id": 0 }).distinct('user')
