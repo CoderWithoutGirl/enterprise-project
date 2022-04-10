@@ -259,7 +259,7 @@ const UserInDepartmentPage = ({ getNewTokenRequest, token }) => {
   return (
     <div>
       <Table
-        limit={20}
+        limit={10}
         tableHead={userTableHead}
         tableData={users}
         renderData={renderTableBody}

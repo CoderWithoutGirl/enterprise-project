@@ -118,7 +118,7 @@ const ItemInCategoryPage = ({ getNewTokenRequest, token }) => {
   return (
     <div>
       <Table
-        limit={20}
+        limit={10}
         tableHead={ideaTableHead}
         tableData={allIdeas}
         renderData={renderTableBody}

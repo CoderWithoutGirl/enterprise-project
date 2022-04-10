@@ -48,10 +48,21 @@ const UserPage = ({ getNewTokenRequest, token }) => {
   const [openDetail, setOpenDetail] = useState(false);
   const [openImport, setOpenImport] = useState(false);
   const [openAssign, setOpenAssign] = useState(false);
-  const [file, setFile] = useState({});
+  const [file, setFile] = useState(null);
   const [data, setData] = useState([]);
   const [filename, setFilename] = useState("");
   const [userAssign, setUserAssign] = useState([]);
+
+  useEffect(() => {
+    if (!openImport) {
+      if (data.length > 0) {
+        handleCancel();
+      } else {
+        setFilename("");
+        setFile(null);
+      }
+    }
+  }, [openImport, data.length]);
 
   const loadUser = useCallback(async () => {
     const loadAllDataOfUser = async () => {
@@ -128,7 +139,7 @@ const UserPage = ({ getNewTokenRequest, token }) => {
      );
 
      if (status === 200) {
-       toast.error("Deleted User Successfully");
+       toast.error("Deactive User Successfully");
        loadUser();
      }
    };
@@ -148,7 +159,7 @@ const UserPage = ({ getNewTokenRequest, token }) => {
       );
 
       if (status === 200) {
-        toast.error("Deleted User Successfully");
+        toast.error("Reactive User Successfully");
         loadUser();
       }
     };
@@ -186,10 +197,10 @@ const UserPage = ({ getNewTokenRequest, token }) => {
       getNewTokenRequest
     );
     if (status === 200) {
-      toast.error("Cancel User Successfully");
       setOpenImport(false);
       setData([]);
       setFilename("");
+      setFile(null);
     }
   };
 
@@ -206,6 +217,7 @@ const UserPage = ({ getNewTokenRequest, token }) => {
       toast.success("Create User Successfully");
       setOpenImport(false);
       setData([]);
+      setFile(null);
       setFilename("");
       loadUser();
     }
@@ -317,7 +329,7 @@ const UserPage = ({ getNewTokenRequest, token }) => {
   return (
     <div>
       <Table
-        limit={20}
+        limit={10}
         tableHead={userTableHead}
         tableData={users}
         renderData={renderTableBody}
@@ -351,7 +363,7 @@ const UserPage = ({ getNewTokenRequest, token }) => {
                   onClick={handleCancel}
                   className="px-4 py-2 text-white bg-red-500 rounded shadow-xl"
                 >
-                  Cannel
+                  Cancel
                 </button>
                 <button
                   onClick={handleCreateUser}
@@ -384,6 +396,7 @@ const UserPage = ({ getNewTokenRequest, token }) => {
                       </div>
                       <input
                         type="file"
+                        value={file}
                         className="opacity-0"
                         accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"
                         onChange={uploadFile}
@@ -396,7 +409,8 @@ const UserPage = ({ getNewTokenRequest, token }) => {
               <div className="flex justify-center p-2 space-x-4">
                 <button
                   onClick={handleUpload}
-                  className="px-4 py-2 text-white bg-green-500 rounded shadow-xl"
+                  disabled={!file ? true : false}
+                  className="px-4 py-2 text-white bg-green-500 rounded shadow-xl disabled:cursor-not-allowed"
                 >
                   Upload
                 </button>

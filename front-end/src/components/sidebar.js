@@ -72,22 +72,16 @@ const SideBar = ({
         <div className="w-full px-3 py-4 overflow-y-auto rounded">
           <ul className="w-full flex items-center justify-evenly md:flex-col md:items-start">
             <li
-              className="w-full h-fit flex sm:flex-row flex-col items-center justify-center"
+              className="w-full h-fit flex sm:flex-row flex-col items-center justify-center cursor-pointer"
               onClick={(e) => editUserHandler(e, authenticateReducer?.user?.id)}
             >
               <div className="shrink-0">
                 <img src={avatar} className="rounded-full w-10" alt="Avatar" />
               </div>
               <div className="grow ml-3">
-                <button
-                  onClick={(e) =>
-                    editUserHandler(e, authenticateReducer?.user?.id)
-                  }
-                >
                   <p className="hidden sm:inline-block text-sm font-semibold text-blue-600">
                     {authenticateReducer?.user?.fullname}
                   </p>
-                </button>
               </div>
             </li>
             {user?.role === roles.QA_MANAGER && (

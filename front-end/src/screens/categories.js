@@ -26,6 +26,7 @@ import { toast } from "react-toastify";
 import ErrorMessageCustom from "../components/errorMessage";
 import { ErrorMessage } from "@hookform/error-message";
 import { getNewToken } from "../store/actions/authenticateAction";
+import TextAreaField from "../components/text-area";
 
 const categoryFormValidationSchema = yup.object({
   name: yup.string().required("Name must be filled").max(50),
@@ -118,6 +119,10 @@ function Categories({ getNewTokenRequest, token }) {
   //Update
   const update = async (e) => {
     e.preventDefault();
+    if (editCategory?.description === "") {
+      toast.error("description cannot be empty");
+      return;
+    }
     const updateCate = async () => {
       const { data, status } = await updateCategory(
         editCategory,
@@ -289,10 +294,11 @@ function Categories({ getNewTokenRequest, token }) {
                   <ErrorMessageCustom message={message} />
                 )}
               />
-              <InputField
+              <TextAreaField
                 type="text"
                 placeholder="Description"
                 name="description"
+                rows={4}
                 value={getValues("description")}
                 onChange={onChange}
               />
@@ -311,19 +317,24 @@ function Categories({ getNewTokenRequest, token }) {
                   title="Create"
                   icon={PlusCircleIcon}
                 />
-                <Button icon={XCircleIcon} type="danger" title="Cancel" onClick={toggle} />
+                <Button
+                  icon={XCircleIcon}
+                  type="danger"
+                  title="Cancel"
+                  onClick={toggle}
+                />
               </div>
             </Form>
           </div>
         </Modal>
 
-
         <Modal open={editOpen} setOpen={setEditOpen}>
           <div className="w-screen sm:max-w-lg">
             <Form title="Update Category">
-              <InputField
+              <TextAreaField
                 type="text"
                 placeholder="Description"
+                rows={4}
                 name="description"
                 value={editCategory?.description}
                 onChange={onEditChange}
@@ -336,18 +347,31 @@ function Categories({ getNewTokenRequest, token }) {
                   type="primary"
                   title="Update"
                 />
-                <Button icon={XCircleIcon} type="danger" title="Cancel" onClick={editHandle} />
+                <Button
+                  icon={XCircleIcon}
+                  type="danger"
+                  title="Cancel"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    setEditOpen(false);
+                  }}
+                />
               </div>
             </Form>
           </div>
         </Modal>
 
-
         <Modal open={deleteOpen} setOpen={setDeleteOpen}>
           <div className="w-screen sm:max-w-lg">
             <Form title="Delete Category">
               <div className="w-3/5 flex flex-wrap justify-between items-center">
-                <h4 style={{ color: "red", fontSize: "17px", paddingBottom: "10px" }}>
+                <h4
+                  style={{
+                    color: "red",
+                    fontSize: "17px",
+                    paddingBottom: "10px",
+                  }}
+                >
                   Are you sure you want to delete ?
                 </h4>
 
@@ -358,7 +382,12 @@ function Categories({ getNewTokenRequest, token }) {
                   type="danger"
                   title="Delete"
                 />
-                <Button icon={XCircleIcon} type="primary" title="Cancel" onClick={handleDelete} />
+                <Button
+                  icon={XCircleIcon}
+                  type="primary"
+                  title="Cancel"
+                  onClick={handleDelete}
+                />
               </div>
             </Form>
           </div>

@@ -30,7 +30,8 @@ import {
   PlusCircleIcon,
   RefreshIcon
 } from "@heroicons/react/solid";
-
+import TextArea from '../components/text-area'
+import TextAreaField from "../components/text-area";
 
 const userTableHead = ["Name", "Description", "Actions"];
 
@@ -124,6 +125,10 @@ function Departments({ getNewTokenRequest, token, updateRouter }) {
   //Update
   const update = async (e) => {
     e.preventDefault();
+    if (editDepartment?.description === "") {
+      toast.error("description cannot be empty");
+      return;
+    }
     const updateDepart = async () => {
       const { data, status } = await updateDepartment(
         editDepartment,
@@ -268,7 +273,7 @@ function Departments({ getNewTokenRequest, token, updateRouter }) {
   return (
     <div className="w-full">
       <Table
-        limit={20}
+        limit={10}
         tableHead={userTableHead}
         tableData={departments}
         renderData={renderTableBody}
@@ -281,16 +286,16 @@ function Departments({ getNewTokenRequest, token, updateRouter }) {
       <Modal open={editOpen} setOpen={setEditOpen}>
         <div className="w-screen sm:max-w-lg">
           <Form title="Update Department">
-            <InputField
+            <TextAreaField
               type="text"
               placeholder="Description"
               name="description"
+              rows={4}
               value={editDepartment?.description}
               onChange={onEditChange}
             />
             <div className="w-3/5 flex flex-wrap justify-between items-center">
               <Button
-                // onClick={update}
                 onClick={update}
                 icon={PencilAltIcon}
                 role="submit"
@@ -301,7 +306,7 @@ function Departments({ getNewTokenRequest, token, updateRouter }) {
                 type="danger"
                 icon={XCircleIcon}
                 title="Cancel"
-                onClick={editHandler}
+                onClick={(e) => {e.preventDefault(); setEditOpen(false)}}
               />
             </div>
           </Form>
@@ -317,8 +322,9 @@ function Departments({ getNewTokenRequest, token, updateRouter }) {
               errors={errors}
               render={({ message }) => <ErrorMessageCustom message={message} />}
             />
-            <InputField
+            <TextArea
               type="text"
+              rows={4}
               placeholder="Description"
               {...register("description")}
             />
@@ -335,17 +341,28 @@ function Departments({ getNewTokenRequest, token, updateRouter }) {
                 type="primary"
                 title="Create"
               />
-              <Button icon={XCircleIcon} type="danger" title="Cancel" onClick={toggle} />
+              <Button
+                icon={XCircleIcon}
+                type="danger"
+                title="Cancel"
+                onClick={toggle}
+              />
             </div>
           </Form>
         </div>
       </Modal>
       <Modal open={deleteOpen} setOpen={setDeleteOpen}>
         <div className="w-screen sm:max-w-lg">
-          <Form title="Delete Department">
+          <Form title="Deactive Department">
             <div className="w-3/5 flex flex-wrap justify-between items-center">
-              <h4 style={{ color: "red", fontSize: "17px", paddingBottom: "10px" }}>
-                Are you sure you want to delete ?
+              <h4
+                style={{
+                  color: "red",
+                  fontSize: "17px",
+                  paddingBottom: "10px",
+                }}
+              >
+                Are you sure you want to deactive ?
               </h4>
 
               <Button
@@ -355,12 +372,16 @@ function Departments({ getNewTokenRequest, token, updateRouter }) {
                 type="danger"
                 title="Delete"
               />
-              <Button icon={XCircleIcon} type="primary" title="Cancel" onClick={handleDelete} />
+              <Button
+                icon={XCircleIcon}
+                type="primary"
+                title="Cancel"
+                onClick={handleDelete}
+              />
             </div>
           </Form>
         </div>
       </Modal>
-
     </div>
   );
 }
