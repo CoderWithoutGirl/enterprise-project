@@ -1,5 +1,12 @@
 
-const {signToken, register, generateRefreshToken, refreshJwtToken, revokeToken} = require('../service/auth.service')
+const {
+  signToken,
+  register,
+  generateRefreshToken,
+  refreshJwtToken,
+  revokeToken,
+  changePassword,
+} = require("../service/auth.service");
 
 const authenticateControler = {
     login: async (req, res) => {
@@ -46,6 +53,16 @@ const authenticateControler = {
         } catch (error) {
             console.log(error.message);
             res.status(400).json({message: error.message, status: 400})
+        }
+    },
+    changePassword: async (req, res) => {
+        const user = req.user;
+        const {oldPassword, newPassword} = req.body;
+        try {
+            await changePassword(user, oldPassword, newPassword);
+            res.status(200).json({message: "Password Changed"})
+        } catch (error) {
+            res.status(400).json({message: error.message})
         }
     },
     logout: async (req, res) => {

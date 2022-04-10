@@ -185,8 +185,8 @@ const createUserByExcel = async (filename) => {
     }
   });
   await Promise.all(array);
-  const url = __basedir + `/statics/excels/${filename}`;
-  fs.unlinkSync(url);
+  // const url = __basedir + `/statics/excels/${filename}`;
+  // fs.unlinkSync(url);
 };
 
 const deleteExcel = async (filename) => {

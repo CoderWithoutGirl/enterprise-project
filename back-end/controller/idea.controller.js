@@ -72,7 +72,7 @@ const uploadSupportDocument = async (req, res) => {
 
 const createDocumentSupportedFromEditor = async (req, res) => {
   const filename = req.file.filename;  
-  const user = req.user;c
+  const user = req.user;
   const origin = req.get('origin')
   const documentLink = await createDocumentFromMarkdown(
     filename,

@@ -3,6 +3,8 @@ const User = require("../model/user");
 const RefreshToken = require("../model/refresh-token.model");
 const crypto = require("crypto");
 const {sendNewEmail} = require('../queue/email.queue')
+const CryptoJS = require("crypto-js");
+
 const { inviteUser } = require("../documents/index");
 
 const randomTokenString = () => {
@@ -101,10 +103,23 @@ const register = async (registerAccount, origin) => {
   }
 };
 
+const changePassword = async (user, oldPass, newPass) => {
+  const userInDb = await User.findById(user.id);
+ const decrypted = CryptoJS.AES.decrypt(userInDb.password, process.env.ENCRYPT_KEY);
+ const rawPassword = decrypted.toString(CryptoJS.enc.Utf8);
+ if (rawPassword === oldPass) {
+   userInDb.password = newPass;
+   await userInDb.save();
+ } else {
+   throw new Error("Old password is wrong")
+ }
+}
+
 module.exports = {
   register,
   signToken,
   generateRefreshToken,
   refreshJwtToken,
   revokeToken,
+  changePassword,
 };

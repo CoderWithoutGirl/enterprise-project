@@ -73,7 +73,7 @@ const userController = {
   createUserExcel: async (req, res) => {
     try {
       const { filename } = req.params;
-      await createUserByExcel(filename);
+      await createUserByExcel(filename.toLowerCase().split(" ").join("-"));
       res.status(200).json({ status: 200 });
     } catch (err) {
       console.log(err);
@@ -82,7 +82,7 @@ const userController = {
   uploadExcel: async (req, res) => {
     try {
       const filename = req.file.filename;
-      const jsonData = await excelDataExtractor(filename);
+      const jsonData = await excelDataExtractor(filename.toLowerCase().split(" ").join("-"));
       res.status(200).json({ status: 200, data: jsonData, filename: filename });
     } catch (err) {
       console.log(err);
@@ -91,7 +91,7 @@ const userController = {
   cancelCreateUserByExcel: async (req, res) => {
     try {
       const { filename } = req.params;
-      await deleteExcel(filename);
+      await deleteExcel(filename.toLowerCase().split(" ").join("-"));
       res.status(200).json({ status: 200 });
     } catch (err) {
       console.log(err);

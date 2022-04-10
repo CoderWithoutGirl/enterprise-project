@@ -24,6 +24,11 @@ export const login = (formData) =>
 export const register = (formData) =>
   apiInstance.post("/auth/register", { ...formData });
 
+export const changePassword = (formData, token) =>
+  apiInstance.put("/auth/update-password", { ...formData }, {headers: {
+    "Authorization": `Bearer ${token}`
+  }});
+
 export const refreshToken = () =>
   apiInstance.get("/auth/refresh-token", {withCredentials: true});
 

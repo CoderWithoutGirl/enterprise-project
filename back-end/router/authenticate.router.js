@@ -3,13 +3,12 @@ const {
   login,
   register,
   refeshToken,
-  logout
+  logout,
+  changePassword
 } = require("../controller/authenticate.controller");
 const passport = require('passport');
 
-authenticateRouter.get('/', passport.authenticate('jwt', {session: false}), async (req, res, next) => {
-    res.send("Hello");
-})
+authenticateRouter.put('/update-password', passport.authenticate('jwt', {session: false}), changePassword)
 
 authenticateRouter.post('/login', 
 passport.authenticate('local', {session: false}),

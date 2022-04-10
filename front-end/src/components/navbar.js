@@ -4,19 +4,55 @@ import { Disclosure, Menu, Transition } from "@headlessui/react";
 import { MenuIcon, XIcon } from "@heroicons/react/outline";
 import { Fragment } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { logout } from "../store/actions/authenticateAction";
+import { logout, getNewToken } from "../store/actions/authenticateAction";
 import Modal from "./modal";
 import Profile from "../screens/users/profile";
 import avatar from "../assets/logo.png";
+import Password from './password';
+import Form from './form';
+import Button from './button';
+import {XCircleIcon, PencilAltIcon} from '@heroicons/react/solid'
+import * as yup from "yup";
+import { yupResolver } from "@hookform/resolvers/yup";
+import { useForm } from "react-hook-form";
+import { ErrorMessage } from "@hookform/error-message";
+import ErrorMessageCustom from "./errorMessage";
+import {changePassword, tokenRequestInterceptor} from '../apiServices/'
+import {toast} from 'react-toastify'
 
+const passwordChangeSchema = yup.object({
+  oldPassword: yup.string().required("Old password must be filled"),
+  newPassword: yup
+    .string()
+    .required("No password provided.")
+    .min(8, "Password is too short - should be 8 chars minimum.")
+    .matches(/[a-zA-Z]/, "Password can only contain Latin letters."),
+  confirmPassword: yup
+    .string()
+    .oneOf([yup.ref("newPassword"), null], "Passwords must match"),
+});
 
-
-const Navbar = ({ authenticateReducer, doLogout }) => {
-  const { isAuthenticated, user } = authenticateReducer;
+const Navbar = ({ authenticateReducer, doLogout, getNewTokenRequest }) => {
+  const { isAuthenticated, user, token } = authenticateReducer;
   const [open, setOpen] = useState(false);
   const [userId, setUserId] = useState("");
   const location = useLocation();
+  const [showChangePassword, setShowChangePassword] = useState(false);
   const navigate = useNavigate();
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    reset,
+  } = useForm({
+    mode: "onChange",
+    defaultValues: {
+      oldPassword: "",
+      newPassword: "",
+      confirmPassword: "",
+    },
+    resolver: yupResolver(passwordChangeSchema),
+  });
 
   const navigation = [
     { name: "Ideas", href: "/ideas", current: location.pathname === "/ideas" },
@@ -27,8 +63,41 @@ const Navbar = ({ authenticateReducer, doLogout }) => {
     },
   ];
 
+  const toggleChangePassword = (e) => {
+    setShowChangePassword(prev => !prev);
+  }
+
   function classNames(...classes) {
     return classes.filter(Boolean).join(" ");
+  }
+
+  const handleChangePassword = async (formData) => {
+    const changePasswordFunc = async () => {
+      const changePasswordRetry = async () => {
+        const { data, status } = await changePassword(
+          formData,
+          token,
+        );
+        return { data, status };
+      };
+      const { status, data } = await tokenRequestInterceptor(
+        changePasswordRetry,
+        getNewTokenRequest
+      );
+      if (status === 200) {
+        setShowChangePassword((prev) => !prev);
+        reset({
+          oldPassword: "",
+          newPassword: "",
+          confirmPassword: "",
+        });
+        toast.success("Password Changed")
+      }
+      else {
+        toast.error(data.message)
+      }
+    };
+    changePasswordFunc();
   }
 
   const handleLogout = (e) => {
@@ -137,6 +206,19 @@ const Navbar = ({ authenticateReducer, doLogout }) => {
                           </Menu.Item>
                           <Menu.Item>
                             {({ active }) => (
+                              <button
+                                onClick={toggleChangePassword}
+                                className={classNames(
+                                  active ? "bg-gray-100" : "",
+                                  "block px-4 py-2 text-sm text-gray-700 w-full text-left"
+                                )}
+                              >
+                                Change Password
+                              </button>
+                            )}
+                          </Menu.Item>
+                          <Menu.Item>
+                            {({ active }) => (
                               <span
                                 onClick={handleLogout}
                                 className={classNames(
@@ -192,6 +274,57 @@ const Navbar = ({ authenticateReducer, doLogout }) => {
         <Profile close={() => setOpen(!open)} userId={userId} />
         {/* <EditUserPage close={() => setOpen(!open)} userId={userId} /> */}
       </Modal>
+      <Modal open={showChangePassword} setOpen={setShowChangePassword}>
+        <div className="w-screen sm:max-w-lg">
+          <Form title="Update Category">
+            <Password
+              name="oldPassword"
+              placeholder="Old Password"
+              {...register("oldPassword")}
+            />
+            <ErrorMessage
+              name="oldPassword"
+              errors={errors}
+              render={({ message }) => <ErrorMessageCustom message={message} />}
+            />
+            <Password
+              name="newPassword"
+              placeholder="New Password"
+              {...register("newPassword")}
+            />
+            <ErrorMessage
+              name="newPassword"
+              errors={errors}
+              render={({ message }) => <ErrorMessageCustom message={message} />}
+            />
+            <Password
+              name="confirmPassword"
+              placeholder="Confirm Password"
+              {...register("confirmPassword")}
+            />
+            <ErrorMessage
+              name="confirmPassword"
+              errors={errors}
+              render={({ message }) => <ErrorMessageCustom message={message} />}
+            />
+            <div className="w-3/5 flex flex-wrap justify-between items-center">
+              <Button
+                onClick={handleSubmit(handleChangePassword)}
+                role="submit"
+                icon={PencilAltIcon}
+                type="primary"
+                title="Change Password"
+              />
+              <Button
+                icon={XCircleIcon}
+                type="danger"
+                title="Cancel"
+                onClick={toggleChangePassword}
+              />
+            </div>
+          </Form>
+        </div>
+      </Modal>
     </>
   );
 };
@@ -205,7 +338,7 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
   return {
     doLogout: (refreshToken) => dispatch(logout({ refreshToken })),
+    getNewTokenRequest: () => dispatch(getNewToken()),
   };
 };
-
 export default connect(mapStateToProps, mapDispatchToProps)(Navbar);
