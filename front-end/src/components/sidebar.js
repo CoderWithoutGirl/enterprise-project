@@ -76,11 +76,7 @@ const SideBar = ({
               onClick={(e) => editUserHandler(e, authenticateReducer?.user?.id)}
             >
               <div className="shrink-0">
-                <img
-                  src={avatar}
-                  className="rounded-full w-10"
-                  alt="Avatar"
-                />
+                <img src={avatar} className="rounded-full w-10" alt="Avatar" />
               </div>
               <div className="grow ml-3">
                 <button
@@ -95,23 +91,67 @@ const SideBar = ({
               </div>
             </li>
             {user?.role === roles.QA_MANAGER && (
-              <li className="w-full">
-                <Link
-                  to="/dashboard"
-                  className={`flex items-center p-2 text-base justify-between font-normal ${
-                    location.pathname === "/dashboard"
-                      ? "bg-gray-700 dark:bg-gray-900"
-                      : "bg-inherit"
-                  } rounded-lg text-white hover:bg-gray-100 dark:hover:bg-gray-700`}
-                >
-                  <div className="flex items-center">
-                    <ChartPieIcon className="text-gray-500 w-5 h-5" />
-                    <span className="hidden md:inline-block ml-3">
-                      Statistics
-                    </span>
-                  </div>
-                </Link>
-              </li>
+              <>
+                <li className="w-full">
+                  <Link
+                    to="/dashboard"
+                    className={`flex items-center p-2 text-base justify-between font-normal ${
+                      location.pathname === "/dashboard"
+                        ? "bg-gray-700 dark:bg-gray-900"
+                        : "bg-inherit"
+                    } rounded-lg text-white hover:bg-gray-100 dark:hover:bg-gray-700`}
+                  >
+                    <div className="flex items-center">
+                      <ChartPieIcon className="text-gray-500 w-5 h-5" />
+                      <span className="hidden md:inline-block ml-3">
+                        Statistics
+                      </span>
+                    </div>
+                  </Link>
+                </li>
+                <li className="w-full">
+                  <Link
+                    to="/categories"
+                    className={`flex items-center p-2 text-base justify-between font-normal ${
+                      location.pathname === "/categories"
+                        ? "bg-gray-700 dark:bg-gray-900"
+                        : "bg-inherit"
+                    } rounded-lg text-white hover:bg-gray-100 dark:hover:bg-gray-700`}
+                  >
+                    <div className="flex items-center">
+                      <DocumentDuplicateIcon className="text-gray-500 w-5 h-5" />
+                      <span className="hidden md:inline-block ml-3">
+                        Categories
+                      </span>
+                    </div>
+                    <ChevronDownIcon
+                      onClick={handleCateToggle}
+                      className="text-gray-500 w-10 h-10"
+                    />
+                  </Link>
+                  <ul
+                    className={`${
+                      categoryToggle ? "flex flex-col sm:block" : "hidden"
+                    } sm:ml-4 space-y-2 absolute bottom-[90px] sm:bottom-0 sm:relative bg-gray-800`}
+                  >
+                    {categoryRouters?.map((item, index) => (
+                      <li key={index} className="w-full">
+                        <Link
+                          to={`/categories/${item.name}`}
+                          className={`flex items-center p-2 text-base font-normal ${
+                            location.pathname === `/departments/${item.name}`
+                              ? "bg-gray-700 dark:bg-gray-900"
+                              : "bg-inherit"
+                          } rounded-lg text-white hover:bg-gray-100 dark:hover:bg-gray-700`}
+                        >
+                          <DuplicateIcon className="text-gray-500 w-5 h-5" />
+                          <span className="sm:ml-3">{item.name}</span>
+                        </Link>
+                      </li>
+                    ))}
+                  </ul>
+                </li>
+              </>
             )}
             {user?.role === roles.QA_COORDINATOR && (
               <li className="w-full">
@@ -206,50 +246,6 @@ const SideBar = ({
                     ))}
                   </ul>
                 </li>
-
-                <li className="w-full">
-                  <Link
-                    to="/categories"
-                    className={`flex items-center p-2 text-base justify-between font-normal ${
-                      location.pathname === "/categories"
-                        ? "bg-gray-700 dark:bg-gray-900"
-                        : "bg-inherit"
-                    } rounded-lg text-white hover:bg-gray-100 dark:hover:bg-gray-700`}
-                  >
-                    <div className="flex items-center">
-                      <DocumentDuplicateIcon className="text-gray-500 w-5 h-5" />
-                      <span className="hidden md:inline-block ml-3">
-                        Categories
-                      </span>
-                    </div>
-                    <ChevronDownIcon
-                      onClick={handleCateToggle}
-                      className="text-gray-500 w-10 h-10"
-                    />
-                  </Link>
-                  <ul
-                    className={`${
-                      categoryToggle ? "flex flex-col sm:block" : "hidden"
-                    } sm:ml-4 space-y-2 absolute bottom-[90px] sm:bottom-0 sm:relative bg-gray-800`}
-                  >
-                    {categoryRouters?.map((item, index) => (
-                      <li key={index} className="w-full">
-                        <Link
-                          to={`/categories/${item.name}`}
-                          className={`flex items-center p-2 text-base font-normal ${
-                            location.pathname === `/departments/${item.name}`
-                              ? "bg-gray-700 dark:bg-gray-900"
-                              : "bg-inherit"
-                          } rounded-lg text-white hover:bg-gray-100 dark:hover:bg-gray-700`}
-                        >
-                          <DuplicateIcon className="text-gray-500 w-5 h-5" />
-                          <span className="sm:ml-3">{item.name}</span>
-                        </Link>
-                      </li>
-                    ))}
-                  </ul>
-                </li>
-
                 <li className="w-full">
                   <Link
                     to="/academic"
