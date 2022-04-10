@@ -37,7 +37,12 @@ app.use("/statics", express.static(path.join(__dirname, "statics")));
 app.use(passport.initialize());
 app.use(
   cors({
-    origin: ["http://localhost:3000", "http://localhost"],
+    origin: [
+      "http://localhost:3000",
+      "http://localhost",
+      "http://20.205.139.206",
+      "http://cod.gae-gw.systems",
+    ],
     credentials: true,
   })
 );
