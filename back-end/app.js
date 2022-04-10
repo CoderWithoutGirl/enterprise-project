@@ -44,6 +44,8 @@ app.use(
       "http://cod.gae-gw.systems",
     ],
     credentials: true,
+    methods: ["GET", "PUT", "POST", "DELETE", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization"],
   })
 );
 app.use(
@@ -53,7 +55,7 @@ app.use(
     resave: false,
   })
 );
-app.use(helmet());
+//app.use(helmet({ crossOriginOpenerPolicy : true}));
 app.use(morgan("dev"));
 app.use(errorhandler());
 app.use(express.json({ urlEncoded: true }));
