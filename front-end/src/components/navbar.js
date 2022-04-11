@@ -276,7 +276,7 @@ const Navbar = ({ authenticateReducer, doLogout, getNewTokenRequest }) => {
       </Modal>
       <Modal open={showChangePassword} setOpen={setShowChangePassword}>
         <div className="w-screen sm:max-w-lg">
-          <Form title="Update Category">
+          <Form title="Change Password">
             <Password
               name="oldPassword"
               placeholder="Old Password"
@@ -313,7 +313,7 @@ const Navbar = ({ authenticateReducer, doLogout, getNewTokenRequest }) => {
                 role="submit"
                 icon={PencilAltIcon}
                 type="primary"
-                title="Change Password"
+                title="Save"
               />
               <Button
                 icon={XCircleIcon}
