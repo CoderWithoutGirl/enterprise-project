@@ -99,7 +99,8 @@ const AcademicPage = ({ getNewTokenRequest, token }) => {
     return Object.values(temp).every((x) => x === "");
   };
 
-  const handleSubmit = async () => {
+  const handleSubmit = async (e) => {
+    e.preventDefault();
     if (validation()) {
       const createOfAcademic = async () => {
         const { status, data } = await createAcademic(
@@ -131,7 +132,8 @@ const AcademicPage = ({ getNewTokenRequest, token }) => {
     }
   };
 
-  const handleUpdateSubmit = async () => {
+  const handleUpdateSubmit = async (e) => {
+    e.preventDefault();
     if (validation()) {
       const updateOfAcademic = async () => {
         const { status, data } = await updateAcademic(
@@ -151,7 +153,7 @@ const AcademicPage = ({ getNewTokenRequest, token }) => {
         getNewTokenRequest
       );
       if (status === 200) {
-        toast.success("Create success");
+        toast.success("Update success");
         setName("");
         setDate(dateInitial);
         setClosureDate(new Date());

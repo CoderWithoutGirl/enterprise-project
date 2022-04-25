@@ -35,8 +35,19 @@ const LoginPage = ({ submitLoginForm }) => {
 
   return (
     <>
+      <video
+        autoPlay
+        muted
+        loop
+        className="fixed r-0 b-0 m-w-screen m-h-screen"
+      >
+        <source
+          src="https://res.cloudinary.com/cod-erp/video/upload/v1649958437/Data_Grid_ujtx34.mp4"
+          type="video/mp4"
+        />
+      </video>
       <div
-        className={`bg-login bg-cover min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8`}
+        className={`relative z-10 bg-cover min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8`}
       >
         <div className="max-w-lg w-screen space-y-8">
           <div>
@@ -50,7 +61,7 @@ const LoginPage = ({ submitLoginForm }) => {
             </h2>
           </div>
           <div className="w-full">
-            <Form title="Login">
+            <Form>
               <InputField
                 {...register("username")}
                 type="text"
@@ -63,10 +74,7 @@ const LoginPage = ({ submitLoginForm }) => {
                   <ErrorMessageCustom message={message} />
                 )}
               />
-              <Password
-                {...register("password")}
-                placeholder="Password"
-              />
+              <Password {...register("password")} placeholder="Password" />
               <ErrorMessage
                 errors={errors}
                 name="password"

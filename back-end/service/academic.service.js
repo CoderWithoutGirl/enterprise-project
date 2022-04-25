@@ -36,7 +36,6 @@ const createAcademicYear = async (academicYear) => {
   const checkAcademicYearExistedInDb = await AcademicYear.findOne({ name });
   if (checkAcademicYearExistedInDb) {
     throw new Error("AcademicYear Name already exists");
-    return;
   } else {
     const createAcademic = new AcademicYear({ ...academicYear });
     await createAcademic.save();

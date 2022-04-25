@@ -13,7 +13,7 @@ const academicControler = {
       await createAcademicYear(req.body);
       res.status(200).json({ status: 200 });
     } catch (err) {
-      console.log(err);
+      res.status(400).json({ message: err.message });
     }
   },
   getAll: async (req, res) => {
